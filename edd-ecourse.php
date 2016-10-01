@@ -194,9 +194,9 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
  * instance to functions everywhere
  *
  * @since 1.0.0
- * @return EDD_eCourse The one true EDD_eCourse
+ * @return EDD_eCourse|void The one true EDD_eCourse
  */
-function EDD_eCourse_load() {
+function edd_ecourse_load() {
 	if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
 		if ( ! class_exists( 'EDD_Extension_Activation' ) ) {
 			require_once 'includes/class.extension-activation.php';
@@ -209,7 +209,7 @@ function EDD_eCourse_load() {
 	}
 }
 
-add_action( 'plugins_loaded', 'EDD_eCourse_load' );
+add_action( 'plugins_loaded', 'edd_ecourse_load' );
 
 
 /**
@@ -219,7 +219,20 @@ add_action( 'plugins_loaded', 'EDD_eCourse_load' );
  * @return void
  */
 function edd_ecourse_activation() {
-	/* Activation functions here */
+
+	if ( ! function_exists( 'edd_ecourse_post_type' ) ) {
+		include_once 'includes/post-types.php';
+
+		// Register post type.
+		edd_ecourse_post_type();
+
+		// Register taxonomy.
+		edd_ecourse_register_taxonomy();
+
+		// Flush rewrite rules.
+		flush_rewrite_rules( false );
+	}
+
 }
 
 register_activation_hook( __FILE__, 'edd_ecourse_activation' );
