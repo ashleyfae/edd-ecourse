@@ -57,7 +57,14 @@ function edd_ecourse_admin_scripts( $hook ) {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 	if ( edd_ecourse_is_admin_page() ) {
-		wp_enqueue_script( 'edd_ecourse_admin_js', EDD_ECOURSE_URL . '/assets/js/admin' . $suffix . '.js', array( 'jquery' ) );
+		$deps = array(
+			'jquery',
+			'jquery-ui-tooltip'
+		);
+
+		wp_enqueue_media();
+
+		wp_enqueue_script( 'edd_ecourse_admin_js', EDD_ECOURSE_URL . '/assets/js/admin' . $suffix . '.js', $deps );
 		wp_enqueue_style( 'edd_ecourse_admin_css', EDD_ECOURSE_URL . '/assets/css/admin.css' );
 	}
 

@@ -2,15 +2,43 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    margin: 0 -1em;
+
+    @media (min-width: 600px) {
+        display: flex;
+        flex-flow: row wrap;
+
+        > .edd-ecourse {
+            flex-grow: 1;
+            flex-basis: auto;
+            max-width: 33.3%;
+        }
+    }
 }
 
 .edd-ecourse {
-
+    margin: 1em 0;
+    padding: 1em;
 }
 
 .edd-course-inner {
     background: white;
     border: 1px solid #e5e5e5;
-    padding: 1em;
+    padding: 3em;
     text-align: center;
+
+    h2 {
+        margin: 0 0 2em;
+    }
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.edd-course-actions {
+    > a {
+        display: inline-block;
+        margin: 0 .5em;
+    }
 }

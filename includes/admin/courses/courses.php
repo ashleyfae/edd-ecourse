@@ -35,9 +35,23 @@ function edd_ecourse_render_page() {
 				foreach ( $courses as $course ) {
 
 					?>
-					<div class="edd-ecourse">
+					<div class="edd-ecourse" data-course-id="<?php echo esc_attr( $course->term_id ); ?>">
 						<div class="edd-course-inner">
 							<h2><?php echo esc_html( $course->name ); ?></h2>
+
+							<div class="edd-course-actions">
+								<a href="#" class="edd-ecourse-tip edd-course-action-lessons" title="<?php esc_attr_e( 'View Lessons', 'edd-ecourse' ); ?>">
+									<span class="dashicons dashicons-list-view"></span>
+								</a>
+
+								<a href="#" class="edd-ecourse-tip edd-course-action-edit" title="<?php esc_attr_e( 'Edit Course', 'edd-ecourse' ); ?>">
+									<span class="dashicons dashicons-edit"></span>
+								</a>
+
+								<a href="#" class="edd-ecourse-tip edd-course-action-delete" title="<?php esc_attr_e( 'Delete Course', 'edd-ecourse' ); ?>">
+									<span class="dashicons dashicons-trash"></span>
+								</a>
+							</div>
 						</div>
 					</div>
 					<?php
