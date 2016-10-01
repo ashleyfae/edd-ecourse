@@ -59,7 +59,8 @@ function edd_ecourse_admin_scripts( $hook ) {
 	if ( edd_ecourse_is_admin_page() ) {
 		$deps = array(
 			'jquery',
-			'jquery-ui-tooltip'
+			'jquery-ui-tooltip',
+			'wp-util'
 		);
 
 		$settings = array(

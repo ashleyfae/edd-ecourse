@@ -49,7 +49,44 @@ jQuery(document).ready(function ($) {
                     action: 'edd_ecourse_add_course',
                     course_name: $('#edd-ecourse-name-new').val(),
                     nonce: $('#edd_ecourse_add_course_nonce').val()
-                }
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+
+                        if (true === response.success) {
+
+                            // Remove spinner.
+                            form.find('.spinner').remove();
+
+                            // Re-enable submit.
+                            form.find('button').attr('disabled', false);
+
+                            // Clear course title field.
+                            $('#edd-ecourse-name-new').val('');
+
+                            // Load template data.
+                            var courseTemplate = wp.template('edd-ecourse-new');
+                            $('#edd-ecourse-grid').prepend(courseTemplate(response.data));
+
+                        } else {
+
+                            if (window.console && window.console.log) {
+                                console.log(response);
+                            }
+
+                        }
+
+                    }
+                }).fail(function (response) {
+                    if (window.console && window.console.log) {
+                        console.log(response);
+                    }
+                });
 
             });
 

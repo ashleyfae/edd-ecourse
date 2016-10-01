@@ -91,6 +91,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 
 			if ( is_admin() ) {
 				require_once EDD_ECOURSE_DIR . 'includes/admin/admin-pages.php';
+				require_once EDD_ECOURSE_DIR . 'includes/admin/courses/actions.php';
 				require_once EDD_ECOURSE_DIR . 'includes/admin/courses/course-functions.php';
 				require_once EDD_ECOURSE_DIR . 'includes/admin/courses/courses.php';
 			}

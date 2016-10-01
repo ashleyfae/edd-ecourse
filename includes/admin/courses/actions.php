@@ -25,7 +25,7 @@ function edd_ecourse_add_course() {
 	check_ajax_referer( 'edd_ecourse_add_course', 'nonce' );
 
 	// Permission check.
-	if ( ! current_user_can( 'manage_terms' ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) { // @todo change this
 		wp_die( __( 'You don\'t have permission to add courses.', 'edd-ecourse' ) );
 	}
 
@@ -41,7 +41,13 @@ function edd_ecourse_add_course() {
 		wp_die( __( 'An error occurred while creating the e-course.', 'edd-ecourse' ) );
 	}
 
-	wp_send_json_success( $term['term_id'] );
+	$data = array(
+		'ID'    => $term['term_id'],
+		'name'  => $course_name,
+		'nonce' => wp_create_nonce( 'delete_course_' . $term['term_id'] )
+	);
+
+	wp_send_json_success( apply_filters( 'edd_ecourse_add_course_data', $data ) );
 
 }
 
@@ -61,7 +67,7 @@ function edd_ecourse_delete_course() {
 	check_ajax_referer( 'delete_course_' . $course_id, 'nonce' );
 
 	// Permission check.
-	if ( ! current_user_can( 'delete_terms', $course_id ) ) {
+	if ( ! current_user_can( 'manage_options', $course_id ) ) { // @todo change this
 		wp_die( __( 'You don\'t have permission to delete this course.', 'edd-ecourse' ) );
 	}
 
@@ -88,3 +94,17 @@ function edd_ecourse_delete_course() {
 }
 
 add_action( 'wp_ajax_edd_ecourse_delete_course', 'edd_ecourse_delete_course' );
+
+function edd_ecourse_load_course_js_templates() {
+	if ( ! isset( $_GET['page'] ) || 'ecourses' != $_GET['page'] ) {
+		return;
+	}
+
+	$view = isset( $_GET['view'] ) ? wp_strip_all_tags( $_GET['view'] ) : 'overview';
+
+	if ( 'overview' == $view ) {
+		include_once EDD_ECOURSE_DIR . 'includes/admin/courses/template-new-course.php';
+	}
+}
+
+add_action( 'admin_footer', 'edd_ecourse_load_course_js_templates' );

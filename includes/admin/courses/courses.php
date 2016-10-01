@@ -24,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function edd_ecourse_render_page() {
 
 	$view = isset( $_GET['view'] ) ? wp_strip_all_tags( $_GET['view'] ) : 'overview';
+
 	?>
 	<div class="wrap">
 		<?php do_action( 'edd_ecourse_render_course_' . $view ); ?>
