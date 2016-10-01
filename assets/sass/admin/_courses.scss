@@ -1,4 +1,12 @@
-#edd-course-grid {
+/* Add E-Course */
+#edd-ecourse-add {
+    .spinner {
+        float: none !important;
+    }
+}
+
+/* Grid */
+#edd-ecourse-grid {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -21,7 +29,7 @@
     padding: 1em;
 }
 
-.edd-course-inner {
+.edd-ecourse-inner {
     background: white;
     border: 1px solid #e5e5e5;
     padding: 3em;
@@ -45,7 +53,7 @@
     }
 }
 
-.edd-course-actions {
+.edd-ecourse-actions {
     > .button {
         display: inline-block;
         margin: 2px;

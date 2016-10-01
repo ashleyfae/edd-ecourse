@@ -14,6 +14,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Add E-Course
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_add_course() {
+
+	// Security check.
+	check_ajax_referer( 'edd_ecourse_add_course', 'nonce' );
+
+	// Permission check.
+	if ( ! current_user_can( 'manage_terms' ) ) {
+		wp_die( __( 'You don\'t have permission to add courses.', 'edd-ecourse' ) );
+	}
+
+	$course_name = wp_strip_all_tags( $_POST['course_name'] );
+
+	if ( ! $course_name ) {
+		wp_die( __( 'A course name is required.', 'edd-ecourse' ) );
+	}
+
+	$term = wp_insert_term( $course_name, 'ecourse' );
+
+	if ( is_wp_error( $term ) || ! is_array( $term ) ) {
+		wp_die( __( 'An error occurred while creating the e-course.', 'edd-ecourse' ) );
+	}
+
+	wp_send_json_success( $term['term_id'] );
+
+}
+
+add_action( 'wp_ajax_edd_ecourse_add_course', 'edd_ecourse_add_course' );
+
+/**
  * Delete E-Course
  *
  * @since 1.0.0
@@ -24,7 +58,7 @@ function edd_ecourse_delete_course() {
 	$course_id = absint( $_POST['course_id'] );
 
 	// Security check.
-	check_ajax_referer( 'delete_course_' . $course_id );
+	check_ajax_referer( 'delete_course_' . $course_id, 'nonce' );
 
 	// Permission check.
 	if ( ! current_user_can( 'delete_terms', $course_id ) ) {

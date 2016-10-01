@@ -24,7 +24,35 @@ jQuery(document).ready(function ($) {
          * Initialize all the things.
          */
         init: function () {
+            this.add();
             this.remove();
+        },
+
+        /**
+         * Add E-Course
+         */
+        add: function () {
+
+            $('#edd-ecourse-add').on('submit', 'form', function (e) {
+
+                e.preventDefault();
+
+                var form = $(this);
+
+                // Add spinner.
+                form.append('<span class="spinner is-active"></span>');
+
+                // Disable submit.
+                form.find('button').attr('disabled', true);
+
+                var data = {
+                    action: 'edd_ecourse_add_course',
+                    course_name: $('#edd-ecourse-name-new').val(),
+                    nonce: $('#edd_ecourse_add_course_nonce').val()
+                }
+
+            });
+
         },
 
         /**
@@ -32,7 +60,7 @@ jQuery(document).ready(function ($) {
          */
         remove: function () {
 
-            $(document.body).on('click', '.edd-course-action-delete', function (e) {
+            $(document.body).on('click', '.edd-ecourse-action-delete', function (e) {
 
                 e.preventDefault();
 
@@ -40,7 +68,8 @@ jQuery(document).ready(function ($) {
                     return false;
                 }
 
-                var actionsWrap = $(this).parents('.edd-course-actions');
+                var courseWrap = $(this).parents('.edd-ecourse');
+                var actionsWrap = $(this).parents('.edd-ecourse-actions');
 
                 // Add spinner.
                 actionsWrap.append('<span class="spinner is-active"></span>');
@@ -50,13 +79,35 @@ jQuery(document).ready(function ($) {
                     $(this).addClass('disabled').attr('disabled', true);
                 });
 
-                var course_id = $(this).parents('.edd-ecourse').data('course-id');
+                var course_id = courseWrap.data('course-id');
 
                 var data = {
                     action: 'edd_ecourse_delete_course',
                     course_id: course_id,
                     nonce: $(this).data('nonce')
                 };
+
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+
+                        if (true === response.success) {
+                            courseWrap.remove();
+                        } else {
+                            if (window.console && window.console.log) {
+                                console.log(response);
+                            }
+                        }
+
+                    }
+                }).fail(function (response) {
+                    if (window.console && window.console.log) {
+                        console.log(response);
+                    }
+                });
 
             });
 
