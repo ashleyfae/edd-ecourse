@@ -30,6 +30,12 @@ function edd_ecourse_is_admin_page() {
 	return apply_filters( 'edd_ecourse_is_admin_page', $is_admin_page, $screen );
 }
 
+function edd_ecourse_filter_edd_is_admin_page( $is_admin_page, $page, $view, $passed_page, $passed_view ) {
+	return edd_ecourse_is_edit_course_page() ? true : $is_admin_page;
+}
+
+add_filter( 'edd_is_admin_page', 'edd_ecourse_filter_edd_is_admin_page', 10, 5 );
+
 /**
  * Register Admin Menu Pages
  *

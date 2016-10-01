@@ -77,7 +77,7 @@ function edd_ecourse_render_course_overview() {
 								<span class="dashicons dashicons-list-view"></span>
 							</a>
 
-							<a href="#" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Edit Course', 'edd-ecourse' ); ?>">
+							<a href="<?php echo esc_url( edd_ecourse_get_edit_course_url( $course->term_id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Edit Course', 'edd-ecourse' ); ?>">
 								<span class="dashicons dashicons-edit"></span>
 							</a>
 
@@ -110,18 +110,81 @@ add_action( 'edd_ecourse_render_course_overview', 'edd_ecourse_render_course_ove
  */
 function edd_ecourse_render_course_edit() {
 
+	if ( ! isset( $_GET['course'] ) ) {
+		wp_die( __( 'Missing course ID.', 'edd-ecourse' ) );
+	}
+
+	$course = get_term( absint( $_GET['course'] ), 'ecourse' );
+
+	if ( is_wp_error( $course ) ) {
+		wp_die( __( 'Invalid course ID.', 'edd-ecourse' ) );
+	}
+
 	?>
 	<h1>
-		<?php _e( 'Edit E-Course', 'edd-ecourse' ); ?>
+		<?php printf( __( 'Edit %s', 'edd-ecourse' ), esc_html( $course->name ) ); ?>
 	</h1>
 
 	<form id="edd-ecourse-edit-course" method="POST">
 		<div id="poststuff">
 			<div id="edd-ecourse-dashboard-widgets-wrap">
 				<div id="post-body" class="metabox-holder columns-2">
-					<div id="side-sortables" class="meta-box-sortables ui-sortable">
 
+					<div id="post-body-content">
+						<div id="titlediv">
+							<div id="titlewrap">
+								<label class="screen-reader-text" for="title"><?php _e( 'Enter title here', 'edd-ecourse' ); ?></label>
+								<input type="text" name="course_title" id="title" size="30" value="<?php echo esc_attr( $course->name ); ?>" spellcheck="true" autocomplete="off">
+							</div>
+						</div>
+
+						<div id="postdivrich" class="postarea">
+							<?php // @todo tinymce description ?>
+						</div>
 					</div>
+
+					<div id="postbox-container-1" class="postbox-container">
+						<div id="side-sortables" class="meta-box-sortables ui-sortable">
+
+							<!-- Save -->
+							<div id="edd-ecourse-update" class="postbox">
+								<h3 class="hndle"><?php _e( 'Update Course', 'edd-ecourse' ); ?></h3>
+								<div class="inside">
+									<?php submit_button( __( 'Save Course', 'edd-ecourse' ), 'primary', 'submit', false ); ?>
+								</div>
+							</div>
+
+							<!-- Details -->
+							<div id="edd-ecourse-details" class="postbox">
+								<h3 class="hndle"><?php _e( 'Course Details', 'edd-ecourse' ); ?></h3>
+								<div class="inside">
+									<div class="edd-admin-box">
+										<div class="edd-admin-box-inside">
+											<p>
+												<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
+												<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
+												<input type="text" id="course-start-date" name="course_start_date" class="large-text">
+												<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div id="postbox-container-2" class="postbox-container">
+						<div id="normal-sortables" class="meta-box-sortables ui-sortable">
+							<div id="edd-ecourse-modules" class="postbox">
+								<h3 class="hndle"><?php _e( 'Modules', 'edd-ecourse' ); ?></h3>
+								<div class="inside">
+
+								</div>
+							</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</div>

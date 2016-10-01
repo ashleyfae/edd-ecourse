@@ -45,6 +45,7 @@ function edd_ecourse_add_course() {
 		'ID'               => $term['term_id'],
 		'name'             => $course_name,
 		'view_lessons_url' => edd_ecourse_get_view_lessons_url( $term['term_id'] ),
+		'edit_course_url'  => edd_ecourse_get_edit_course_url( $term['term_id'] ),
 		'nonce'            => wp_create_nonce( 'delete_course_' . $term['term_id'] )
 	);
 

@@ -83,6 +83,22 @@ function edd_ecourse_get_courses( $args = array() ) {
 }
 
 /**
+ * Get Course Modules
+ *
+ * @param int $course_id ID of the course.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_get_course_modules( $course_id ) {
+
+	$modules = get_term_meta( $course_id, 'course_modules', true );
+
+	return apply_filters( 'edd_ecourse_get_course_modules', $modules, $course_id );
+
+}
+
+/**
  * Get E-Course Lessons
  *
  * @param int   $course_id  ID of the course.

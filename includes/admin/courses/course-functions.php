@@ -31,6 +31,40 @@ function edd_ecourse_get_add_course_url() {
 }
 
 /**
+ * Get Edit Course URL
+ *
+ * Returns the URL to the "Edit Course" page.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_get_edit_course_url( $course_id = 0 ) {
+	$url = add_query_arg( array(
+		'page'   => 'ecourses',
+		'view'   => 'edit',
+		'course' => absint( $course_id )
+	), admin_url( 'admin.php' ) );
+
+	return apply_filters( 'edd_ecourse_get_edit_course_url', $url );
+}
+
+/**
+ * Checks to see if we're currently on the Edit Course page.
+ *
+ * @since 1.0.0
+ * @return bool
+ */
+function edd_ecourse_is_edit_course_page() {
+	$is_course_page = false;
+
+	if ( isset( $_GET['page'] ) && 'ecourses' == $_GET['page'] && isset( $_GET['view'] ) && 'edit' == $_GET['view'] ) {
+		$is_course_page = true;
+	}
+
+	return apply_filters( 'edd_ecourses_is_edit_course_page', $is_course_page );
+}
+
+/**
  * Get Add Course URL
  *
  * Returns the URL to the "Add Course" page.
