@@ -10,3 +10,34 @@
         padding: 0;
     }
 }
+
+/* Module List */
+
+#edd-ecourse-module-list {
+    list-style: none;
+    margin: 2em 0;
+    padding: 0;
+
+    li {
+        background: #f9f9f9;
+        border: 1px solid #e5e5e5;
+        clear: both;
+        cursor: move;
+        line-height: 18px;
+        margin: 0 3px 3px 3px;
+        max-width: 400px;
+        overflow: hidden;
+        padding: 5px;
+        position: relative;
+    }
+
+    .delete-module {
+        color: #b7b2b2;
+        cursor: pointer;
+        float: right;
+
+        &:hover {
+            color: red;
+        }
+    }
+}

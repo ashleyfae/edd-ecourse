@@ -164,24 +164,59 @@ function edd_ecourse_render_course_edit() {
 												<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
 												<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
 												<input type="text" id="course-start-date" name="course_start_date" class="large-text">
-												<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
+											<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
 											</p>
 										</div>
 									</div>
 								</div>
 							</div>
 
+							<?php // @todo maybe featured image ?>
+
 						</div>
 					</div>
 
 					<div id="postbox-container-2" class="postbox-container">
 						<div id="normal-sortables" class="meta-box-sortables ui-sortable">
+
+							<!-- Modules -->
 							<div id="edd-ecourse-modules" class="postbox">
 								<h3 class="hndle"><?php _e( 'Modules', 'edd-ecourse' ); ?></h3>
 								<div class="inside">
+									<?php
+									$modules = edd_ecourse_get_course_modules( $course->term_id );
 
+									// @todo remove these
+									$modules = array(
+										'Introduction',
+										'Design',
+										'Marketing'
+									);
+									?>
+
+									<ul id="edd-ecourse-module-list">
+										<?php
+										if ( is_array( $modules ) ) {
+											foreach ( $modules as $name ) {
+												?>
+												<li data-module-name="<?php echo esc_attr( $name ); ?>">
+													<?php echo esc_html( $name ); ?>
+													<span class="dashicons dashicons-trash delete-module"></span>
+												</li>
+												<?php
+											}
+										}
+										?>
+									</ul>
+
+									<form id="edd-ecourse-add-module">
+										<label for="edd-ecourse-module-name" class="screen-reader-text"><?php _e( 'Enter module name', 'edd-ecourse' ); ?></label>
+										<input type="text" id="edd-ecourse-module-name" placeholder="<?php esc_attr_e( 'Module name', 'edd-ecourse' ); ?>" required>
+										<button type="submit" class="button"><?php _e( 'Add Module', 'edd-ecourse' ); ?></button>
+									</form>
 								</div>
 							</div>
+
 						</div>
 					</div>
 
