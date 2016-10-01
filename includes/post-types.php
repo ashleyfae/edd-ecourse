@@ -107,6 +107,7 @@ function edd_ecourse_register_taxonomy() {
 			'hierarchical' => false,
 		),
 		'has_archive'       => true,
+		'meta_box_cb'       => false
 	);
 
 	register_taxonomy( 'ecourse', array( 'ecourse_lesson' ), apply_filters( 'edd_ecourse_taxonomy_args', $args ) );
