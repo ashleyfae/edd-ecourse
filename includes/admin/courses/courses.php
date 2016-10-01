@@ -164,8 +164,8 @@ function edd_ecourse_render_course_edit() {
 												<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
 												<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
 												<input type="text" id="course-start-date" name="course_start_date" class="large-text">
-											<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
 											</p>
+											<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
 										</div>
 									</div>
 								</div>
