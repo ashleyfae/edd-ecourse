@@ -85,15 +85,14 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 			// Include scripts
 			require_once EDD_ECOURSE_DIR . 'includes/scripts.php';
 			require_once EDD_ECOURSE_DIR . 'includes/functions.php';
+			require_once EDD_ECOURSE_DIR . 'includes/course-functions.php';
+			require_once EDD_ECOURSE_DIR . 'includes/post-types.php';
+			require_once EDD_ECOURSE_DIR . 'includes/shortcodes.php';
 
-			/**
-			 * @todo        The following files are not included in the boilerplate, but
-			 *              the referenced locations are listed for the purpose of ensuring
-			 *              path standardization in EDD extensions. Uncomment any that are
-			 *              relevant to your extension, and remove the rest.
-			 */
-			// require_once EDD_ECOURSE_DIR . 'includes/shortcodes.php';
-			// require_once EDD_ECOURSE_DIR . 'includes/widgets.php';
+			if ( is_admin() ) {
+				require_once EDD_ECOURSE_DIR . 'includes/admin/admin-pages.php';
+				require_once EDD_ECOURSE_DIR . 'includes/admin/courses/courses.php';
+			}
 		}
 
 
@@ -104,20 +103,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 * @since       1.0.0
 		 * @return void
 		 *
-		 * @todo        The hooks listed in this section are a guideline, and
-		 *              may or may not be relevant to your particular extension.
-		 *              Please remove any unnecessary lines, and refer to the
-		 *              WordPress codex and EDD documentation for additional
-		 *              information on the included hooks.
-		 *
-		 *              This method should be used to add any filters or actions
-		 *              that are necessary to the core of your extension only.
-		 *              Hooks that are relevant to meta boxes, widgets and
-		 *              the like can be placed in their respective files.
-		 *
-		 *              IMPORTANT! If you are releasing your extension as a
-		 *              commercial extension in the EDD store, DO NOT remove
-		 *              the license check!
+		 * @todo        Probably remove.
 		 */
 		private function hooks() {
 			// Register settings
@@ -222,16 +208,23 @@ function edd_ecourse_activation() {
 
 	if ( ! function_exists( 'edd_ecourse_post_type' ) ) {
 		include_once 'includes/post-types.php';
-
-		// Register post type.
-		edd_ecourse_post_type();
-
-		// Register taxonomy.
-		edd_ecourse_register_taxonomy();
-
-		// Flush rewrite rules.
-		flush_rewrite_rules( false );
 	}
+
+	if ( ! function_exists( 'edd_ecourse_insert_demo_course' ) ) {
+		include_once 'includes/course-functions.php';
+	}
+
+	// Register post type.
+	edd_ecourse_post_type();
+
+	// Register taxonomy.
+	edd_ecourse_register_taxonomy();
+
+	// Insert demo content.
+	edd_ecourse_insert_demo_course();
+
+	// Flush rewrite rules.
+	flush_rewrite_rules( false );
 
 }
 

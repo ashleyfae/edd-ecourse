@@ -2,8 +2,10 @@
 /**
  * Register Post Type and Taxonomies
  *
- * @package EDD\E-Course\PostTypes
- * @since   1.0.0
+ * @package   EDD\E-Course\PostTypes
+ * @copyright Copyright (c) 2016, Ashley Gibson
+ * @license   GPL2+
+ * @since     1.0.0
  */
 
 // Exit if accessed directly
@@ -89,7 +91,7 @@ function edd_ecourse_register_taxonomy() {
 
 	$args = array(
 		'labels'            => $labels,
-		'hierarchical'      => true,
+		'hierarchical'      => false,
 		'public'            => true,
 		'show_ui'           => true,
 		'show_admin_column' => true,
