@@ -1,8 +1,8 @@
 <?php
 /**
- * Helper Functions
+ * Shortcodes
  *
- * @package EDD\E-Course\Functions
+ * @package EDD\E-Course\Shortcodes
  * @since   1.0.0
  */
 
