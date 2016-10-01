@@ -62,10 +62,17 @@ function edd_ecourse_admin_scripts( $hook ) {
 			'jquery-ui-tooltip'
 		);
 
+		$settings = array(
+			'l10n' => array(
+				'confirm_delete_course' => __( 'Are you sure you want to delete this e-course and all associated lessons? This cannot be undone.', 'edd-ecourse' )
+			)
+		);
+
 		wp_enqueue_media();
 
-		wp_enqueue_script( 'edd_ecourse_admin_js', EDD_ECOURSE_URL . '/assets/js/admin' . $suffix . '.js', $deps );
-		wp_enqueue_style( 'edd_ecourse_admin_css', EDD_ECOURSE_URL . '/assets/css/admin.css' );
+		wp_enqueue_script( 'edd-ecourse-admin', EDD_ECOURSE_URL . '/assets/js/admin' . $suffix . '.js', $deps );
+		wp_localize_script( 'edd-ecourse-admin', 'edd_ecourse_vars', $settings );
+		wp_enqueue_style( 'edd-ecourse-admin', EDD_ECOURSE_URL . '/assets/css/admin.css' );
 	}
 
 }

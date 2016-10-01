@@ -81,3 +81,34 @@ function edd_ecourse_get_courses( $args = array() ) {
 	return $courses;
 
 }
+
+/**
+ * Get E-Course Lessons
+ *
+ * @param int   $course_id  ID of the course.
+ * @param array $query_args WP_Query arguments to override the defaults.
+ *
+ * @since 1.0.0
+ * @return array
+ */
+function edd_ecourse_get_course_lessons( $course_id, $query_args = array() ) {
+
+	$default_args = array(
+		'post_type'      => 'ecourse',
+		'posts_per_page' => 500,
+		'tax_query'      => array(
+			array(
+				'taxonomy' => 'ecourse',
+				'field'    => 'id',
+				'terms'    => $course_id
+			)
+		)
+	);
+
+	$query_args = wp_parse_args( $query_args, $default_args );
+
+	$lessons = get_posts( $query_args );
+
+	return $lessons;
+
+}

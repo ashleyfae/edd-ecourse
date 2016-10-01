@@ -16,6 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Register Lesson Post Type
  *
+ * @todo  Custom capabilities at some point.
+ *
  * @since 1.0.0
  * @return void
  */
@@ -65,6 +67,8 @@ add_action( 'init', 'edd_ecourse_post_type' );
 
 /**
  * Register E-Course Taxonomy
+ *
+ * @todo  Custom capabilities at some point.
  *
  * @since 1.0.0
  * @return void
