@@ -42,9 +42,10 @@ function edd_ecourse_add_course() {
 	}
 
 	$data = array(
-		'ID'    => $term['term_id'],
-		'name'  => $course_name,
-		'nonce' => wp_create_nonce( 'delete_course_' . $term['term_id'] )
+		'ID'               => $term['term_id'],
+		'name'             => $course_name,
+		'view_lessons_url' => edd_ecourse_get_view_lessons_url( $term['term_id'] ),
+		'nonce'            => wp_create_nonce( 'delete_course_' . $term['term_id'] )
 	);
 
 	wp_send_json_success( apply_filters( 'edd_ecourse_add_course_data', $data ) );

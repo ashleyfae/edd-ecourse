@@ -73,7 +73,7 @@ function edd_ecourse_render_course_overview() {
 						<h2><?php echo esc_html( $course->name ); ?></h2>
 
 						<div class="edd-ecourse-actions">
-							<a href="#" class="button edd-ecourse-tip edd-ecourse-action-lessons" title="<?php esc_attr_e( 'View Lessons', 'edd-ecourse' ); ?>">
+							<a href="<?php echo esc_url( edd_ecourse_get_view_lessons_url( $course->term_id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-lessons" title="<?php esc_attr_e( 'View Lessons', 'edd-ecourse' ); ?>">
 								<span class="dashicons dashicons-list-view"></span>
 							</a>
 
@@ -108,28 +108,6 @@ add_action( 'edd_ecourse_render_course_overview', 'edd_ecourse_render_course_ove
  * @since 1.0.0
  * @return void
  */
-function edd_ecourse_render_course_add() {
-
-	?>
-	<h1>
-		<?php _e( 'Add E-Course', 'edd-ecourse' ); ?>
-	</h1>
-
-	<form id="edd-ecourse-add-course" method="POST">
-
-	</form>
-	<?php
-
-}
-
-add_action( 'edd_ecourse_render_course_add', 'edd_ecourse_render_course_add' );
-
-/**
- * Render Add E-Course Page
- *
- * @since 1.0.0
- * @return void
- */
 function edd_ecourse_render_course_edit() {
 
 	?>
@@ -153,3 +131,32 @@ function edd_ecourse_render_course_edit() {
 }
 
 add_action( 'edd_ecourse_render_course_edit', 'edd_ecourse_render_course_edit' );
+
+/**
+ * Render View E-Course Lesson List
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_render_course_lesson_list() {
+
+	if ( ! isset( $_GET['course'] ) ) {
+		wp_die( __( 'Missing course ID.', 'edd-ecourse' ) );
+	}
+
+	$course = get_term( absint( $_GET['course'] ), 'ecourse' );
+
+	if ( is_wp_error( $course ) ) {
+		wp_die( __( 'Invalid course ID.', 'edd-ecourse' ) );
+	}
+
+	?>
+	<h1>
+		<?php printf( __( 'Lessons: %s', 'edd-ecourse' ), esc_html( $course->name ) ); ?>
+		<a href="<?php echo esc_url( edd_ecourse_get_add_lesson_url( $course->term_id ) ); ?>" class="page-title-action"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
+	</h1>
+	<?php
+
+}
+
+add_action( 'edd_ecourse_render_course_list', 'edd_ecourse_render_course_lesson_list' );
