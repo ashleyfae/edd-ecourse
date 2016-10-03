@@ -118,9 +118,9 @@ function edd_ecourse_render_course_edit() {
 
 	$modules = edd_ecourse_get_course_modules( $course->id );
 	?>
-	<h1>
-		<?php printf( __( 'Lessons: %s', 'edd-ecourse' ), esc_html( $course->title ) ); ?>
-		<a href="<?php echo esc_url( edd_ecourse_get_add_lesson_url( $course->id ) ); ?>" class="page-title-action"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
+	<h1 id="edd-ecourse-title" data-course="<?php echo esc_attr( $course->id ); ?>">
+		<span><?php echo esc_html( $course->title ); ?></span>
+		<button id="edd-ecourse-edit-course-title" class="page-title-action"><?php _e( 'Edit Title', 'edd-ecourse' ); ?></button>
 	</h1>
 
 	<div id="poststuff">
@@ -128,13 +128,6 @@ function edd_ecourse_render_course_edit() {
 			<div id="post-body" class="metabox-holder columns-2">
 
 				<div id="post-body-content">
-					<div id="titlediv">
-						<div id="titlewrap">
-							<label class="screen-reader-text" for="title"><?php _e( 'Enter title here', 'edd-ecourse' ); ?></label>
-							<input type="text" name="course_title" id="title" size="30" value="<?php echo esc_attr( $course->title ); ?>" spellcheck="true" autocomplete="off">
-						</div>
-					</div>
-
 					<div id="postdivrich" class="postarea">
 						<?php // @todo tinymce description ?>
 					</div>
@@ -166,7 +159,7 @@ function edd_ecourse_render_course_edit() {
 				</div>
 
 				<div id="postbox-container-2" class="postbox-container">
-					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
+					<div id="edd-ecourse-module-sortables" class="meta-box-sortables ui-sortable">
 
 						<!-- Modules -->
 						<?php if ( is_array( $modules ) ) : ?>

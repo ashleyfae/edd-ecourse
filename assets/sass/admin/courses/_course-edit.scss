@@ -11,6 +11,30 @@
     }
 }
 
+/* Course TItle */
+
+#edd-ecourse-title {
+    input[type="text"] {
+        background-color: #fff;
+        font-size: 23px;
+        line-height: 100%;
+        margin: 0;
+        outline: 0;
+        padding: 3px 8px;
+    }
+
+    .button {
+        display: inline-block;
+        margin: 0 5px;
+    }
+
+    &.edd-ecourse-is-editing {
+        .button {
+            height: 39px;
+        }
+    }
+}
+
 /* Module List */
 
 .edd-ecourse-module-group {
@@ -49,7 +73,11 @@
 }
 
 /* Add Module */
-#edd-ecourse-add-module-form {
+.edd-ecourse-add-module {
+    .hndle {
+        cursor: auto !important;
+    }
+
     .spinner {
         float: none;
     }

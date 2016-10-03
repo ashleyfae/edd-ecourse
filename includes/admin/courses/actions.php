@@ -42,10 +42,10 @@ function edd_ecourse_add_course_cb() {
 	}
 
 	$data = array(
-		'ID'               => $course_id,
-		'name'             => $course_name,
-		'edit_course_url'  => edd_ecourse_get_manage_course_url( $course_id ),
-		'nonce'            => wp_create_nonce( 'delete_course_' . $course_id )
+		'ID'              => $course_id,
+		'name'            => $course_name,
+		'edit_course_url' => edd_ecourse_get_manage_course_url( $course_id ),
+		'nonce'           => wp_create_nonce( 'delete_course_' . $course_id )
 	);
 
 	wp_send_json_success( apply_filters( 'edd_ecourse_add_course_data', $data ) );
@@ -144,6 +144,39 @@ function edd_ecourse_add_module_cb() {
 }
 
 add_action( 'wp_ajax_edd_ecourse_add_module', 'edd_ecourse_add_module_cb' );
+
+/**
+ * Update E-Course Title
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_update_course_title() {
+
+	// Permission check.
+	if ( ! current_user_can( 'manage_options' ) ) { // @todo change this
+		wp_die( __( 'You don\'t have permission to delete this module.', 'edd-ecourse' ) );
+	}
+
+	$course_id = $_POST['course'];
+
+	if ( ! is_numeric( $course_id ) || $course_id < 1 ) {
+		wp_die( __( 'Error: Not a valid course.', 'edd-ecourse' ) );
+	}
+
+	$course_id = absint( $course_id );
+
+	$result = edd_ecourse_load()->courses->update( $course_id, array( 'title' => sanitize_text_field( $_POST['title'] ) ) );
+
+	if ( false === $result ) {
+		wp_die( __( 'An unexpected error occurred while trying to update this course.', 'edd-ecourse' ) );
+	}
+
+	wp_send_json_success();
+
+}
+
+add_action( 'wp_ajax_edd_ecourse_update_course_title', 'edd_ecourse_update_course_title' );
 
 /**
  * Update Module Title

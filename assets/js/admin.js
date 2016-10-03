@@ -26,6 +26,7 @@ jQuery(document).ready(function ($) {
         init: function () {
             this.add();
             this.remove();
+            this.editTitle();
         },
 
         /**
@@ -148,6 +149,106 @@ jQuery(document).ready(function ($) {
 
             });
 
+        },
+
+        /**
+         * Edit Course Title
+         */
+        editTitle: function () {
+
+            $('#edd-ecourse-edit-course-title').on('click', function (e) {
+
+                e.preventDefault();
+
+                var editButton = $(this);
+                var wrap = $(this).parent();
+                var courseID = wrap.data('course');
+                var courseTitleWrap = wrap.find('span');
+                var currentTitle = courseTitleWrap.text();
+
+                wrap.addClass('edd-ecourse-is-editing');
+
+                // Turn the title into an input box.
+                courseTitleWrap.html('<input type="text" size="30" spellcheck="true" autocomplete="off" value="">');
+
+                var inputBox = courseTitleWrap.find('input');
+                inputBox.focus().val(currentTitle);
+
+                // Hide edit button.
+                editButton.hide();
+
+                // Add submit and cancel buttons.
+                editButton.after('<button href="#" class="button edd-ecourse-cancel-edit-course-title">' + edd_ecourse_vars.l10n.cancel + '</button>');
+                editButton.after('<button href="#" class="button button-primary edd-ecourse-submit-edit-course-title">' + edd_ecourse_vars.l10n.save + '</button>');
+
+                /** Cancel Edit **/
+                wrap.on('click', '.edd-ecourse-cancel-edit-course-title', function (e) {
+
+                    e.preventDefault();
+
+                    $('.edd-ecourse-cancel-edit-course-title, .edd-ecourse-submit-edit-course-title').remove();
+                    editButton.show();
+
+                    courseTitleWrap.html(currentTitle);
+
+                    wrap.removeClass('edd-ecourse-is-editing');
+
+                });
+
+                /** Save Edit **/
+                // I'm doing some funky shit here so it will trigger when pressing "enter" or clicking.
+                wrap.on('keypress click', function (e) {
+                    //wrap.on('click', '.edd-ecourse-submit-edit-course-title', function (e) {
+
+                    if (! wrap.hasClass('edd-ecourse-is-editing')) {
+                        return;
+                    }
+
+                    if ('click' == e.type && ! $(e.target).hasClass('edd-ecourse-submit-edit-course-title')) {
+                        return;
+                    }
+
+                    if (e.type != 'click' && e.which !== 13) {
+                        return;
+                    }
+
+                    e.preventDefault();
+
+                    $(this).attr('disabled', true);
+
+                    var data = {
+                        action: 'edd_ecourse_update_course_title',
+                        course: courseID,
+                        title: inputBox.val()
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: ajaxurl,
+                        data: data,
+                        dataType: "json",
+                        success: function (response) {
+
+                            console.log(response);
+
+                            $('.edd-ecourse-cancel-edit-course-title, .edd-ecourse-submit-edit-course-title').remove();
+                            editButton.show();
+
+                            courseTitleWrap.html(data.title);
+
+                            wrap.removeClass('edd-ecourse-is-editing');
+
+                        }
+                    }).fail(function (response) {
+                        if (window.console && window.console.log) {
+                            console.log(response);
+                        }
+                    });
+
+                });
+
+            });
+
         }
 
     };
@@ -249,10 +350,10 @@ jQuery(document).ready(function ($) {
                 wrap.addClass('edd-ecourse-is-editing');
 
                 // Turn the title into an input box.
-                moduleTitleWrap.html('<input type="text" value="' + currentTitle + '">');
+                moduleTitleWrap.html('<input type="text" value="">');
 
                 var inputBox = moduleTitleWrap.find('input');
-                inputBox.focus();
+                inputBox.focus().val(currentTitle);
 
                 // Hide edit button.
                 editButton.hide();
