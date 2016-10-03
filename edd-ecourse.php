@@ -243,9 +243,6 @@ function edd_ecourse_activation() {
 	// Register post type.
 	edd_ecourse_post_type();
 
-	// Register taxonomy.
-	edd_ecourse_register_taxonomy();
-
 	// Insert demo content.
 	//edd_ecourse_insert_demo_course();
 

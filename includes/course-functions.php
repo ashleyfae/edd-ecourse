@@ -167,11 +167,10 @@ function edd_ecourse_get_course_lessons( $course_id, $query_args = array() ) {
 	$default_args = array(
 		'post_type'      => 'ecourse',
 		'posts_per_page' => 500,
-		'tax_query'      => array(
+		'meta_query'     => array(
 			array(
-				'taxonomy' => 'ecourse',
-				'field'    => 'id',
-				'terms'    => $course_id
+				'key'   => 'ecourse',
+				'value' => $course_id
 			)
 		)
 	);
