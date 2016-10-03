@@ -23,11 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<h2>{{{ data.name }}}</h2>
 
 			<div class="edd-ecourse-actions">
-				<a href="{{ data.view_lessons_url }}" class="button edd-ecourse-tip edd-ecourse-action-lessons" title="<?php esc_attr_e( 'View Lessons', 'edd-ecourse' ); ?>">
-					<span class="dashicons dashicons-list-view"></span>
-				</a>
-
-				<a href="{{ data.edit_course_url }}" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Edit Course', 'edd-ecourse' ); ?>">
+				<a href="{{ data.edit_course_url }}" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Manage Course', 'edd-ecourse' ); ?>">
 					<span class="dashicons dashicons-edit"></span>
 				</a>
 

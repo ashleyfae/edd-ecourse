@@ -73,11 +73,7 @@ function edd_ecourse_render_course_overview() {
 						<h2><?php echo esc_html( $course->title ); ?></h2>
 
 						<div class="edd-ecourse-actions">
-							<a href="<?php echo esc_url( edd_ecourse_get_view_lessons_url( $course->id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-lessons" title="<?php esc_attr_e( 'View Lessons', 'edd-ecourse' ); ?>">
-								<span class="dashicons dashicons-list-view"></span>
-							</a>
-
-							<a href="<?php echo esc_url( edd_ecourse_get_edit_course_url( $course->id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Edit Course', 'edd-ecourse' ); ?>">
+							<a href="<?php echo esc_url( edd_ecourse_get_manage_course_url( $course->id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Manage Course', 'edd-ecourse' ); ?>">
 								<span class="dashicons dashicons-edit"></span>
 							</a>
 
@@ -103,144 +99,12 @@ function edd_ecourse_render_course_overview() {
 add_action( 'edd_ecourse_render_course_overview', 'edd_ecourse_render_course_overview' );
 
 /**
- * Render Add E-Course Page
- *
- * @since 1.0.0
- * @return void
- */
-function edd_ecourse_render_course_edit() {
-
-	if ( ! isset( $_GET['course'] ) ) {
-		wp_die( __( 'Missing course ID.', 'edd-ecourse' ) );
-	}
-
-	$course = edd_ecourse_get_course( absint( $_GET['course'] ) );
-
-	if ( ! $course ) {
-		wp_die( __( 'Invalid course ID.', 'edd-ecourse' ) );
-	}
-
-	?>
-	<h1>
-		<?php printf( __( 'Edit %s', 'edd-ecourse' ), esc_html( $course->title ) ); ?>
-	</h1>
-
-	<form id="edd-ecourse-edit-course" method="POST">
-		<div id="poststuff">
-			<div id="edd-ecourse-dashboard-widgets-wrap">
-				<div id="post-body" class="metabox-holder columns-2">
-
-					<div id="post-body-content">
-						<div id="titlediv">
-							<div id="titlewrap">
-								<label class="screen-reader-text" for="title"><?php _e( 'Enter title here', 'edd-ecourse' ); ?></label>
-								<input type="text" name="course_title" id="title" size="30" value="<?php echo esc_attr( $course->title ); ?>" spellcheck="true" autocomplete="off">
-							</div>
-						</div>
-
-						<div id="postdivrich" class="postarea">
-							<?php // @todo tinymce description ?>
-						</div>
-					</div>
-
-					<div id="postbox-container-1" class="postbox-container">
-						<div id="side-sortables" class="meta-box-sortables ui-sortable">
-
-							<!-- Save -->
-							<div id="edd-ecourse-update" class="postbox">
-								<h3 class="hndle"><?php _e( 'Update Course', 'edd-ecourse' ); ?></h3>
-								<div class="inside">
-									<?php submit_button( __( 'Save Course', 'edd-ecourse' ), 'primary', 'submit', false ); ?>
-								</div>
-							</div>
-
-							<!-- Details -->
-							<div id="edd-ecourse-details" class="postbox">
-								<h3 class="hndle"><?php _e( 'Course Details', 'edd-ecourse' ); ?></h3>
-								<div class="inside">
-									<div class="edd-admin-box">
-										<div class="edd-admin-box-inside">
-											<p>
-												<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
-												<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
-												<input type="text" id="course-start-date" name="course_start_date" class="large-text" value="<?php echo esc_attr( $course->start_date ); ?>">
-											</p>
-											<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<?php // @todo maybe featured image ?>
-
-						</div>
-					</div>
-
-					<div id="postbox-container-2" class="postbox-container">
-						<div id="normal-sortables" class="meta-box-sortables ui-sortable">
-
-							<!-- Modules -->
-							<div id="edd-ecourse-modules" class="postbox">
-								<h3 class="hndle"><?php _e( 'Modules', 'edd-ecourse' ); ?></h3>
-								<div class="inside">
-									<?php
-									$modules = edd_ecourse_get_course_modules( $course->id );
-
-									// @todo remove these
-									$modules = array(
-										'Introduction',
-										'Design',
-										'Marketing'
-									);
-									?>
-
-									<ul id="edd-ecourse-module-list">
-										<?php
-										if ( is_array( $modules ) ) {
-											foreach ( $modules as $module ) {
-												?>
-												<li data-module-id="<?php echo esc_attr( $module->id ); ?>">
-													<?php echo esc_html( $module->name ); ?>
-													<span class="dashicons dashicons-trash delete-module"></span>
-												</li>
-												<?php
-											}
-										}
-										?>
-									</ul>
-
-									<form id="edd-ecourse-add-module">
-										<label for="edd-ecourse-module-name" class="screen-reader-text"><?php _e( 'Enter module name', 'edd-ecourse' ); ?></label>
-										<input type="text" id="edd-ecourse-module-name" placeholder="<?php esc_attr_e( 'Module name', 'edd-ecourse' ); ?>" required>
-										<button type="submit" class="button"><?php _e( 'Add Module', 'edd-ecourse' ); ?></button>
-									</form>
-								</div>
-							</div>
-
-						</div>
-					</div>
-
-				</div>
-			</div>
-		</div>
-
-		<?php wp_nonce_field( 'edd_update_payment_details_nonce' ); ?>
-		<input type="hidden" name="edd_ecourses_course_id" value="<?php echo esc_attr( $course->id ); ?>">
-		<input type="hidden" name="edd_action" value="ecourse_update_course">
-	</form>
-	<?php
-
-}
-
-add_action( 'edd_ecourse_render_course_edit', 'edd_ecourse_render_course_edit' );
-
-/**
  * Render View E-Course Lesson List
  *
  * @since 1.0.0
  * @return void
  */
-function edd_ecourse_render_course_lesson_list() {
+function edd_ecourse_render_course_edit() {
 
 	if ( ! isset( $_GET['course'] ) ) {
 		wp_die( __( 'Missing course ID.', 'edd-ecourse' ) );
@@ -261,9 +125,47 @@ function edd_ecourse_render_course_lesson_list() {
 
 	<div id="poststuff">
 		<div id="edd-ecourse-dashboard-widgets-wrap">
-			<div id="post-body" class="metabox-holder columns-1">
+			<div id="post-body" class="metabox-holder columns-2">
+
+				<div id="post-body-content">
+					<div id="titlediv">
+						<div id="titlewrap">
+							<label class="screen-reader-text" for="title"><?php _e( 'Enter title here', 'edd-ecourse' ); ?></label>
+							<input type="text" name="course_title" id="title" size="30" value="<?php echo esc_attr( $course->title ); ?>" spellcheck="true" autocomplete="off">
+						</div>
+					</div>
+
+					<div id="postdivrich" class="postarea">
+						<?php // @todo tinymce description ?>
+					</div>
+				</div>
 
 				<div id="postbox-container-1" class="postbox-container">
+					<div id="side-sortables" class="meta-box-sortables ui-sortable">
+
+						<!-- Details -->
+						<div id="edd-ecourse-details" class="postbox">
+							<h3 class="hndle"><?php _e( 'Course Details', 'edd-ecourse' ); ?></h3>
+							<div class="inside">
+								<div class="edd-admin-box">
+									<div class="edd-admin-box-inside">
+										<p>
+											<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
+											<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
+											<input type="text" id="course-start-date" name="course_start_date" class="large-text" value="<?php echo esc_attr( $course->start_date ); ?>">
+										</p>
+										<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<?php // @todo maybe featured image ?>
+
+					</div>
+				</div>
+
+				<div id="postbox-container-2" class="postbox-container">
 					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 
 						<!-- Modules -->
@@ -309,4 +211,4 @@ function edd_ecourse_render_course_lesson_list() {
 
 }
 
-add_action( 'edd_ecourse_render_course_list', 'edd_ecourse_render_course_lesson_list' );
+add_action( 'edd_ecourse_render_course_edit', 'edd_ecourse_render_course_edit' );

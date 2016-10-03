@@ -38,14 +38,14 @@ function edd_ecourse_get_add_course_url() {
  * @since 1.0.0
  * @return string
  */
-function edd_ecourse_get_edit_course_url( $course_id = 0 ) {
+function edd_ecourse_get_manage_course_url( $course_id = 0 ) {
 	$url = add_query_arg( array(
 		'page'   => 'ecourses',
 		'view'   => 'edit',
 		'course' => absint( $course_id )
 	), admin_url( 'admin.php' ) );
 
-	return apply_filters( 'edd_ecourse_get_edit_course_url', $url );
+	return apply_filters( 'edd_ecourse_get_manage_course_url', $url );
 }
 
 /**
@@ -85,24 +85,4 @@ function edd_ecourse_get_add_lesson_url( $course_id = 0, $module_id = 0 ) {
 	$url = add_query_arg( $args, admin_url( 'post-new.php' ) );
 
 	return apply_filters( 'edd_ecourse_get_add_lesson_url', $url );
-}
-
-/**
- * Get View Lessons URL
- *
- * Returns the URL to the page that lists all the lessons in an e-course.
- *
- * @param int $course_id
- *
- * @since 1.0.0
- * @return string
- */
-function edd_ecourse_get_view_lessons_url( $course_id = 0 ) {
-	$url = add_query_arg( array(
-		'page'   => 'ecourses',
-		'view'   => 'list',
-		'course' => $course_id
-	), admin_url( 'admin.php' ) );
-
-	return apply_filters( 'edd_ecourse_get_add_course_url', $url );
 }

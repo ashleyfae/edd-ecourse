@@ -44,8 +44,7 @@ function edd_ecourse_add_course_cb() {
 	$data = array(
 		'ID'               => $course_id,
 		'name'             => $course_name,
-		'view_lessons_url' => edd_ecourse_get_view_lessons_url( $course_id ),
-		'edit_course_url'  => edd_ecourse_get_edit_course_url( $course_id ),
+		'edit_course_url'  => edd_ecourse_get_manage_course_url( $course_id ),
 		'nonce'            => wp_create_nonce( 'delete_course_' . $course_id )
 	);
 
@@ -196,7 +195,7 @@ function edd_ecourse_load_course_js_templates() {
 		include_once EDD_ECOURSE_DIR . 'includes/admin/courses/template-new-course.php';
 	}
 
-	if ( 'list' == $view ) {
+	if ( 'edit' == $view ) {
 		include_once EDD_ECOURSE_DIR . 'includes/admin/courses/template-new-module.php';
 	}
 }
