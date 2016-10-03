@@ -229,8 +229,6 @@ jQuery(document).ready(function ($) {
                         dataType: "json",
                         success: function (response) {
 
-                            console.log(response);
-
                             $('.edd-ecourse-cancel-edit-course-title, .edd-ecourse-submit-edit-course-title').remove();
                             editButton.show();
 
@@ -343,6 +341,7 @@ jQuery(document).ready(function ($) {
 
                 var editButton = $(this);
                 var wrap = $(this).parents('.edd-ecourse-module-group');
+                var addLessonButton = wrap.find('.edd-ecourse-add-module-lesson');
                 var moduleID = wrap.data('module');
                 var moduleTitleWrap = wrap.find('.edd-ecourse-module-title');
                 var currentTitle = moduleTitleWrap.text();
@@ -357,6 +356,8 @@ jQuery(document).ready(function ($) {
 
                 // Hide edit button.
                 editButton.hide();
+                // Hide lesson button.
+                addLessonButton.hide();
 
                 // Add submit and cancel buttons.
                 editButton.after('<button href="#" class="button edd-ecourse-cancel-edit-module-title">' + edd_ecourse_vars.l10n.cancel + '</button>');
@@ -369,6 +370,7 @@ jQuery(document).ready(function ($) {
 
                     $('.edd-ecourse-cancel-edit-module-title, .edd-ecourse-submit-edit-module-title').remove();
                     editButton.show();
+                    addLessonButton.show();
 
                     moduleTitleWrap.html(currentTitle);
 
@@ -400,6 +402,7 @@ jQuery(document).ready(function ($) {
 
                             $('.edd-ecourse-cancel-edit-module-title, .edd-ecourse-submit-edit-module-title').remove();
                             editButton.show();
+                            addLessonButton.show();
 
                             moduleTitleWrap.html(data.title);
 
