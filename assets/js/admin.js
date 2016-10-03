@@ -152,6 +152,96 @@ jQuery(document).ready(function ($) {
 
     };
 
+    var EDD_ECourse_Module = {
+
+        init: function () {
+            this.editTitle();
+        },
+
+        /**
+         * Edit Module Title
+         */
+        editTitle: function () {
+
+            $('.edd-ecourse-edit-module-title').on('click', function (e) {
+
+                e.preventDefault();
+
+                var editButton = $(this);
+                var wrap = $(this).parents('.edd-ecourse-module-group');
+                var moduleID = wrap.data('module');
+                var moduleTitleWrap = wrap.find('.edd-ecourse-module-title');
+                var currentTitle = moduleTitleWrap.text();
+
+                wrap.addClass('edd-ecourse-is-editing');
+
+                // Turn the title into an input box.
+                moduleTitleWrap.html('<input type="text" value="' + currentTitle + '">');
+
+                // Hide edit button.
+                editButton.hide();
+
+                // Add submit and cancel buttons.
+                editButton.after('<button href="#" class="button edd-ecourse-cancel-edit-module-title">' + edd_ecourse_vars.l10n.cancel + '</button>');
+                editButton.after('<button href="#" class="button button-primary edd-ecourse-submit-edit-module-title">' + edd_ecourse_vars.l10n.save + '</button>');
+
+                /** Cancel Edit **/
+                wrap.on('click', '.edd-ecourse-cancel-edit-module-title', function (e) {
+
+                    e.preventDefault();
+
+                    $('.edd-ecourse-cancel-edit-module-title, .edd-ecourse-submit-edit-module-title').remove();
+                    editButton.show();
+
+                    moduleTitleWrap.html(currentTitle);
+
+                    wrap.removeClass('edd-ecourse-is-editing');
+
+                });
+
+                /** Save Edit **/
+                wrap.on('click', '.edd-ecourse-submit-edit-module-title', function (e) {
+
+                    $(this).attr('disabled', true);
+
+                    var data = {
+                        action: 'edd_ecourse_update_module_title',
+                        module: moduleID,
+                        title: wrap.find('input').val()
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: ajaxurl,
+                        data: data,
+                        dataType: "json",
+                        success: function (response) {
+
+                            console.log(response);
+
+                            $('.edd-ecourse-cancel-edit-module-title, .edd-ecourse-submit-edit-module-title').remove();
+                            editButton.show();
+
+                            moduleTitleWrap.html(data.title);
+
+                            wrap.removeClass('edd-ecourse-is-editing');
+
+                        }
+                    }).fail(function (response) {
+                        if (window.console && window.console.log) {
+                            console.log(response);
+                        }
+                    });
+
+                });
+
+            });
+
+        }
+
+    };
+
     EDD_ECourse.init();
+    EDD_ECourse_Module.init();
 
 });

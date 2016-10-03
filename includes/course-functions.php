@@ -114,6 +114,10 @@ function edd_ecourse_get_course_modules( $course_id, $args = array() ) {
 
 	$modules = edd_ecourse_load()->modules->get_modules( $args );
 
+	if ( ! is_array( $modules ) || ! count( $modules ) ) {
+		$modules = false;
+	}
+
 	return apply_filters( 'edd_ecourse_get_course_modules', $modules, $course_id, $args );
 
 }

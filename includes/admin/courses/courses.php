@@ -253,13 +253,6 @@ function edd_ecourse_render_course_lesson_list() {
 	}
 
 	$modules = edd_ecourse_get_course_modules( $course->id );
-
-	// @todo remove these
-	/*$modules = array(
-		'Introduction',
-		'Design',
-		'Marketing'
-	);*/
 	?>
 	<h1>
 		<?php printf( __( 'Lessons: %s', 'edd-ecourse' ), esc_html( $course->title ) ); ?>
@@ -277,8 +270,11 @@ function edd_ecourse_render_course_lesson_list() {
 						<?php if ( is_array( $modules ) ) : ?>
 
 							<?php foreach ( $modules as $module ) : ?>
-								<div class="postbox edd-ecourse-module-group">
-									<h3 class="hndle"><?php echo esc_html( $module->title ); ?></h3>
+								<div class="postbox edd-ecourse-module-group" data-module="<?php echo esc_attr( $module->id ); ?>">
+									<h3 class="hndle">
+										<span class="edd-ecourse-module-title"><?php echo esc_html( $module->title ); ?></span>
+										<button class="button edd-ecourse-edit-module-title"><?php _e('Edit', 'edd-ecourse'); ?></button>
+									</h3>
 									<div class="inside">
 
 										<!-- lessons here -->
@@ -287,16 +283,18 @@ function edd_ecourse_render_course_lesson_list() {
 								</div>
 							<?php endforeach; ?>
 
-						<?php else : ?>
-
-							<div id="edd-ecourse-add-first-module" class="postbox">
-								<h3 class="hndle"><?php _e( 'Add Your First Module', 'edd-ecourse' ) ?></h3>
-								<div class="inside">
-									<p><?php _e( 'Your first step is to create' ); ?></p>
-								</div>
-							</div>
-
 						<?php endif; ?>
+
+						<div class="postbox edd-ecourse-add-module">
+							<h3 class="hndle"><?php _e( 'Add Module', 'edd-ecourse' ) ?></h3>
+							<div class="inside">
+								<form class="edd-ecourse-add-module-form" method="POST">
+									<label for="edd-ecourse-module-name" class="screen-reader-text"><?php _e( 'Enter module name', 'edd-ecourse' ); ?></label>
+									<input type="text" id="edd-ecourse-module-name" placeholder="<?php esc_attr_e( 'Module name', 'edd-ecourse' ); ?>" required>
+									<button type="submit" class="button"><?php _e( 'Add Module', 'edd-ecourse' ); ?></button>
+								</form>
+							</div>
+						</div>
 
 					</div>
 				</div>

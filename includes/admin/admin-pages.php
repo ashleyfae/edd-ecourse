@@ -30,6 +30,22 @@ function edd_ecourse_is_admin_page() {
 	return apply_filters( 'edd_ecourse_is_admin_page', $is_admin_page, $screen );
 }
 
+/**
+ * Filter EDD's Admin Page Function
+ *
+ * Load the Easy Digital Downloads files on a few of our own pages.
+ *
+ * @todo  Check this - I may not need it.
+ *
+ * @param $is_admin_page
+ * @param $page
+ * @param $view
+ * @param $passed_page
+ * @param $passed_view
+ *
+ * @since 1.0.0
+ * @return bool
+ */
 function edd_ecourse_filter_edd_is_admin_page( $is_admin_page, $page, $view, $passed_page, $passed_view ) {
 	return edd_ecourse_is_edit_course_page() ? true : $is_admin_page;
 }
@@ -71,7 +87,9 @@ function edd_ecourse_admin_scripts( $hook ) {
 
 		$settings = array(
 			'l10n' => array(
-				'confirm_delete_course' => __( 'Are you sure you want to delete this e-course and all associated lessons? This cannot be undone.', 'edd-ecourse' )
+				'cancel'                => __( 'Cancel', 'edd-ecourse' ),
+				'confirm_delete_course' => __( 'Are you sure you want to delete this e-course and all associated lessons? This cannot be undone.', 'edd-ecourse' ),
+				'save'                  => __( 'Save', 'edd-ecourse' ),
 			)
 		);
 

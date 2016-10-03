@@ -73,7 +73,7 @@ function edd_ecourse_delete_course() {
 	check_ajax_referer( 'delete_course_' . $course_id, 'nonce' );
 
 	// Permission check.
-	if ( ! current_user_can( 'manage_options', $course_id ) ) { // @todo change this
+	if ( ! current_user_can( 'manage_options' ) ) { // @todo change this
 		wp_die( __( 'You don\'t have permission to delete this course.', 'edd-ecourse' ) );
 	}
 
@@ -102,6 +102,33 @@ function edd_ecourse_delete_course() {
 }
 
 add_action( 'wp_ajax_edd_ecourse_delete_course', 'edd_ecourse_delete_course' );
+
+function edd_ecourse_update_module_title() {
+
+	// Permission check.
+	if ( ! current_user_can( 'manage_options' ) ) { // @todo change this
+		wp_die( __( 'You don\'t have permission to delete this module.', 'edd-ecourse' ) );
+	}
+
+	$module_id = $_POST['module'];
+
+	if ( ! is_numeric( $module_id ) || $module_id < 1 ) {
+		wp_die( __( 'Error: Not a valid module.', 'edd-ecourse' ) );
+	}
+
+	$module_id = absint( $module_id );
+
+	$result = edd_ecourse_load()->modules->update( $module_id, array( 'title' => sanitize_text_field( $_POST['title'] ) ) );
+
+	if ( false === $result ) {
+		wp_die( __( 'An unexpected error occurred while trying to update this module.', 'edd-ecourse' ) );
+	}
+
+	wp_send_json_success();
+
+}
+
+add_action( 'wp_ajax_edd_ecourse_update_module_title', 'edd_ecourse_update_module_title' );
 
 /**
  * Load Underscore.js Course Template
