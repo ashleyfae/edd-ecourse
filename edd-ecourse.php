@@ -278,6 +278,8 @@ register_activation_hook( __FILE__, 'edd_ecourse_activation' );
  * activated before EDD is. Then we need to run the activation again once
  * EDD is finally activated.
  *
+ * @todo Actually test this edge case.
+ *
  * @uses  edd_ecourse_activation()
  *
  * @param $plugin
