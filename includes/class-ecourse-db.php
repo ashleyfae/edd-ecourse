@@ -117,7 +117,7 @@ class EDD_eCourse_DB extends EDD_DB {
 	 *
 	 * @access public
 	 * @since  1.0.0
-	 * @return bool|false|int
+	 * @return int|false The number of courses deleted, or false on error.
 	 */
 	public function delete( $id = false ) {
 
@@ -237,7 +237,7 @@ class EDD_eCourse_DB extends EDD_DB {
 		global $wpdb;
 
 		$defaults = array(
-			'number'  => 20,
+			'number'  => - 1,
 			'offset'  => 0,
 			'orderby' => 'title',
 			'order'   => 'ASC'

@@ -30,9 +30,28 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 
 		/**
 		 * @var EDD_eCourse $instance The one true EDD_eCourse
-		 * @since 1.0.0
+		 * @access private
+		 * @since  1.0.0
 		 */
 		private static $instance;
+
+		/**
+		 * E-Course DB Object
+		 *
+		 * @var EDD_eCourse_DB
+		 * @access public
+		 * @since  1.0.0
+		 */
+		public $courses;
+
+		/**
+		 * Modules DB Object
+		 *
+		 * @var EDD_eCourse_Modules_DB
+		 * @access public
+		 * @since  1.0.0
+		 */
+		public $modules;
 
 
 		/**
@@ -49,6 +68,9 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 				self::$instance->includes();
 				self::$instance->load_textdomain();
 				self::$instance->hooks();
+
+				self::$instance->courses = new EDD_eCourse_DB;
+				self::$instance->modules = new EDD_eCourse_Modules_DB;
 			}
 
 			return self::$instance;
@@ -84,6 +106,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		private function includes() {
 			// Include scripts
 			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db.php';
+			require_once EDD_ECOURSE_DIR . 'includes/class-modules-db.php';
 			require_once EDD_ECOURSE_DIR . 'includes/scripts.php';
 			require_once EDD_ECOURSE_DIR . 'includes/functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/course-functions.php';
@@ -225,6 +248,23 @@ function edd_ecourse_activation() {
 
 	// Insert demo content.
 	//edd_ecourse_insert_demo_course();
+
+	// Only add DB tables if EDD_DB class exists.
+	if ( class_exists( 'EDD_DB' ) ) {
+		if ( ! class_exists( 'EDD_eCourse_DB' ) ) {
+			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db.php';
+		}
+
+		$db = new EDD_eCourse_DB();
+		@$db->create_table();
+
+		if ( ! class_exists( 'EDD_eCourse_Modules_DB' ) ) {
+			require_once EDD_ECOURSE_DIR . 'includes/class-modules-db.php';
+		}
+
+		$db = new EDD_eCourse_Modules_DB();
+		@$db->create_table();
+	}
 
 	// Flush rewrite rules.
 	flush_rewrite_rules( false );

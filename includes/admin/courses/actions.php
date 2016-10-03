@@ -35,20 +35,22 @@ function edd_ecourse_add_course() {
 		wp_die( __( 'A course name is required.', 'edd-ecourse' ) );
 	}
 
-	$term = wp_insert_term( $course_name, 'ecourse' );
+	$course_id = edd_ecourse_load()->courses->add( array(
+		'title' => $course_name
+	) );
 
-	if ( is_wp_error( $term ) || ! is_array( $term ) ) {
+	if ( false === $course_id ) {
 		wp_die( __( 'An error occurred while creating the e-course.', 'edd-ecourse' ) );
 	}
 
 	// Add
 
 	$data = array(
-		'ID'               => $term['term_id'],
+		'ID'               => $course_id,
 		'name'             => $course_name,
-		'view_lessons_url' => edd_ecourse_get_view_lessons_url( $term['term_id'] ),
-		'edit_course_url'  => edd_ecourse_get_edit_course_url( $term['term_id'] ),
-		'nonce'            => wp_create_nonce( 'delete_course_' . $term['term_id'] )
+		'view_lessons_url' => edd_ecourse_get_view_lessons_url( $course_id ),
+		'edit_course_url'  => edd_ecourse_get_edit_course_url( $course_id ),
+		'nonce'            => wp_create_nonce( 'delete_course_' . $course_id )
 	);
 
 	wp_send_json_success( apply_filters( 'edd_ecourse_add_course_data', $data ) );
@@ -59,8 +61,6 @@ add_action( 'wp_ajax_edd_ecourse_add_course', 'edd_ecourse_add_course' );
 
 /**
  * Delete E-Course
- *
- * @todo use edd_ecourse_delete() instead
  *
  * @since 1.0.0
  * @return void
@@ -77,9 +77,7 @@ function edd_ecourse_delete_course() {
 		wp_die( __( 'You don\'t have permission to delete this course.', 'edd-ecourse' ) );
 	}
 
-	$course = get_term( $course_id, 'ecourse' );
-
-	if ( ! $course || is_wp_error( $course ) || ! is_object( $course ) ) {
+	if ( ! is_numeric( $course_id ) || $course_id < 1 ) {
 		wp_die( __( 'Error: Not a valid e-course.', 'edd-ecourse' ) );
 	}
 
@@ -92,8 +90,12 @@ function edd_ecourse_delete_course() {
 		}
 	}
 
-	// Now delete the term itself.
-	wp_delete_term( $course_id, 'ecourse' );
+	// Now delete the course itself.
+	$result = edd_ecourse_delete( $course_id );
+
+	if ( false === $result ) {
+		wp_die( __( 'There was a problem deleting the course.', 'edd-ecourse' ) );
+	}
 
 	wp_send_json_success();
 

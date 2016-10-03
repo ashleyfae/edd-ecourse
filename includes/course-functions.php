@@ -29,9 +29,11 @@ function edd_ecourse_insert_demo_course() {
 	}
 
 	// Insert e-course.
-	$course = wp_insert_term( __( 'My First Course', 'edd-ecourse' ), 'ecourse' );
+	$course_id = edd_ecourse_load()->courses->add( array(
+		'title' => esc_html__( 'My First Course', 'edd-ecourse' )
+	) );
 
-	if ( is_wp_error( $course ) ) {
+	if ( ! $course_id ) {
 		return false;
 	}
 
@@ -41,7 +43,7 @@ function edd_ecourse_insert_demo_course() {
 		'post_status'  => 'publish',
 		'post_type'    => 'ecourse_lesson',
 		'tax_input'    => array(
-			'ecourse' => array( $course['term_id'] )
+			'ecourse' => array( intval( $course_id ) )
 		)
 	);
 
@@ -56,23 +58,34 @@ function edd_ecourse_insert_demo_course() {
 }
 
 /**
+ * Get Course by ID
+ *
+ * @param int $course_id
+ *
+ * @since 1.0.0
+ * @return object|false Course object or false on failure.
+ */
+function edd_ecourse_get_course( $course_id ) {
+	return edd_ecourse_load()->courses->get_course_by( 'id', $course_id );
+}
+
+/**
  * Get E-Courses
  *
  * @param array $args
  *
  * @since 1.0.0
- * @return array|false Array of WP_Term objects or false if none exist.
+ * @return array|false Array of course objects or false if none exist.
  */
 function edd_ecourse_get_courses( $args = array() ) {
 
 	$defaults = array(
-		'hide_empty' => false,
-		'taxonomy'   => 'ecourse'
+		'number' => - 1
 	);
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$courses = get_terms( $args );
+	$courses = edd_ecourse_load()->courses->get_courses( $args );
 
 	if ( ! is_array( $courses ) ) {
 		return false;
@@ -88,13 +101,20 @@ function edd_ecourse_get_courses( $args = array() ) {
  * @param int $course_id ID of the course.
  *
  * @since 1.0.0
- * @return string
+ * @return array|false Array of module objects or false on failure.
  */
-function edd_ecourse_get_course_modules( $course_id ) {
+function edd_ecourse_get_course_modules( $course_id, $args = array() ) {
 
-	$modules = get_term_meta( $course_id, 'course_modules', true );
+	$defaults = array(
+		'course' => $course_id,
+		'number' => - 1
+	);
 
-	return apply_filters( 'edd_ecourse_get_course_modules', $modules, $course_id );
+	$args = wp_parse_args( $args, $defaults );
+
+	$modules = edd_ecourse_load()->modules->get_modules( $args );
+
+	return apply_filters( 'edd_ecourse_get_course_modules', $modules, $course_id, $args );
 
 }
 
@@ -135,8 +155,8 @@ function edd_ecourse_get_course_lessons( $course_id, $query_args = array() ) {
  * @param int $course_id ID of the course to delete.
  *
  * @since 1.0.0
- * @return bool Whether or not the deletion was successful.
+ * @return int|false The number of courses deleted, or false on error.
  */
 function edd_ecourse_delete( $course_id ) {
-	// @todo
+	return edd_ecourse_load()->courses->delete( $course_id );
 }

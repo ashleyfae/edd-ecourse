@@ -149,4 +149,4 @@ function edd_ecourse_register_taxonomy() {
 
 }
 
-add_action( 'init', 'edd_ecourse_register_taxonomy' );
+//add_action( 'init', 'edd_ecourse_register_taxonomy' );

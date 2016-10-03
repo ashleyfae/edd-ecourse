@@ -68,20 +68,20 @@ function edd_ecourse_render_course_overview() {
 			foreach ( $courses as $course ) {
 
 				?>
-				<div class="edd-ecourse" data-course-id="<?php echo esc_attr( $course->term_id ); ?>">
+				<div class="edd-ecourse" data-course-id="<?php echo esc_attr( $course->id ); ?>">
 					<div class="edd-ecourse-inner">
-						<h2><?php echo esc_html( $course->name ); ?></h2>
+						<h2><?php echo esc_html( $course->title ); ?></h2>
 
 						<div class="edd-ecourse-actions">
-							<a href="<?php echo esc_url( edd_ecourse_get_view_lessons_url( $course->term_id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-lessons" title="<?php esc_attr_e( 'View Lessons', 'edd-ecourse' ); ?>">
+							<a href="<?php echo esc_url( edd_ecourse_get_view_lessons_url( $course->id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-lessons" title="<?php esc_attr_e( 'View Lessons', 'edd-ecourse' ); ?>">
 								<span class="dashicons dashicons-list-view"></span>
 							</a>
 
-							<a href="<?php echo esc_url( edd_ecourse_get_edit_course_url( $course->term_id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Edit Course', 'edd-ecourse' ); ?>">
+							<a href="<?php echo esc_url( edd_ecourse_get_edit_course_url( $course->id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Edit Course', 'edd-ecourse' ); ?>">
 								<span class="dashicons dashicons-edit"></span>
 							</a>
 
-							<button href="#" class="button edd-ecourse-tip edd-ecourse-action-delete" title="<?php esc_attr_e( 'Delete Course', 'edd-ecourse' ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'delete_course_' . $course->term_id ) ); ?>">
+							<button href="#" class="button edd-ecourse-tip edd-ecourse-action-delete" title="<?php esc_attr_e( 'Delete Course', 'edd-ecourse' ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'delete_course_' . $course->id ) ); ?>">
 								<span class="dashicons dashicons-trash"></span>
 							</button>
 						</div>
@@ -114,15 +114,15 @@ function edd_ecourse_render_course_edit() {
 		wp_die( __( 'Missing course ID.', 'edd-ecourse' ) );
 	}
 
-	$course = get_term( absint( $_GET['course'] ), 'ecourse' );
+	$course = edd_ecourse_get_course( absint( $_GET['course'] ) );
 
-	if ( is_wp_error( $course ) ) {
+	if ( ! $course ) {
 		wp_die( __( 'Invalid course ID.', 'edd-ecourse' ) );
 	}
 
 	?>
 	<h1>
-		<?php printf( __( 'Edit %s', 'edd-ecourse' ), esc_html( $course->name ) ); ?>
+		<?php printf( __( 'Edit %s', 'edd-ecourse' ), esc_html( $course->title ) ); ?>
 	</h1>
 
 	<form id="edd-ecourse-edit-course" method="POST">
@@ -134,7 +134,7 @@ function edd_ecourse_render_course_edit() {
 						<div id="titlediv">
 							<div id="titlewrap">
 								<label class="screen-reader-text" for="title"><?php _e( 'Enter title here', 'edd-ecourse' ); ?></label>
-								<input type="text" name="course_title" id="title" size="30" value="<?php echo esc_attr( $course->name ); ?>" spellcheck="true" autocomplete="off">
+								<input type="text" name="course_title" id="title" size="30" value="<?php echo esc_attr( $course->title ); ?>" spellcheck="true" autocomplete="off">
 							</div>
 						</div>
 
@@ -163,7 +163,7 @@ function edd_ecourse_render_course_edit() {
 											<p>
 												<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
 												<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
-												<input type="text" id="course-start-date" name="course_start_date" class="large-text">
+												<input type="text" id="course-start-date" name="course_start_date" class="large-text" value="<?php echo esc_attr( $course->start_date ); ?>">
 											</p>
 											<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
 										</div>
@@ -184,7 +184,7 @@ function edd_ecourse_render_course_edit() {
 								<h3 class="hndle"><?php _e( 'Modules', 'edd-ecourse' ); ?></h3>
 								<div class="inside">
 									<?php
-									$modules = edd_ecourse_get_course_modules( $course->term_id );
+									$modules = edd_ecourse_get_course_modules( $course->id );
 
 									// @todo remove these
 									$modules = array(
@@ -197,10 +197,10 @@ function edd_ecourse_render_course_edit() {
 									<ul id="edd-ecourse-module-list">
 										<?php
 										if ( is_array( $modules ) ) {
-											foreach ( $modules as $name ) {
+											foreach ( $modules as $module ) {
 												?>
-												<li data-module-name="<?php echo esc_attr( $name ); ?>">
-													<?php echo esc_html( $name ); ?>
+												<li data-module-id="<?php echo esc_attr( $module->id ); ?>">
+													<?php echo esc_html( $module->name ); ?>
 													<span class="dashicons dashicons-trash delete-module"></span>
 												</li>
 												<?php
@@ -225,7 +225,7 @@ function edd_ecourse_render_course_edit() {
 		</div>
 
 		<?php wp_nonce_field( 'edd_update_payment_details_nonce' ); ?>
-		<input type="hidden" name="edd_ecourses_course_id" value="<?php echo esc_attr( $course->term_id ); ?>">
+		<input type="hidden" name="edd_ecourses_course_id" value="<?php echo esc_attr( $course->id ); ?>">
 		<input type="hidden" name="edd_action" value="ecourse_update_course">
 	</form>
 	<?php
@@ -246,13 +246,13 @@ function edd_ecourse_render_course_lesson_list() {
 		wp_die( __( 'Missing course ID.', 'edd-ecourse' ) );
 	}
 
-	$course = get_term( absint( $_GET['course'] ), 'ecourse' );
+	$course = edd_ecourse_get_course( absint( $_GET['course'] ) );
 
-	if ( is_wp_error( $course ) ) {
+	if ( ! $course ) {
 		wp_die( __( 'Invalid course ID.', 'edd-ecourse' ) );
 	}
 
-	$modules = edd_ecourse_get_course_modules( $course->term_id );
+	$modules = edd_ecourse_get_course_modules( $course->id );
 
 	// @todo remove these
 	/*$modules = array(
@@ -262,8 +262,8 @@ function edd_ecourse_render_course_lesson_list() {
 	);*/
 	?>
 	<h1>
-		<?php printf( __( 'Lessons: %s', 'edd-ecourse' ), esc_html( $course->name ) ); ?>
-		<a href="<?php echo esc_url( edd_ecourse_get_add_lesson_url( $course->term_id ) ); ?>" class="page-title-action"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
+		<?php printf( __( 'Lessons: %s', 'edd-ecourse' ), esc_html( $course->title ) ); ?>
+		<a href="<?php echo esc_url( edd_ecourse_get_add_lesson_url( $course->id ) ); ?>" class="page-title-action"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
 	</h1>
 
 	<div id="poststuff">
@@ -276,9 +276,9 @@ function edd_ecourse_render_course_lesson_list() {
 						<!-- Modules -->
 						<?php if ( is_array( $modules ) ) : ?>
 
-							<?php foreach ( $modules as $key => $name ) : ?>
+							<?php foreach ( $modules as $module ) : ?>
 								<div class="postbox edd-ecourse-module-group">
-									<h3 class="hndle"><?php echo esc_html( $name ); ?></h3>
+									<h3 class="hndle"><?php echo esc_html( $module->title ); ?></h3>
 									<div class="inside">
 
 										<!-- lessons here -->
@@ -292,7 +292,7 @@ function edd_ecourse_render_course_lesson_list() {
 							<div id="edd-ecourse-add-first-module" class="postbox">
 								<h3 class="hndle"><?php _e( 'Add Your First Module', 'edd-ecourse' ) ?></h3>
 								<div class="inside">
-									<p><?php _e('Your first step is to create'); ?></p>
+									<p><?php _e( 'Your first step is to create' ); ?></p>
 								</div>
 							</div>
 
