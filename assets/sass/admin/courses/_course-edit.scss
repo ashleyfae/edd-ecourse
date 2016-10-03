@@ -15,6 +15,22 @@
 
 .edd-ecourse-module-group {
     .hndle {
+        padding-left: 34px !important;
+        position: relative;
+
+        &:before {
+            color: rgba(0, 0, 0, 0.2);
+            content: '\f545';
+            display: inline-block;
+            font: {
+                family: Dashicons;
+                size: 16px;
+            }
+            position: absolute;
+            top: 11px;
+            left: 12px;
+        }
+
         span {
             display: inline-block;
         }

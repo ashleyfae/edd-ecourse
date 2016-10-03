@@ -201,17 +201,3 @@ function edd_ecourse_load_course_js_templates() {
 }
 
 add_action( 'admin_footer', 'edd_ecourse_load_course_js_templates' );
-
-/**
- * Update Course Details
- *
- * @todo
- *
- * @since 1.0.0
- * @return void
- */
-function edd_ecourse_update_course() {
-
-}
-
-add_action( 'edd_ecourse_update_course', 'edd_ecourse_update_course' );
