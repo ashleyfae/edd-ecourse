@@ -23,6 +23,12 @@
         > .edd-ecourse {
             flex-grow: 1;
             flex-basis: auto;
+            max-width: 50%;
+        }
+    }
+
+    @media (min-width: 992px) {
+        > .edd-ecourse {
             max-width: 33.3%;
         }
     }
