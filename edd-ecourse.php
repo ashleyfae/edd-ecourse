@@ -83,6 +83,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 */
 		private function includes() {
 			// Include scripts
+			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db.php';
 			require_once EDD_ECOURSE_DIR . 'includes/scripts.php';
 			require_once EDD_ECOURSE_DIR . 'includes/functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/course-functions.php';
@@ -223,7 +224,7 @@ function edd_ecourse_activation() {
 	edd_ecourse_register_taxonomy();
 
 	// Insert demo content.
-	edd_ecourse_insert_demo_course();
+	//edd_ecourse_insert_demo_course();
 
 	// Flush rewrite rules.
 	flush_rewrite_rules( false );
@@ -231,3 +232,28 @@ function edd_ecourse_activation() {
 }
 
 register_activation_hook( __FILE__, 'edd_ecourse_activation' );
+
+/**
+ * On EDD Activation
+ *
+ * This function exists because some of the installation functions use
+ * EDD functions/classes. This is to catch an edge case if this plugin is
+ * activated before EDD is. Then we need to run the activation again once
+ * EDD is finally activated.
+ *
+ * @uses  edd_ecourse_activation()
+ *
+ * @param $plugin
+ * @param $network_activation
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_on_edd_activation( $plugin, $network_activation ) {
+	// @todo check if plugin is EDD
+	if ( $plugin ) {
+		edd_ecourse_activation();
+	}
+}
+
+add_action( 'activated_plugin', 'edd_ecourse_on_edd_activation', 10, 2 );

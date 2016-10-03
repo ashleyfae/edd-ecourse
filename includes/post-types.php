@@ -75,7 +75,8 @@ add_action( 'init', 'edd_ecourse_post_type' );
  */
 function edd_ecourse_register_taxonomy() {
 
-	$labels = array(
+	/* E-Course Taxonomy */
+	$course_labels = array(
 		'name'                       => _x( 'Courses', 'Taxonomy General Name', 'edd-ecourse' ),
 		'singular_name'              => _x( 'Course', 'Taxonomy Singular Name', 'edd-ecourse' ),
 		'menu_name'                  => __( 'Manage Courses', 'edd-ecourse' ),
@@ -93,13 +94,13 @@ function edd_ecourse_register_taxonomy() {
 		'not_found'                  => __( 'Not Found', 'edd-ecourse' ),
 	);
 
-	$args = array(
-		'labels'            => $labels,
+	$course_args = array(
+		'labels'            => $course_labels,
 		'hierarchical'      => false,
 		'public'            => true,
-		'show_ui'           => true,
+		'show_ui'           => false,
 		'show_admin_column' => true,
-		'show_in_nav_menus' => true,
+		'show_in_nav_menus' => false,
 		'show_tagcloud'     => false,
 		'rewrite'           => array(
 			'slug'         => 'courses',
@@ -110,7 +111,41 @@ function edd_ecourse_register_taxonomy() {
 		'meta_box_cb'       => false
 	);
 
-	register_taxonomy( 'ecourse', array( 'ecourse_lesson' ), apply_filters( 'edd_ecourse_taxonomy_args', $args ) );
+	register_taxonomy( 'ecourse', array( 'ecourse_lesson' ), apply_filters( 'edd_ecourse_taxonomy_args', $course_args ) );
+
+	/* Module Taxonomy */
+	$module_labels = array(
+		'name'                       => _x( 'Modules', 'Taxonomy General Name', 'edd-ecourse' ),
+		'singular_name'              => _x( 'Module', 'Taxonomy Singular Name', 'edd-ecourse' ),
+		'menu_name'                  => __( 'Manage Modules', 'edd-ecourse' ),
+		'all_items'                  => __( 'All Modules', 'edd-ecourse' ),
+		'parent_item'                => __( 'Parent Module', 'edd-ecourse' ),
+		'parent_item_colon'          => __( 'Parent Module:', 'edd-ecourse' ),
+		'new_item_name'              => __( 'New Module Name', 'edd-ecourse' ),
+		'add_new_item'               => __( 'Add New Module', 'edd-ecourse' ),
+		'edit_item'                  => __( 'Edit Module', 'edd-ecourse' ),
+		'update_item'                => __( 'Update Module', 'edd-ecourse' ),
+		'separate_items_with_commas' => __( 'Separate modules with commas', 'edd-ecourse' ),
+		'search_items'               => __( 'Search Modules', 'edd-ecourse' ),
+		'add_or_remove_items'        => __( 'Add or remove modules', 'edd-ecourse' ),
+		'choose_from_most_used'      => __( 'Choose from the most used modules', 'edd-ecourse' ),
+		'not_found'                  => __( 'Not Found', 'edd-ecourse' ),
+	);
+
+	$module_args = array(
+		'labels'            => $module_labels,
+		'hierarchical'      => false,
+		'public'            => true,
+		'show_ui'           => false,
+		'show_admin_column' => true,
+		'show_in_nav_menus' => false,
+		'show_tagcloud'     => false,
+		'rewrite'           => false,
+		'has_archive'       => false,
+		'meta_box_cb'       => false
+	);
+
+	register_taxonomy( 'ecourse_module', array(), apply_filters( 'edd_ecourse_module_taxonomy_args', $module_args ) );
 
 }
 

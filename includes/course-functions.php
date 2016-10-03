@@ -128,3 +128,15 @@ function edd_ecourse_get_course_lessons( $course_id, $query_args = array() ) {
 	return $lessons;
 
 }
+
+/**
+ * Delete E-Course
+ *
+ * @param int $course_id ID of the course to delete.
+ *
+ * @since 1.0.0
+ * @return bool Whether or not the deletion was successful.
+ */
+function edd_ecourse_delete( $course_id ) {
+	// @todo
+}

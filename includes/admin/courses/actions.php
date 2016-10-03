@@ -41,6 +41,8 @@ function edd_ecourse_add_course() {
 		wp_die( __( 'An error occurred while creating the e-course.', 'edd-ecourse' ) );
 	}
 
+	// Add
+
 	$data = array(
 		'ID'               => $term['term_id'],
 		'name'             => $course_name,
@@ -57,6 +59,8 @@ add_action( 'wp_ajax_edd_ecourse_add_course', 'edd_ecourse_add_course' );
 
 /**
  * Delete E-Course
+ *
+ * @todo use edd_ecourse_delete() instead
  *
  * @since 1.0.0
  * @return void
@@ -97,6 +101,12 @@ function edd_ecourse_delete_course() {
 
 add_action( 'wp_ajax_edd_ecourse_delete_course', 'edd_ecourse_delete_course' );
 
+/**
+ * Load Underscore.js Course Template
+ *
+ * @since 1.0.0
+ * @return void
+ */
 function edd_ecourse_load_course_js_templates() {
 	if ( ! isset( $_GET['page'] ) || 'ecourses' != $_GET['page'] ) {
 		return;
@@ -110,3 +120,17 @@ function edd_ecourse_load_course_js_templates() {
 }
 
 add_action( 'admin_footer', 'edd_ecourse_load_course_js_templates' );
+
+/**
+ * Update Course Details
+ *
+ * @todo
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_update_course() {
+
+}
+
+add_action( 'edd_ecourse_update_course', 'edd_ecourse_update_course' );

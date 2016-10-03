@@ -223,6 +223,10 @@ function edd_ecourse_render_course_edit() {
 				</div>
 			</div>
 		</div>
+
+		<?php wp_nonce_field( 'edd_update_payment_details_nonce' ); ?>
+		<input type="hidden" name="edd_ecourses_course_id" value="<?php echo esc_attr( $course->term_id ); ?>">
+		<input type="hidden" name="edd_action" value="ecourse_update_course">
 	</form>
 	<?php
 
@@ -248,11 +252,58 @@ function edd_ecourse_render_course_lesson_list() {
 		wp_die( __( 'Invalid course ID.', 'edd-ecourse' ) );
 	}
 
+	$modules = edd_ecourse_get_course_modules( $course->term_id );
+
+	// @todo remove these
+	/*$modules = array(
+		'Introduction',
+		'Design',
+		'Marketing'
+	);*/
 	?>
 	<h1>
 		<?php printf( __( 'Lessons: %s', 'edd-ecourse' ), esc_html( $course->name ) ); ?>
 		<a href="<?php echo esc_url( edd_ecourse_get_add_lesson_url( $course->term_id ) ); ?>" class="page-title-action"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
 	</h1>
+
+	<div id="poststuff">
+		<div id="edd-ecourse-dashboard-widgets-wrap">
+			<div id="post-body" class="metabox-holder columns-1">
+
+				<div id="postbox-container-1" class="postbox-container">
+					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
+
+						<!-- Modules -->
+						<?php if ( is_array( $modules ) ) : ?>
+
+							<?php foreach ( $modules as $key => $name ) : ?>
+								<div class="postbox edd-ecourse-module-group">
+									<h3 class="hndle"><?php echo esc_html( $name ); ?></h3>
+									<div class="inside">
+
+										<!-- lessons here -->
+
+									</div>
+								</div>
+							<?php endforeach; ?>
+
+						<?php else : ?>
+
+							<div id="edd-ecourse-add-first-module" class="postbox">
+								<h3 class="hndle"><?php _e( 'Add Your First Module', 'edd-ecourse' ) ?></h3>
+								<div class="inside">
+									<p><?php _e('Your first step is to create'); ?></p>
+								</div>
+							</div>
+
+						<?php endif; ?>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
 	<?php
 
 }
