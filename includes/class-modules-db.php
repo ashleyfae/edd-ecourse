@@ -1,9 +1,9 @@
 <?php
 
 /**
- * E-Course DB Class
+ * E-Course Modules DB Class
  *
- * For interacting with the e-course database table.
+ * For interacting with the modules database table.
  *
  * @package   edd-ecourse
  * @copyright Copyright (c) 2016, Ashley Gibson
@@ -17,14 +17,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class EDD_eCourse_DB
+ * Class EDD_eCourse_Modules_DB
  *
  * @since 1.0.0
  */
-class EDD_eCourse_DB extends EDD_DB {
+class EDD_eCourse_Modules_DB extends EDD_DB {
 
 	/**
-	 * EDD_eCourse_DB constructor.
+	 * EDD_eCourse_Modules_DB constructor.
 	 *
 	 * @access public
 	 * @since  1.0.0
@@ -34,7 +34,7 @@ class EDD_eCourse_DB extends EDD_DB {
 
 		global $wpdb;
 
-		$this->table_name  = $wpdb->prefix . 'edd_ecourses';
+		$this->table_name  = $wpdb->prefix . 'edd_ecourse_modules';
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
 
@@ -54,9 +54,8 @@ class EDD_eCourse_DB extends EDD_DB {
 			'id'          => '%d',
 			'title'       => '%s',
 			'description' => '%s',
-			'status'      => '%s',
-			'type'        => '%s',
-			'start_date'  => '%s'
+			'position'    => '%d',
+			'course'      => '%d'
 		);
 	}
 
@@ -71,14 +70,13 @@ class EDD_eCourse_DB extends EDD_DB {
 		return array(
 			'title'       => '',
 			'description' => '',
-			'status'      => '', // @todo `active` ?
-			'type'        => 'normal', // @todo hmm
-			'start_date'  => date( 'Y-m-d H:i:s' )
+			'position'    => 0,
+			'course'      => 0
 		);
 	}
 
 	/**
-	 * Add E-Course
+	 * Add Module
 	 *
 	 * @param array $data
 	 *
@@ -88,30 +86,34 @@ class EDD_eCourse_DB extends EDD_DB {
 	 */
 	public function add( $data = array() ) {
 
-		$defaults = array();
+		$defaults = array(
+			'position' => 0,
+			'course'   => 0
+		);
 
 		$args = wp_parse_args( $data, $defaults );
 
-		if ( empty( $args['title'] ) ) {
+		if ( empty( $args['title'] ) || empty( $args['course'] ) || $args['course'] < 1 ) {
 			return false;
 		}
 
-		$course = $this->get_course_by( 'id', $args['id'] );
+		$module = $this->get_module_by( 'id', $args['id'] );
 
-		if ( $course ) {
-			$this->update( $course->id, $args );
+		if ( $module ) {
+			$this->update( $module->id, $args );
 
-			return $course->id;
+			return $module->id;
 		}
 
-		return $this->insert( $data, 'ecourse' );
+		return $this->insert( $data, 'ecourse_module' );
 
 	}
 
 	/**
-	 * Delete Course by ID
+	 * Delete Module by ID
 	 *
-	 * NOTE: This should not be called directly. Use edd_ecourse_delete() instead.
+	 * NOTE: This should not be called directly. Use edd_ecourse_delete_module() instead.
+	 * @todo   create edd_ecourse_delete_module()
 	 *
 	 * @param bool $id ID of the course to delete.
 	 *
@@ -125,12 +127,12 @@ class EDD_eCourse_DB extends EDD_DB {
 			return false;
 		}
 
-		$course = $this->get_course_by( 'id', $id );
+		$module = $this->get_module_by( 'id', $id );
 
-		if ( $course->id > 0 ) {
+		if ( $module->id > 0 ) {
 			global $wpdb;
 
-			return $wpdb->delete( $this->table_name, array( 'id' => $course->id ), array( '%d' ) );
+			return $wpdb->delete( $this->table_name, array( 'id' => $module->id ), array( '%d' ) );
 		}
 
 		return false;
@@ -138,9 +140,9 @@ class EDD_eCourse_DB extends EDD_DB {
 	}
 
 	/**
-	 * Course Exists
+	 * Module Exists
 	 *
-	 * Check if a course exists.
+	 * Check if a module exists.
 	 *
 	 * @param string $value Field value.
 	 * @param string $field Name of the field to check.
@@ -161,18 +163,18 @@ class EDD_eCourse_DB extends EDD_DB {
 	}
 
 	/**
-	 * Get Course By
+	 * Get Module By
 	 *
-	 * Retrieve a single course from the database.
+	 * Retrieve a single module from the database.
 	 *
-	 * @param string $field Field to search - `id` or `title`.
-	 * @param int    $value The course ID or title to search.
+	 * @param string $field Field to search - `id`, `title`, or `course`.
+	 * @param int    $value The module ID or title to search.
 	 *
 	 * @access public
 	 * @since  1.0.0
-	 * @return object|false Course object or false on failure.
+	 * @return object|false Module object or false on failure.
 	 */
-	public function get_course_by( $field = 'id', $value = 0 ) {
+	public function get_module_by( $field = 'id', $value = 0 ) {
 
 		global $wpdb;
 
@@ -180,7 +182,7 @@ class EDD_eCourse_DB extends EDD_DB {
 			return false;
 		}
 
-		if ( 'id' == $field ) {
+		if ( 'id' == $field || 'course' == $field ) {
 
 			// Make sure the value is numeric.
 			if ( ! is_numeric( $value ) ) {
@@ -207,6 +209,9 @@ class EDD_eCourse_DB extends EDD_DB {
 			case 'id' :
 				$db_field = 'id';
 				break;
+			case 'course' :
+				$db_field = 'course';
+				break;
 			case 'title' :
 				$value    = sanitize_text_field( $value );
 				$db_field = 'title';
@@ -224,22 +229,22 @@ class EDD_eCourse_DB extends EDD_DB {
 	}
 
 	/**
-	 * Get Courses
+	 * Get Modules
 	 *
 	 * @param array $args Query arguments to override the defaults.
 	 *
 	 * @access public
 	 * @since  1.0.0
-	 * @return array|false Array of course objects or false on failure.
+	 * @return array|false Array of module objects or false on failure.
 	 */
-	public function get_courses( $args = array() ) {
+	public function get_modules( $args = array() ) {
 
 		global $wpdb;
 
 		$defaults = array(
 			'number'  => 20,
 			'offset'  => 0,
-			'orderby' => 'title',
+			'orderby' => 'position',
 			'order'   => 'ASC'
 		);
 
@@ -252,7 +257,7 @@ class EDD_eCourse_DB extends EDD_DB {
 		$join  = '';
 		$where = ' WHERE 1=1 ';
 
-		// Specific courses
+		// Specific modules
 		if ( array_key_exists( 'id', $args ) && ! empty( $args['id'] ) ) {
 
 			if ( is_array( $args['id'] ) ) {
@@ -265,90 +270,46 @@ class EDD_eCourse_DB extends EDD_DB {
 
 		}
 
-		// Statuses
-		if ( array_key_exists( 'status', $args ) && ! empty( $args['status'] ) ) {
+		// By course.
+		if ( array_key_exists( 'course', $args ) && ! empty( $args['course'] ) ) {
 
-			if ( is_array( $args['status'] ) ) {
-				$statuses = implode( ',', array_map( 'sanitize_text_field', $args['status'] ) );
+			if ( is_array( $args['course'] ) ) {
+				$ids = implode( ',', array_map( 'intval', $args['course'] ) );
 			} else {
-				$statuses = sanitize_text_field( $args['status'] );
+				$ids = intval( $args['course'] );
 			}
 
-			$where .= " AND `status` IN( {$statuses} ) ";
+			$where .= " AND `course` IN( {$ids} ) ";
 
 		}
 
-		// Types
-		if ( array_key_exists( 'type', $args ) && ! empty( $args['type'] ) ) {
-
-			if ( is_array( $args['type'] ) ) {
-				$types = implode( ',', array_map( 'sanitize_text_field', $args['type'] ) );
-			} else {
-				$types = sanitize_text_field( $args['type'] );
-			}
-
-			$where .= " AND `type` IN( {$types} ) ";
-
-		}
-
-		// Courses by name.
+		// Module by name.
 		if ( array_key_exists( 'title', $args ) && ! empty( $args['title'] ) ) {
 			$where .= $wpdb->prepare( " AND `title` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['name'] ) );
-		}
-
-		// Within a specific start date.
-		if ( array_key_exists( 'date', $args ) && ! empty( $args['date'] ) ) {
-
-			if ( is_array( $args['date'] ) ) {
-
-				if ( ! empty( $args['date']['start'] ) ) {
-
-					$start = date( 'Y-m-d 00:00:00', strtotime( $args['date']['start'] ) );
-					$where .= " AND `start_date` >= '{$start}'";
-
-				}
-
-				if ( ! empty( $args['date']['end'] ) ) {
-
-					$end = date( 'Y-m-d 23:59:59', strtotime( $args['date']['end'] ) );
-					$where .= " AND `start_date` <= '{$end}'";
-
-				}
-
-			} else {
-
-				$year  = date( 'Y', strtotime( $args['date'] ) );
-				$month = date( 'm', strtotime( $args['date'] ) );
-				$day   = date( 'd', strtotime( $args['date'] ) );
-
-				$where .= " AND $year = YEAR ( start_date ) AND $month = MONTH ( start_date ) AND $day = DAY ( start_date )";
-
-			}
-
 		}
 
 		// Orderby.
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
 
-		$cache_key = md5( 'edd_ecourses_' . serialize( $args ) );
+		$cache_key = md5( 'edd_ecourse_modules_' . serialize( $args ) );
 
-		$courses = wp_cache_get( $cache_key, 'courses' );
+		$modules = wp_cache_get( $cache_key, 'course_modules' );
 
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
 
-		if ( $courses === false ) {
+		if ( $modules === false ) {
 			$query   = $wpdb->prepare( "SELECT * FROM  $this->table_name $join $where GROUP BY $this->primary_key ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
-			$courses = $wpdb->get_results( $query );
-			wp_cache_set( $cache_key, $courses, 'courses', 3600 );
+			$modules = $wpdb->get_results( $query );
+			wp_cache_set( $cache_key, $modules, 'course_modules', 3600 );
 		}
 
-		return $courses;
+		return $modules;
 
 	}
 
 	/**
-	 * Get Number of Courses
+	 * Get Number of Modules
 	 *
 	 * @param array $args
 	 *
@@ -377,10 +338,10 @@ class EDD_eCourse_DB extends EDD_DB {
 		id bigint(20) NOT NULL AUTO_INCREMENT,
 		title mediumtext NOT NULL,
 		description longtext NOT NULL,
-		status mediumtext NOT NULL,
-		type mediumtext NOT NULL,
-		start_date datetime NOT NULL,
-		PRIMARY KEY  (id)
+		position bigint(20) NOT NULL,
+		course bigint(20) NOT NULL,
+		PRIMARY KEY  (id),
+		KEY course (course)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );
