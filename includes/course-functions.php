@@ -96,6 +96,37 @@ function edd_ecourse_get_courses( $args = array() ) {
 }
 
 /**
+ * Insert a Course
+ *
+ * @param array $args Arguments, including `title` (required), `description`, `status`, `type`, `start_date`
+ *
+ * @since 1.0.0
+ * @return int|bool Course ID on success or false on failure.
+ */
+function edd_ecourse_insert_course( $args = array() ) {
+	$course_id = edd_ecourse_load()->courses->add( $args );
+
+	return $course_id;
+}
+
+/**
+ * Insert Module
+ *
+ * @todo  Move to module-functions.php ?
+ *
+ * @param array $args Module arguments, including `title` (required), `description`, `position`, and `course`
+ *                    (required).
+ *
+ * @since 1.0.0
+ * @return int|false Module ID on success or false on failure.
+ */
+function edd_ecourse_insert_module( $args = array() ) {
+	$module_id = edd_ecourse_load()->modules->add( $args );
+
+	return $module_id;
+}
+
+/**
  * Get Course Modules
  *
  * @param int $course_id ID of the course.

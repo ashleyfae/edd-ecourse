@@ -154,8 +154,81 @@ jQuery(document).ready(function ($) {
 
     var EDD_ECourse_Module = {
 
+        /**
+         * Initialize all the things.
+         */
         init: function () {
+            this.add();
             this.editTitle();
+        },
+
+        /**
+         * Add Module
+         */
+        add: function () {
+
+            $('#edd-ecourse-add-module-form').on('submit', function (e) {
+
+                e.preventDefault();
+
+                var form = $(this);
+                var wrap = $('.edd-ecourse-add-module');
+
+                // Add spinner.
+                form.append('<span class="spinner is-active"></span>');
+
+                // Disable submit.
+                form.find('button').attr('disabled', true);
+
+                var data = {
+                    action: 'edd_ecourse_add_module',
+                    title: $('#edd-ecourse-module-name').val(),
+                    course_id: $('#edd-ecourse-id').val(),
+                    position: ($('.edd-ecourse-module-group').length) + 1,
+                    nonce: $('#edd_ecourse_add_module_nonce').val()
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+
+                        console.log(response);
+
+                        if (true === response.success) {
+
+                            // Remove spinner.
+                            form.find('.spinner').remove();
+
+                            // Re-enable submit.
+                            form.find('button').attr('disabled', false);
+
+                            // Clear course title field.
+                            $('#edd-ecourse-module-name').val('');
+
+                            // Load template data.
+                            var moduleTemplate = wp.template('edd-ecourse-new-module');
+                            wrap.before(moduleTemplate(response.data));
+
+                        } else {
+
+                            if (window.console && window.console.log) {
+                                console.log(response);
+                            }
+
+                        }
+
+                    }
+                }).fail(function (response) {
+                    if (window.console && window.console.log) {
+                        console.log(response);
+                    }
+                });
+
+            });
+
         },
 
         /**
@@ -177,6 +250,9 @@ jQuery(document).ready(function ($) {
 
                 // Turn the title into an input box.
                 moduleTitleWrap.html('<input type="text" value="' + currentTitle + '">');
+
+                var inputBox = moduleTitleWrap.find('input');
+                inputBox.focus();
 
                 // Hide edit button.
                 editButton.hide();
@@ -202,12 +278,14 @@ jQuery(document).ready(function ($) {
                 /** Save Edit **/
                 wrap.on('click', '.edd-ecourse-submit-edit-module-title', function (e) {
 
+                    e.preventDefault();
+
                     $(this).attr('disabled', true);
 
                     var data = {
                         action: 'edd_ecourse_update_module_title',
                         module: moduleID,
-                        title: wrap.find('input').val()
+                        title: inputBox.val()
                     };
 
                     $.ajax({

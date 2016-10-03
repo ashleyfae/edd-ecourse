@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  * @return void
  */
-function edd_ecourse_add_course() {
+function edd_ecourse_add_course_cb() {
 
 	// Security check.
 	check_ajax_referer( 'edd_ecourse_add_course', 'nonce' );
@@ -35,15 +35,11 @@ function edd_ecourse_add_course() {
 		wp_die( __( 'A course name is required.', 'edd-ecourse' ) );
 	}
 
-	$course_id = edd_ecourse_load()->courses->add( array(
-		'title' => $course_name
-	) );
+	$course_id = edd_ecourse_insert_course( array( 'title' => $course_name ) );
 
 	if ( false === $course_id ) {
 		wp_die( __( 'An error occurred while creating the e-course.', 'edd-ecourse' ) );
 	}
-
-	// Add
 
 	$data = array(
 		'ID'               => $course_id,
@@ -57,7 +53,7 @@ function edd_ecourse_add_course() {
 
 }
 
-add_action( 'wp_ajax_edd_ecourse_add_course', 'edd_ecourse_add_course' );
+add_action( 'wp_ajax_edd_ecourse_add_course', 'edd_ecourse_add_course_cb' );
 
 /**
  * Delete E-Course
@@ -103,6 +99,59 @@ function edd_ecourse_delete_course() {
 
 add_action( 'wp_ajax_edd_ecourse_delete_course', 'edd_ecourse_delete_course' );
 
+/**
+ * Add Module
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_add_module_cb() {
+
+	// Security check.
+	check_ajax_referer( 'edd_ecourse_add_module', 'nonce' );
+
+	$title     = wp_strip_all_tags( $_POST['title'] );
+	$course_id = $_POST['course_id'];
+	$position  = $_POST['position'];
+
+	if ( ! $title ) {
+		wp_die( __( 'A title is required.', 'edd-ecourse' ) );
+	}
+
+	if ( ! is_numeric( $course_id ) || $course_id < 1 ) {
+		wp_die( __( 'Invalid course ID', 'edd-ecourse' ) );
+	}
+
+	$module_id = edd_ecourse_insert_module( array(
+		'title'    => $title,
+		'course'   => absint( $course_id ),
+		'position' => intval( $position )
+	) );
+
+	if ( false === $module_id ) {
+		wp_die( __( 'An unexpected error occurred while trying to add this module.', 'edd-ecourse' ) );
+	}
+
+	$data = array(
+		'ID'         => $module_id,
+		'title'      => $title,
+		'lesson_url' => esc_url( edd_ecourse_get_add_lesson_url( $course_id, $module_id ) )
+	);
+
+	wp_send_json_success( $data );
+
+	exit;
+
+}
+
+add_action( 'wp_ajax_edd_ecourse_add_module', 'edd_ecourse_add_module_cb' );
+
+/**
+ * Update Module Title
+ *
+ * @since 1.0.0
+ * @return void
+ */
 function edd_ecourse_update_module_title() {
 
 	// Permission check.
@@ -145,6 +194,10 @@ function edd_ecourse_load_course_js_templates() {
 
 	if ( 'overview' == $view ) {
 		include_once EDD_ECOURSE_DIR . 'includes/admin/courses/template-new-course.php';
+	}
+
+	if ( 'list' == $view ) {
+		include_once EDD_ECOURSE_DIR . 'includes/admin/courses/template-new-module.php';
 	}
 }
 

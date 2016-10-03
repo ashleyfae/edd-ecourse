@@ -69,17 +69,18 @@ function edd_ecourse_is_edit_course_page() {
  *
  * Returns the URL to the "Add Course" page.
  *
+ * @param int $course_id ID of the course to add the lesson to.
+ * @param int $module_id ID of the module to add the lesson to.
+ *
  * @since 1.0.0
  * @return string
  */
-function edd_ecourse_get_add_lesson_url( $course_id = false ) {
+function edd_ecourse_get_add_lesson_url( $course_id = 0, $module_id = 0 ) {
 	$args = array(
-		'post_type' => 'ecourse_lesson'
+		'post_type' => 'ecourse_lesson',
+		'course'    => absint( $course_id ),
+		'module'    => absint( $module_id )
 	);
-
-	if ( $course_id ) {
-		$args['course'] = absint( $course_id );
-	}
 
 	$url = add_query_arg( $args, admin_url( 'post-new.php' ) );
 

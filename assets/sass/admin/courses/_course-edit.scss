@@ -19,7 +19,7 @@
             display: inline-block;
         }
 
-        button {
+        .button {
             display: inline-block;
             margin: 0 5px;
         }
@@ -29,5 +29,12 @@
         span {
             padding: 3px 5px 3px 0;
         }
+    }
+}
+
+/* Add Module */
+#edd-ecourse-add-module-form {
+    .spinner {
+        float: none;
     }
 }
