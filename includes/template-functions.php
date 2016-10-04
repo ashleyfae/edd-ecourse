@@ -56,13 +56,34 @@ add_filter( 'edd_template_paths', 'edd_ecourse_template_paths' );
  *
  * Checks whether or not we're on an official e-course page.
  *
- * @todo  actually make this work
- *
  * @since 1.0.0
  * @return bool
  */
 function edd_ecourse_is_course_page() {
-	return false;
+
+	$is_course_page = false;
+
+	global $post;
+
+	$dashboard = edd_get_option( 'ecourse_dashboard_page' );
+
+	// Dashboard page.
+	if ( is_object( $post ) && $dashboard == $post->ID ) {
+		$is_course_page = true;
+	}
+
+	// Course lesson list.
+	if ( $course_slug = get_query_var( edd_ecourse_get_endpoint() ) ) {
+		$is_course_page = true;
+	}
+
+	// Single lesson.
+	if ( is_singular( 'ecourse_lesson' ) ) {
+		$is_course_page = true;
+	}
+
+	return apply_filters( 'edd_ecourse_is_course_page', $is_course_page );
+
 }
 
 /**
