@@ -41,6 +41,9 @@ function edd_ecourse_insert_module( $args = array() ) {
 function edd_ecourse_get_module_lessons( $module_id, $args = array() ) {
 
 	$default_args = array(
+		'meta_key'       => 'lesson_position',
+		'orderby'        => 'meta_value_num',
+		'order'          => 'ASC',
 		'posts_per_page' => - 1,
 		'post_type'      => 'ecourse_lesson',
 		'meta_query'     => array(
@@ -57,5 +60,22 @@ function edd_ecourse_get_module_lessons( $module_id, $args = array() ) {
 	$lessons = get_posts( $query_args );
 
 	return apply_filters( 'edd_ecourse_get_module_lessons', $lessons, $module_id, $args );
+
+}
+
+/**
+ * Get Number of Lessons in Module
+ *
+ * @param int $module_id ID of the module.
+ *
+ * @since 1.0.0
+ * @return int
+ */
+function edd_ecourse_get_number_module_lessons( $module_id ) {
+
+	$args    = array( 'fields' => 'ids' );
+	$lessons = edd_ecourse_get_module_lessons( $module_id, $args );
+
+	return is_array( $lessons ) ? count( $lessons ) : 0;
 
 }

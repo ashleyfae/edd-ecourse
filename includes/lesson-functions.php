@@ -154,3 +154,18 @@ function edd_ecourse_get_lesson_status( $lesson ) {
 
 	return apply_filters( 'edd_ecourse_get_lesson_status', $status, $post );
 }
+
+/**
+ * @param $lesson
+ *
+ * @since 1.0.0
+ * @return mixed|void
+ */
+function edd_ecourse_get_lesson_position( $lesson ) {
+
+	$lesson_id = is_a( $lesson, 'WP_Post' ) ? $lesson->ID : $lesson;
+	$position  = get_post_meta( $lesson_id, 'lesson_position', true );
+
+	return apply_filters( 'edd_ecourse_get_lesson_position', $position, $lesson );
+
+}

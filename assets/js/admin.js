@@ -258,6 +258,7 @@ jQuery(document).ready(function ($) {
          */
         init: function () {
             this.sort();
+            this.sortLessons();
             this.add();
             this.editTitle();
         },
@@ -310,6 +311,52 @@ jQuery(document).ready(function ($) {
                 });
 
             });
+        },
+
+        sortLessons: function () {
+
+            $('.edd-ecourse-lesson-list').sortable()
+                .on('sortstop', function (event, ui) {
+
+                    var lessons = [];
+
+                    $('.edd-ecourse-lesson-list > li').each(function () {
+                        lessons.push($(this).data('id'));
+                    });
+
+                    // Save positioning.
+                    var data = {
+                        action: 'edd_ecourse_save_lesson_positions',
+                        lessons: lessons,
+                        nonce: $('#edd_ecourse_manage_course_nonce').val()
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: ajaxurl,
+                        data: data,
+                        dataType: "json",
+                        success: function (response) {
+
+                            console.log(response);
+
+                            if (true !== response.success) {
+
+                                if (window.console && window.console.log) {
+                                    console.log(response);
+                                }
+
+                            }
+
+                        }
+                    }).fail(function (response) {
+                        if (window.console && window.console.log) {
+                            console.log(response);
+                        }
+                    });
+
+                });
+
         },
 
         /**

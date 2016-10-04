@@ -168,6 +168,13 @@ function edd_ecourse_save_lesson_meta( $post_id, $post ) {
 		delete_post_meta( $post_id, 'lesson_type' );
 	}
 
+	// Set the lesson position in the module.
+	$position = edd_ecourse_get_lesson_position( $post_id );
+	if ( empty( $position ) ) {
+		$new_position = ( $module_id && is_numeric( $module_id ) ) ? $module_id : 1;
+		update_post_meta( $post_id, 'lesson_position', edd_ecourse_get_number_module_lessons( absint( $new_position ) ) );
+	}
+
 }
 
 add_action( 'save_post', 'edd_ecourse_save_lesson_meta', 10, 2 );
