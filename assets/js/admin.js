@@ -313,6 +313,10 @@ jQuery(document).ready(function ($) {
             });
         },
 
+        /**
+         * Sort Lessons
+         * Change the order of the lessons and save.
+         */
         sortLessons: function () {
 
             $('.edd-ecourse-lesson-list').sortable()
@@ -527,15 +531,47 @@ jQuery(document).ready(function ($) {
          * Initialize all the things.
          */
         init: function () {
+            this.addBackButton();
             this.changeModule();
         },
 
+        /**
+         * Add Back Button
+         * Adds a 'back to course' button to the page title actions.
+         */
+        addBackButton: function () {
+            $('body.post-php.post-type-ecourse_lesson').find('.page-title-action').after('<a href="" class="page-title-action edd-ecourse-back-to-manage">' + edd_ecourse_vars.l10n.back_to_course + '</a>');
+
+            var currentCourse = $('#lesson_details').find('#course').val();
+
+            this.changeBackURL(currentCourse);
+        },
+
+        /**
+         * Change Back URL
+         *
+         * Updates the 'back to course' button with the correct course ID.
+         * @param course_id
+         */
+        changeBackURL: function (course_id) {
+            var baseURL = edd_ecourse_vars.manage_course_url;
+            var newURL = baseURL.replace(/course=([0-9]+)$/, 'course=' + course_id);
+
+            $('.edd-ecourse-back-to-manage').attr('href', newURL);
+        },
+
+        /**
+         * Change module select dropdown when the course dropdown changes.
+         */
         changeModule: function () {
 
             $('#lesson_details').on('change', '#course', function (e) {
 
                 var courseID = $(this).val();
                 var moduleWrap = $('#lesson_details').find('#module');
+
+                // Change back button.
+                EDD_ECourse_Lesson.changeBackURL(courseID);
 
                 var data = {
                     action: 'edd_ecourse_update_course_module_list',

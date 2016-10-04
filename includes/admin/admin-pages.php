@@ -27,7 +27,7 @@ function edd_ecourse_is_admin_page() {
 		$is_admin_page = true;
 	}
 
-	if ('ecourse_lesson' == $screen->post_type) {
+	if ( 'ecourse_lesson' == $screen->post_type ) {
 		$is_admin_page = true;
 	}
 
@@ -91,7 +91,9 @@ function edd_ecourse_admin_scripts( $hook ) {
 		);
 
 		$settings = array(
-			'l10n' => array(
+			'manage_course_url' => edd_ecourse_get_manage_course_url( 0 ),
+			'l10n'              => array(
+				'back_to_course'        => __( 'Back to Course', 'edd-ecourse' ),
 				'cancel'                => __( 'Cancel', 'edd-ecourse' ),
 				'confirm_delete_course' => __( 'Are you sure you want to delete this e-course and all associated lessons? This cannot be undone.', 'edd-ecourse' ),
 				'save'                  => __( 'Save', 'edd-ecourse' ),
