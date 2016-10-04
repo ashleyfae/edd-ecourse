@@ -177,7 +177,7 @@ function edd_ecourse_render_course_edit() {
 									<h3 class="hndle">
 										<span class="edd-ecourse-module-title"><?php echo esc_html( $module->title ); ?></span>
 										<button class="button edd-ecourse-edit-module-title"><?php _e( 'Edit', 'edd-ecourse' ); ?></button>
-										<a href="<?php echo esc_url( edd_ecourse_get_add_lesson_url( $course->id, $module->id ) ); ?>" class="button button-primary edd-ecourse-add-module-lesson"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
+										<a href="<?php echo esc_url( edd_ecourse_get_add_lesson_url( $course->id, $module->id ) ); ?>" class="button edd-ecourse-add-module-lesson"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
 									</h3>
 									<div class="inside">
 
