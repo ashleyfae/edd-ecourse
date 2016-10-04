@@ -201,11 +201,20 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 					'type' => 'header',
 				),
 				array(
+					'id'          => 'ecourse_dashboard_page',
+					'name'        => __( 'Dashboard Page', 'edd-ecourse' ),
+					'desc'        => __( 'This is the course dashboard page that shows an overview of the student\'s courses and progress.', 'edd-ecourse' ),
+					'type'        => 'select',
+					'options'     => edd_get_pages(),
+					'chosen'      => true,
+					'placeholder' => __( 'Select a page', 'edd-ecourse' )
+				),
+				array(
 					'id'   => 'ecourse_keep_out_of_admin',
 					'name' => __( 'Keep out of wp-admin', 'edd-ecourse' ),
 					'desc' => __( 'By default, all registered users can access portions of the WordPress admin area, like to edit their own profile. Check this to forcibly keep out e-course students.', 'edd-ecourse' ),
 					'type' => 'checkbox',
-					'std'  => true // @todo auto set on install
+					'std'  => true
 				)
 			);
 
@@ -279,6 +288,31 @@ function edd_ecourse_activation() {
 
 	// Flush rewrite rules.
 	flush_rewrite_rules( false );
+
+	// Populate some default values.
+	$existing_settings = get_option( 'edd_settings', array() );
+	$options           = array();
+
+	if ( ! array_key_exists( 'ecourse_dashboard_page', $existing_settings ) ) {
+		$dashboard = wp_insert_post( array(
+			'post_title'     => __( 'Dashboard', 'edd-ecourse' ),
+			'post_content'   => '[course-dashboard]',
+			'post_status'    => 'publish',
+			'post_author'    => 1,
+			'post_type'      => 'page',
+			'comment_status' => 'closed'
+		) );
+
+		// Store the page ID.
+		$options['ecourse_dashboard_page'] = $dashboard;
+	}
+
+	if ( ! array_key_exists( 'ecourse_keep_out_of_admin', $existing_settings ) ) {
+		$options['ecourse_keep_out_of_admin'] = 1;
+	}
+
+	$merged_options = array_merge( $existing_settings, $options );
+	update_option('edd_settings', $merged_options);
 
 }
 
