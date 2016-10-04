@@ -113,6 +113,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 			require_once EDD_ECOURSE_DIR . 'includes/lesson-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/module-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/post-types.php';
+			require_once EDD_ECOURSE_DIR . 'includes/rewrite-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/shortcodes.php';
 			require_once EDD_ECOURSE_DIR . 'includes/template-functions.php';
 
@@ -263,11 +264,18 @@ function edd_ecourse_activation() {
 		include_once 'includes/course-functions.php';
 	}
 
+	if ( ! function_exists( 'edd_ecourse_add_endpoint' ) ) {
+		include_once 'includes/rewrite-functions.php';
+	}
+
 	// Register post type.
 	edd_ecourse_post_type();
 
 	// Insert demo content.
 	//edd_ecourse_insert_demo_course();
+
+	// Add course endpoint.
+	edd_ecourse_add_endpoint();
 
 	// Only add DB tables if EDD_DB class exists.
 	if ( class_exists( 'EDD_DB' ) ) {
@@ -312,7 +320,7 @@ function edd_ecourse_activation() {
 	}
 
 	$merged_options = array_merge( $existing_settings, $options );
-	update_option('edd_settings', $merged_options);
+	update_option( 'edd_settings', $merged_options );
 
 }
 
@@ -330,17 +338,11 @@ register_activation_hook( __FILE__, 'edd_ecourse_activation' );
  *
  * @uses  edd_ecourse_activation()
  *
- * @param $plugin
- * @param $network_activation
- *
  * @since 1.0.0
  * @return void
  */
-function edd_ecourse_on_edd_activation( $plugin, $network_activation ) {
-	// @todo check if plugin is EDD
-	if ( $plugin ) {
-		edd_ecourse_activation();
-	}
+function edd_ecourse_on_edd_activation() {
+	edd_ecourse_activation();
 }
 
-add_action( 'activated_plugin', 'edd_ecourse_on_edd_activation', 10, 2 );
+add_action( 'edd_after_install', 'edd_ecourse_on_edd_activation' );
