@@ -23,7 +23,11 @@ function edd_ecourse_is_admin_page() {
 	$screen        = get_current_screen();
 	$is_admin_page = false;
 
-	if ( $screen->base == 'toplevel_page_ecourses' ) {
+	if ( 'toplevel_page_ecourses' == $screen->base ) {
+		$is_admin_page = true;
+	}
+
+	if ('ecourse_lesson' == $screen->post_type) {
 		$is_admin_page = true;
 	}
 
