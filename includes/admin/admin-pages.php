@@ -102,9 +102,9 @@ function edd_ecourse_admin_scripts( $hook ) {
 
 		wp_enqueue_media();
 
-		wp_enqueue_script( 'edd-ecourse-admin', EDD_ECOURSE_URL . '/assets/js/admin' . $suffix . '.js', $deps );
+		wp_enqueue_script( 'edd-ecourse-admin', EDD_ECOURSE_URL . 'assets/js/admin' . $suffix . '.js', $deps );
 		wp_localize_script( 'edd-ecourse-admin', 'edd_ecourse_vars', $settings );
-		wp_enqueue_style( 'edd-ecourse-admin', EDD_ECOURSE_URL . '/assets/css/admin.css' );
+		wp_enqueue_style( 'edd-ecourse-admin', EDD_ECOURSE_URL . 'assets/css/admin.css' );
 	}
 
 }
