@@ -110,3 +110,42 @@ function edd_ecourse_admin_scripts( $hook ) {
 }
 
 add_action( 'admin_enqueue_scripts', 'edd_ecourse_admin_scripts', 100 );
+
+/**
+ * Maybe Keep Out of Admin Area
+ *
+ * Keep students out of the admin area.
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function ecu_ecourse_keep_out_of_admin() {
+
+	if ( ! edd_get_option( 'ecourse_keep_out_of_admin' ) ) {
+		return;
+	}
+
+	// If we're doing ajax stuff - bail.
+	if ( 'wp-admin/admin-ajax.php' == $_SERVER['PHP_SELF'] || defined( 'DOING_AJAX' ) ) {
+		return;
+	}
+
+	$current_user = wp_get_current_user();
+
+	// @todo Look for some better capability checks. This seems a bit shit.
+
+	// If current user isn't a customer - bail.
+	if ( ! in_array( 'customer', $current_user->roles ) ) {
+		return;
+	}
+
+	// If current user has some edit capabilities - bail.
+	if ( current_user_can( 'edit_posts' ) || current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	wp_redirect( home_url( '/' ) ); // @todo dashboard URL
+
+}
+
+add_action( 'admin_init', 'ecu_ecourse_keep_out_of_admin' );

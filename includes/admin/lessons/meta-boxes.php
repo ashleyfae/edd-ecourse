@@ -106,7 +106,6 @@ function edd_ecourse_render_lesson_permissions_box( $post ) {
 	$download_id = edd_ecourse_get_course_download( $course_id, 'id' );
 
 	// Restrict to price option.
-	// @todo test this
 	if ( $download_id && edd_has_variable_prices( $download_id ) ) {
 		$price_restrict = get_post_meta( $post->ID, 'required_price_id', true );
 		?>

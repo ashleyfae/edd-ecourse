@@ -198,6 +198,13 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 					'name' => '<strong>' . __( 'E-Course Settings', 'edd-ecourse' ) . '</strong>',
 					'desc' => __( 'Configure E-Course Settings', 'edd-ecourse' ),
 					'type' => 'header',
+				),
+				array(
+					'id'   => 'ecourse_keep_out_of_admin',
+					'name' => __( 'Keep out of wp-admin', 'edd-ecourse' ),
+					'desc' => __( 'By default, all registered users can access portions of the WordPress admin area, like to edit their own profile. Check this to forcibly keep out e-course students.', 'edd-ecourse' ),
+					'type' => 'checkbox',
+					'std'  => true // @todo auto set on install
 				)
 			);
 
