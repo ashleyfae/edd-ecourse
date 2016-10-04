@@ -106,32 +106,41 @@
             top: 12px;
             left: 32px;
         }
+
+        &:hover {
+            .edd-ecourse-lesson-status-publish {
+                background: #388a2d;
+            }
+
+            .edd-ecourse-lesson-status-private {
+                background: #ccbe35;
+            }
+
+            .edd-ecourse-lesson-status-draft {
+                background: #00a0d2;
+            }
+
+            .edd-ecourse-lesson-actions {
+                a {
+                    color: inherit;
+                }
+            }
+        }
     }
 
     .edd-ecourse-lesson-status {
-        background: #6e6e6e;
+        background: #bfbfbf;
         color: white;
         display: inline-block;
         font-size: 11px;
         margin: 0 10px;
         padding: 0 5px;
         text-transform: uppercase;
-
-        &.edd-ecourse-lesson-status-publish {
-            background: #388a2d;
-        }
-
-        &.edd-ecourse-lesson-status-private {
-            background: #ccbe35;
-        }
-
-        &.edd-ecourse-lesson-status-draft {
-            background: #00a0d2;
-        }
     }
 
     .edd-ecourse-lesson-actions {
         a {
+            color: #bfbfbf;
             display: inline-block;
             margin: 0 3px;
             text-decoration: none;
