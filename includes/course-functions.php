@@ -150,6 +150,31 @@ function edd_ecourse_unique_course_slug( $slug ) {
 }
 
 /**
+ * Get Course URL
+ *
+ * Returns the public-facing URL to the course archive page. This is where
+ * all the modules and lessons are listed for a given course.
+ *
+ * @param object|int|string $course Course object, ID, or slug.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_get_course_url( $course ) {
+	if ( is_object( $course ) ) {
+		$slug = $course->slug;
+	} elseif ( is_numeric( $course ) ) {
+		// @todo work with course ID
+	} else {
+		$slug = $course;
+	}
+
+	$url = home_url( '/' . edd_ecourse_get_endpoint() . '/' . urlencode( $slug ) );
+
+	return apply_filters( 'edd_ecourse_get_course_url', $url, $slug, $course );
+}
+
+/**
  * Get Course Modules
  *
  * @param int $course_id ID of the course.

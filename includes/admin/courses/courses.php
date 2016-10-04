@@ -136,6 +136,20 @@ function edd_ecourse_render_course_edit() {
 			<div id="post-body" class="metabox-holder columns-2">
 
 				<div id="post-body-content">
+					<div id="edit-slug-box" class="hide-if-no-js">
+						<strong><?php _e( 'Permalink:', 'edd-ecourse' ); ?></strong>
+						<span id="sample-permalink">
+							<?php // @todo Make this editable ?>
+							<a href="<?php echo esc_url( edd_ecourse_get_course_url( $course->slug ) ); ?>">
+								<?php echo home_url( '/' . edd_ecourse_get_endpoint() . '/' ) . '<span id="editable-post-name">' . esc_html( $course->slug ) . '</span>/'; ?>
+							</a>
+						</span>
+						&lrm;
+						<span id="edit-slug-buttons">
+							<button type="button" class="edit-slug button button-small hide-if-no-js" aria-label="<?php esc_attr_e( 'Edit permalink', 'edd-ecourse' ); ?>"><?php _e( 'Edit', 'edd-ecourse' ); ?></button>
+						</span>
+					</div>
+
 					<div id="postdivrich" class="postarea">
 						<?php // @todo tinymce description ?>
 					</div>
