@@ -149,7 +149,7 @@ function edd_ecourse_template_include( $template ) {
 	} elseif ( $course_slug = get_query_var( edd_ecourse_get_endpoint() ) ) {
 
 		// Course lesson list.
-		$course_template = edd_get_template_part( 'ecourse', 'lesson-list', false );
+		$course_template = edd_get_template_part( 'ecourse', 'archive', false );
 
 		if ( $course_template ) {
 			// Set global variable.

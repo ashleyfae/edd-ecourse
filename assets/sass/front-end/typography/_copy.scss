@@ -1,0 +1,23 @@
+body {
+    @include font-size(1.8);
+    font: {
+        family: $font-primary;
+    }
+    line-height: 1.6;
+}
+
+p {
+    margin: 0 0 2em;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-justify {
+    text-align: justify;
+}

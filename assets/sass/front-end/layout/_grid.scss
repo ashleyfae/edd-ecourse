@@ -1,0 +1,25 @@
+@import "susy";
+
+$susy: (
+        columns: 12,
+        container: 1100px,
+        global-box-sizing: border-box,
+        gutters: 10
+);
+
+@include border-box-sizing();
+
+@media (min-width: 768px) {
+    #wrapper {
+        clear: both;
+        display: flex;
+    }
+
+    #secondary {
+        flex: 0 0 350px;
+    }
+
+    #main {
+        padding: 2em;
+    }
+}

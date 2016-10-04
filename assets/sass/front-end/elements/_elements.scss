@@ -1,52 +1,29 @@
 /*--------------------------------------------------------------
->>> TABLE OF CONTENTS:
-----------------------------------------------------------------
-1.0 Reset
-2.0 Typography
-    2.1 Copy
-    2.2 Code
-    2.3 Headings
-3.0 Layout
-    3.1 Grid
-4.0 Elements
-    4.1 Boxes
-    4.2 Buttons
-    4.3 Forms
-    4.4 Horizontal Rules
-    4.5 Progress Bars
-    4.6 Tables
-5.0 Navigation
-6.0 Modules
-7.0 Content
-    7.1 Body
-    7.2 Header
-    7.x Sidebar
-    7.x Footer
+4.1 Boxes
 --------------------------------------------------------------*/
-@import "front-end/variables";
-@import "front-end/mixins";
+@import "boxes";
 
 /*--------------------------------------------------------------
-1.0 Reset
+4.2 Buttons
 --------------------------------------------------------------*/
-@import "front-end/reset";
+@import "buttons";
 
 /*--------------------------------------------------------------
-2.0 Typography
+4.3 Forms
 --------------------------------------------------------------*/
-@import "front-end/typography/typography";
+@import "forms";
 
 /*--------------------------------------------------------------
-3.0 Layout
+4.4 Horizontal Rules
 --------------------------------------------------------------*/
-@import "front-end/layout/layout";
+@import "hr";
 
 /*--------------------------------------------------------------
-4.0 Elements
+4.5 Progress Bars
 --------------------------------------------------------------*/
-@import "front-end/elements/elements";
+@import "progress-bars";
 
 /*--------------------------------------------------------------
-7.0 Content
+4.6 Tables
 --------------------------------------------------------------*/
-@import "front-end/content/content";
+@import "tables";
