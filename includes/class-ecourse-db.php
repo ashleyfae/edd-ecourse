@@ -53,6 +53,7 @@ class EDD_eCourse_DB extends EDD_DB {
 		return array(
 			'id'          => '%d',
 			'title'       => '%s',
+			'slug'        => '%s',
 			'description' => '%s',
 			'status'      => '%s',
 			'type'        => '%s',
@@ -70,6 +71,7 @@ class EDD_eCourse_DB extends EDD_DB {
 	public function get_column_defaults() {
 		return array(
 			'title'       => '',
+			'slug'        => '',
 			'description' => '',
 			'status'      => '', // @todo `active` ?
 			'type'        => 'normal', // @todo hmm
@@ -165,7 +167,7 @@ class EDD_eCourse_DB extends EDD_DB {
 	 *
 	 * Retrieve a single course from the database.
 	 *
-	 * @param string $field Field to search - `id` or `title`.
+	 * @param string $field Field to search - `id`, `title`, or `slug`.
 	 * @param int    $value The course ID or title to search.
 	 *
 	 * @access public
@@ -197,6 +199,10 @@ class EDD_eCourse_DB extends EDD_DB {
 
 			$value = trim( $value );
 
+		} elseif ( 'slug' == $field ) {
+
+			$value = trim( $value );
+
 		}
 
 		if ( ! $value ) {
@@ -211,6 +217,9 @@ class EDD_eCourse_DB extends EDD_DB {
 				$value    = sanitize_text_field( $value );
 				$db_field = 'title';
 				break;
+			case 'slug' :
+				$value    = sanitize_text_field( $value );
+				$db_field = 'slug';
 			default :
 				return false;
 		}
@@ -296,6 +305,11 @@ class EDD_eCourse_DB extends EDD_DB {
 			$where .= $wpdb->prepare( " AND `title` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['name'] ) );
 		}
 
+		// Courses by slug.
+		if ( array_key_exists( 'slug', $args ) && ! empty( $args['slug'] ) ) {
+			$where .= $wpdb->prepare( " AND `slug` LIKE '%%%%" . '%s' . "%%%%' ", sanitize_text_field( $args['slug'] ) );
+		}
+
 		// Within a specific start date.
 		if ( array_key_exists( 'date', $args ) && ! empty( $args['date'] ) ) {
 
@@ -376,6 +390,7 @@ class EDD_eCourse_DB extends EDD_DB {
 		$sql = "CREATE TABLE " . $this->table_name . " (
 		id bigint(20) NOT NULL AUTO_INCREMENT,
 		title mediumtext NOT NULL,
+		slug varchar(20) NOT NULL,
 		description longtext NOT NULL,
 		status mediumtext NOT NULL,
 		type mediumtext NOT NULL,

@@ -123,6 +123,10 @@ function edd_ecourse_template_include( $template ) {
 	// Dashboard page.
 	if ( is_object( $post ) && $dashboard == $post->ID ) {
 
+	} elseif ( $course_slug = get_query_var( edd_ecourse_get_endpoint() ) ) {
+
+		// Course lesson list.
+
 	} elseif ( is_singular( 'ecourse_lesson' ) ) {
 
 		// Lesson page.
