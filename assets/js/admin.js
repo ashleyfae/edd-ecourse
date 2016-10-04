@@ -252,9 +252,12 @@ jQuery(document).ready(function ($) {
 
         },
 
+        /**
+         * Edit Slug
+         */
         editSlug: function () {
 
-
+            // @todo
 
         }
 

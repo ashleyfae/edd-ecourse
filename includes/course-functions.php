@@ -289,3 +289,16 @@ function edd_ecourse_get_course_download( $course_id, $format = 'object' ) {
 	return apply_filters( 'edd_ecourse_get_course_download', $download, $course_id, $format );
 
 }
+
+/**
+ * Get Current Course
+ *
+ * @since 1.0.0
+ * @return object|false Course object or false on failure.
+ */
+function edd_ecourse_get_current_course() {
+	$course_slug = get_query_var( edd_ecourse_get_endpoint() );
+	$course      = edd_ecourse_load()->courses->get_course_by( 'slug', $course_slug );
+
+	return $course;
+}

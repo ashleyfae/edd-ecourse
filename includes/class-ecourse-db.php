@@ -223,6 +223,7 @@ class EDD_eCourse_DB extends EDD_DB {
 			case 'slug' :
 				$value    = sanitize_text_field( $value );
 				$db_field = 'slug';
+				break;
 			default :
 				return false;
 		}

@@ -126,11 +126,25 @@ function edd_ecourse_template_include( $template ) {
 	} elseif ( $course_slug = get_query_var( edd_ecourse_get_endpoint() ) ) {
 
 		// Course lesson list.
+		$course_template = edd_get_template_part( 'ecourse', 'lesson-list', false );
+
+		if ( $course_template ) {
+			// Set global variable.
+			global $edd_ecourse;
+
+			$course = edd_ecourse_get_current_course();
+
+			if ( $course ) {
+				$edd_ecourse = $course;
+			}
+
+			$template = $course_template;
+		}
 
 	} elseif ( is_singular( 'ecourse_lesson' ) ) {
 
 		// Lesson page.
-		$lesson_template = edd_get_template_part( 'content', 'lesson', false );
+		$lesson_template = edd_get_template_part( 'ecourse', 'lesson', false );
 
 		if ( $lesson_template ) {
 			$template = $lesson_template;
