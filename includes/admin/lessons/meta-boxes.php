@@ -100,9 +100,29 @@ function edd_ecourse_render_lesson_details_box( $post ) {
  */
 function edd_ecourse_render_lesson_permissions_box( $post ) {
 
-	wp_nonce_field( 'edd_ecourse_save_lesson_permissions', 'save_lesson_permissions_nonce' );
-
 	do_action( 'edd_ecourse_lesson_permissions_meta_box_before', $post );
+
+	$course_id   = edd_ecourse_get_lesson_course( $post );
+	$download_id = edd_ecourse_get_course_download( $course_id, 'id' );
+
+	// Restrict to price option.
+	if ( $download_id && edd_has_variable_prices( $download_id ) ) {
+		$price_restrict = get_post_meta( $post->ID, 'required_price_id', true );
+		?>
+		<p>
+			<label><?php _e( 'Restrict to Price ID', 'edd-ecourse' ); ?></label>
+			<?php foreach ( edd_get_variable_prices( $download_id ) as $price_id => $price ) :
+				$selected = ( is_array( $price_restrict ) && in_array( $price_id, $price_restrict ) ) ? ' checked' : '';
+				?>
+				<br>
+				<label for="required_price_id_<?php echo sanitize_html_class( $price_id ); ?>">
+					<input type="checkbox" id="required_price_id_<?php echo sanitize_html_class( $price_id ); ?>" name="required_price_id[]" value="<?php echo esc_attr( $price_id ); ?>"<?php echo $selected; ?>>
+					<?php echo esc_html( $price_id ); ?>
+				</label>
+			<?php endforeach; ?>
+		</p>
+		<?php
+	}
 
 	do_action( 'edd_ecourse_lesson_permissions_meta_box_after', $post );
 

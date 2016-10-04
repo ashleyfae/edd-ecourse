@@ -153,7 +153,8 @@ function edd_ecourse_get_course_lessons( $course_id, $query_args = array() ) {
 		'meta_query'     => array(
 			array(
 				'key'   => 'ecourse',
-				'value' => $course_id
+				'value' => $course_id,
+				'type'  => 'NUMERIC'
 			)
 		)
 	);
@@ -180,4 +181,44 @@ function edd_ecourse_get_course_lessons( $course_id, $query_args = array() ) {
  */
 function edd_ecourse_delete( $course_id ) {
 	return edd_ecourse_load()->courses->delete( $course_id );
+}
+
+/**
+ * Get Course Download
+ *
+ * Returns the EDD product associated with an e-course.
+ *
+ * @param int    $course_id ID of the course to get the downlaod for.
+ * @param string $format    Format for the return value: `object` or `id`
+ *
+ * @since 1.0.0
+ * @return int|WP_Post
+ */
+function edd_ecourse_get_course_download( $course_id, $format = 'object' ) {
+
+	$args = array(
+		'post_type'      => 'download',
+		'post_status'    => 'any',
+		'posts_per_page' => 1,
+		'meta_query'     => array(
+			'key'   => 'ecourse',
+			'value' => $course_id,
+			'type'  => 'NUMERIC'
+		)
+	);
+
+	if ( 'object' != $format ) {
+		$args['fields'] = 'ids';
+	}
+
+	$downloads = get_posts( $args );
+
+	if ( is_array( $downloads ) && array_key_exists( 0, $downloads ) ) {
+		$download = $downloads[0];
+	} else {
+		$download = false;
+	}
+
+	return apply_filters( 'edd_ecourse_get_course_download', $download, $course_id, $format );
+
 }
