@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Register Meta boxes
+ * Register Meta Boxes
  *
  * @since 1.0.0
  * @return void

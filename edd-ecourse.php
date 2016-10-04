@@ -121,6 +121,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 				require_once EDD_ECOURSE_DIR . 'includes/admin/courses/actions.php';
 				require_once EDD_ECOURSE_DIR . 'includes/admin/courses/course-functions.php';
 				require_once EDD_ECOURSE_DIR . 'includes/admin/courses/courses.php';
+				require_once EDD_ECOURSE_DIR . 'includes/admin/downloads/meta-boxes.php';
 				require_once EDD_ECOURSE_DIR . 'includes/admin/lessons/actions.php';
 				require_once EDD_ECOURSE_DIR . 'includes/admin/lessons/meta-boxes.php';
 			}
