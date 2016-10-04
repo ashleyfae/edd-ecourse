@@ -124,6 +124,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 				require_once EDD_ECOURSE_DIR . 'includes/admin/downloads/meta-boxes.php';
 				require_once EDD_ECOURSE_DIR . 'includes/admin/lessons/actions.php';
 				require_once EDD_ECOURSE_DIR . 'includes/admin/lessons/meta-boxes.php';
+				require_once EDD_ECOURSE_DIR . 'includes/admin/users/user-profiles.php';
 			}
 		}
 
