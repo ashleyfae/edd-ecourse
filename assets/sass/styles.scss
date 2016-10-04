@@ -16,12 +16,21 @@
     4.5 Progress Bars
     4.6 Tables
 5.0 Navigation
+    5.1 Links
+    5.2 Menus
 6.0 Modules
+    6.1 Accessibility
+    6.2 Alignments
 7.0 Content
     7.1 Body
     7.2 Header
     7.x Sidebar
     7.x Footer
+8.0 Media
+    8.1 Audio
+    8.2 Images
+    8.3 Captions
+    8.4 Galleries
 --------------------------------------------------------------*/
 @import "front-end/variables";
 @import "front-end/mixins";
@@ -47,6 +56,21 @@
 @import "front-end/elements/elements";
 
 /*--------------------------------------------------------------
+5.0 Navigation
+--------------------------------------------------------------*/
+@import "front-end/navigation/navigation";
+
+/*--------------------------------------------------------------
+6.0 Modules
+--------------------------------------------------------------*/
+@import "front-end/modules/modules";
+
+/*--------------------------------------------------------------
 7.0 Content
 --------------------------------------------------------------*/
 @import "front-end/content/content";
+
+/*--------------------------------------------------------------
+8.0 Media
+--------------------------------------------------------------*/
+@import "front-end/media/media";

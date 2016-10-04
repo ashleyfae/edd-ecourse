@@ -302,3 +302,48 @@ function edd_ecourse_get_current_course() {
 
 	return $course;
 }
+
+/**
+ * Get Current E-Course Title
+ *
+ * @global object $edd_ecourse
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_get_title() {
+	global $edd_ecourse;
+
+	return $edd_ecourse->title;
+}
+
+/**
+ * Display Current E-Course Title
+ *
+ * @uses  edd_ecourse_get_title()
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_title() {
+	echo edd_ecourse_get_title();
+}
+
+/**
+ * Get Current E-Course ID
+ *
+ * @since 1.0.0
+ * @return int
+ */
+function edd_ecourse_get_id() {
+	global $edd_ecourse;
+
+	return $edd_ecourse->id;
+}
+
+function edd_ecourse_get_modules() {
+	$course_id = edd_ecourse_get_id();
+	$modules   = edd_ecourse_get_course_modules( $course_id );
+
+	return is_array( $modules ) ? $modules : array();
+}
