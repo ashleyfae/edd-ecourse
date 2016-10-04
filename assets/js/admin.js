@@ -474,7 +474,67 @@ jQuery(document).ready(function ($) {
 
     };
 
+    var EDD_ECourse_Lesson = {
+
+        /**
+         * Initialize all the things.
+         */
+        init: function () {
+            this.changeModule();
+        },
+
+        changeModule: function () {
+
+            $('#lesson_details').on('change', '#course', function (e) {
+
+                var courseID = $(this).val();
+                var moduleWrap = $('#lesson_details').find('#module');
+
+                var data = {
+                    action: 'edd_ecourse_update_course_module_list',
+                    course: courseID,
+                    nonce: $('#save_lesson_details_nonce').val()
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+
+                        console.log(response);
+
+                        console.log(typeof response.data);
+
+                        if (response.data && 'object' == typeof response.data) {
+                            var moduleOptions = '';
+
+                            $.each(response.data, function (index, value) {
+                                moduleOptions = moduleOptions + '<option value="' + index + '">' + value + '</option>';
+                            });
+
+                            moduleWrap.parent().show();
+                            moduleWrap.empty().append(moduleOptions);
+                        } else {
+                            moduleWrap.parent().hide();
+                        }
+
+                    }
+                }).fail(function (response) {
+                    if (window.console && window.console.log) {
+                        console.log(response);
+                    }
+                });
+
+            });
+
+        }
+
+    };
+
     EDD_ECourse.init();
     EDD_ECourse_Module.init();
+    EDD_ECourse_Lesson.init();
 
 });
