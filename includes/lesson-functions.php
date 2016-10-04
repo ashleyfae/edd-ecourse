@@ -109,3 +109,48 @@ function edd_ecourse_get_available_lesson_types() {
 
 	return apply_filters( 'edd_ecourse_get_available_lesson_types', $types );
 }
+
+/**
+ * Get Lesson Status
+ *
+ * This basically just looks at the `post_status` and tweaks the wording,
+ * tense, and capitalization.
+ *
+ * @param WP_Post|int $lesson Post object or ID.
+ *
+ * @since 1.0.0
+ * @return string|false
+ */
+function edd_ecourse_get_lesson_status( $lesson ) {
+	$post = is_a( $lesson, 'WP_Post' ) ? $lesson : get_post( $lesson );
+
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return false;
+	}
+
+	switch ( $post->post_status ) {
+
+		case 'publish' :
+			$status = __( 'Published', 'edd-ecourse' );
+			break;
+
+		case 'draft' :
+			$status = __( 'Draft', 'edd-ecourse' );
+			break;
+
+		case 'private' :
+			$status = __( 'Private', 'edd-ecourse' );
+			break;
+
+		case 'pending' :
+			$status = __( 'Pending', 'edd-ecourse' );
+			break;
+
+		default :
+			$status = false;
+			break;
+
+	}
+
+	return apply_filters( 'edd_ecourse_get_lesson_status', $status, $post );
+}

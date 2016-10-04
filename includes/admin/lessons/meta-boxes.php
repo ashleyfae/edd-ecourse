@@ -107,3 +107,67 @@ function edd_ecourse_render_lesson_permissions_box( $post ) {
 	do_action( 'edd_ecourse_lesson_permissions_meta_box_after', $post );
 
 }
+
+/**
+ * Save Lesson Meta
+ *
+ * @param int     $post_id
+ * @param WP_Post $post
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_save_lesson_meta( $post_id, $post ) {
+
+	// Nonce doesn't exist - bail.
+	if ( ! isset( $_POST['save_lesson_details_nonce'] ) ) {
+		return;
+	}
+
+	// Nonce can't be verified - bail.
+	if ( ! wp_verify_nonce( $_POST['save_lesson_details_nonce'], 'edd_ecourse_save_lesson_details' ) ) {
+		return;
+	}
+
+	// Autosave or form isn't submitted - bail.
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	// Permission check.
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+
+	/** Let's saaaave! */
+
+	do_action( 'edd_ecourse_save_lesson_meta', $post );
+
+	// Course ID
+	$course_id = array_key_exists( 'course', $_POST ) ? $_POST['course'] : false;
+	if ( $course_id && is_numeric( $course_id ) ) {
+		update_post_meta( $post_id, 'course', absint( $course_id ) );
+	} else {
+		delete_post_meta( $post_id, 'course' );
+	}
+
+	// Module ID
+	$module_id = array_key_exists( 'module', $_POST ) ? $_POST['module'] : false;
+	if ( $module_id && is_numeric( $module_id ) ) {
+		update_post_meta( $post_id, 'module', absint( $module_id ) );
+	} else {
+		delete_post_meta( $post_id, 'module' );
+	}
+
+	// Lesson type
+	$type = array_key_exists( 'lesson_type', $_POST ) ? $_POST['lesson_type'] : false;
+	if ( $type && is_array( $type ) ) {
+		$sanitized_type = array_map( 'sanitize_text_field', $type );
+		update_post_meta( $post_id, 'lesson_type', $sanitized_type );
+	} else {
+		delete_post_meta( $post_id, 'lesson_type' );
+	}
+
+}
+
+add_action( 'save_post', 'edd_ecourse_save_lesson_meta', 10, 2 );

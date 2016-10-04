@@ -110,23 +110,6 @@ function edd_ecourse_insert_course( $args = array() ) {
 }
 
 /**
- * Insert Module
- *
- * @todo  Move to module-functions.php ?
- *
- * @param array $args Module arguments, including `title` (required), `description`, `position`, and `course`
- *                    (required).
- *
- * @since 1.0.0
- * @return int|false Module ID on success or false on failure.
- */
-function edd_ecourse_insert_module( $args = array() ) {
-	$module_id = edd_ecourse_load()->modules->add( $args );
-
-	return $module_id;
-}
-
-/**
  * Get Course Modules
  *
  * @param int $course_id ID of the course.

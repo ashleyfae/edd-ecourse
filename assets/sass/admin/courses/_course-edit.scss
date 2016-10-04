@@ -66,8 +66,73 @@
     }
 
     &:not(.edd-ecourse-is-editing) {
-        span {
+        .hndle span {
             padding: 3px 5px 3px 0;
+        }
+    }
+
+    .inside {
+        margin: 0 !important;
+        padding: 0;
+    }
+}
+
+.edd-ecourse-lesson-list {
+    margin: 0;
+
+    li {
+        cursor: move;
+        font: {
+            weight: 600;
+        }
+        margin: 0;
+        padding: 12px 12px 12px 58px;
+        position: relative;
+
+        &:nth-child(odd) {
+            background: #f5f5f5;
+        }
+
+        &:before {
+            color: rgba(0, 0, 0, 0.2);
+            content: '\f545';
+            display: inline-block;
+            font: {
+                family: Dashicons;
+                size: 16px;
+                weight: 400;
+            }
+            position: absolute;
+            top: 12px;
+            left: 32px;
+        }
+    }
+
+    .edd-ecourse-lesson-status {
+        background: #6e6e6e;
+        color: white;
+        display: inline-block;
+        font-size: 11px;
+        margin: 0 10px;
+        padding: 0 5px;
+        text-transform: uppercase;
+
+        &.edd-ecourse-lesson-status-publish {
+            background: #388a2d;
+        }
+
+        &.edd-ecourse-lesson-status-private {
+            background: #ccbe35;
+        }
+
+        &.edd-ecourse-lesson-status-draft {
+            background: #00a0d2;
+        }
+    }
+
+    .edd-ecourse-lesson-actions {
+        a {
+            text-decoration: none;
         }
     }
 }

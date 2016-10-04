@@ -111,6 +111,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 			require_once EDD_ECOURSE_DIR . 'includes/functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/course-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/lesson-functions.php';
+			require_once EDD_ECOURSE_DIR . 'includes/module-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/post-types.php';
 			require_once EDD_ECOURSE_DIR . 'includes/shortcodes.php';
 

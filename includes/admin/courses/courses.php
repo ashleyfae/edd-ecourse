@@ -173,7 +173,26 @@ function edd_ecourse_render_course_edit() {
 									</h3>
 									<div class="inside">
 
-										<!-- lessons here -->
+										<?php
+										$lessons = edd_ecourse_get_module_lessons( $module->id );
+
+										if ( is_array( $lessons ) ) {
+											?>
+											<ul class="edd-ecourse-lesson-list">
+												<?php foreach ( $lessons as $lesson ) : ?>
+													<li data-id="<?php echo esc_attr( $lesson->ID ); ?>" data-position="<?php echo esc_attr( 1 ); ?>">
+														<span class="edd-ecourse-lesson-title"><?php echo esc_html( $lesson->post_title ); ?></span>
+														<span class="edd-ecourse-lesson-status edd-ecourse-lesson-status-<?php echo sanitize_html_class( $lesson->post_status ); ?>"><?php echo esc_html( edd_ecourse_get_lesson_status( $lesson ) ); ?></span>
+														<span class="edd-ecourse-lesson-actions">
+															<a href="<?php echo esc_url( get_edit_post_link( $lesson->ID ) ); ?>" class="edd-ecourse-lesson-edit-link edd-ecourse-tip" title="<?php esc_attr_e( 'Edit', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-edit"></span></a>
+															<a href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>" target="_blank" class="edd-ecourse-lesson-preview-link edd-ecourse-tip" title="<?php esc_attr_e( 'View', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-visibility"></span></a>
+														</span>
+													</li>
+												<?php endforeach; ?>
+											</ul>
+											<?php
+										}
+										?>
 
 									</div>
 								</div>
