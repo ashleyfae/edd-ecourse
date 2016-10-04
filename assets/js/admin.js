@@ -27,6 +27,7 @@ jQuery(document).ready(function ($) {
             this.add();
             this.remove();
             this.editTitle();
+            this.editSlug();
         },
 
         /**
@@ -248,6 +249,12 @@ jQuery(document).ready(function ($) {
                 });
 
             });
+
+        },
+
+        editSlug: function () {
+
+
 
         }
 

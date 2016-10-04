@@ -392,8 +392,8 @@ class EDD_eCourse_DB extends EDD_DB {
 
 		$sql = "CREATE TABLE " . $this->table_name . " (
 		id bigint(20) NOT NULL AUTO_INCREMENT,
-		title mediumtext NOT NULL,
-		slug varchar(20) NOT NULL,
+		title text NOT NULL,
+		slug varchar(200) NOT NULL,
 		description longtext NOT NULL,
 		status mediumtext NOT NULL,
 		type mediumtext NOT NULL,

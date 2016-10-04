@@ -37,7 +37,7 @@ function edd_ecourse_add_course_cb() {
 
 	$course_id = edd_ecourse_insert_course( array( 'title' => $course_name ) );
 
-	if ( false === $course_id ) {
+	if ( ! $course_id ) {
 		wp_die( __( 'An error occurred while creating the e-course.', 'edd-ecourse' ) );
 	}
 
