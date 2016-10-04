@@ -110,6 +110,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 			require_once EDD_ECOURSE_DIR . 'includes/scripts.php';
 			require_once EDD_ECOURSE_DIR . 'includes/functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/course-functions.php';
+			require_once EDD_ECOURSE_DIR . 'includes/lesson-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/post-types.php';
 			require_once EDD_ECOURSE_DIR . 'includes/shortcodes.php';
 
@@ -118,6 +119,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 				require_once EDD_ECOURSE_DIR . 'includes/admin/courses/actions.php';
 				require_once EDD_ECOURSE_DIR . 'includes/admin/courses/course-functions.php';
 				require_once EDD_ECOURSE_DIR . 'includes/admin/courses/courses.php';
+				require_once EDD_ECOURSE_DIR . 'includes/admin/lessons/meta-boxes.php';
 			}
 		}
 
@@ -278,7 +280,7 @@ register_activation_hook( __FILE__, 'edd_ecourse_activation' );
  * activated before EDD is. Then we need to run the activation again once
  * EDD is finally activated.
  *
- * @todo Actually test this edge case.
+ * @todo  Actually test this edge case.
  *
  * @uses  edd_ecourse_activation()
  *
