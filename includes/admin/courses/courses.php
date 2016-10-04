@@ -66,11 +66,19 @@ function edd_ecourse_render_course_overview() {
 		if ( is_array( $courses ) ) {
 
 			foreach ( $courses as $course ) {
-
+				$download = edd_ecourse_get_course_download( $course->id );
 				?>
 				<div class="edd-ecourse" data-course-id="<?php echo esc_attr( $course->id ); ?>">
 					<div class="edd-ecourse-inner">
 						<h2><?php echo esc_html( $course->title ); ?></h2>
+
+						<div class="edd-ecourse-product">
+							<?php if ( $download ) : ?>
+								<p><?php printf( __( 'Product: %s', 'edd-ecourse' ), '<a href="' . esc_url( get_edit_post_link( $download->ID ) ) . '">' . esc_html( $download->post_title ) . '</a>' ); ?></p>
+							<?php else : ?>
+								<p><?php printf( __( 'This course doesn\'t have an associated product yet. Would you like to <a href="%s">create one?</a>', 'edd-ecourse' ), esc_url( admin_url( 'post-new.php?post_type=download&course=' . $course->id ) ) ); ?></p>
+							<?php endif; ?>
+						</div>
 
 						<div class="edd-ecourse-actions">
 							<a href="<?php echo esc_url( edd_ecourse_get_manage_course_url( $course->id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Manage Course', 'edd-ecourse' ); ?>">

@@ -201,9 +201,11 @@ function edd_ecourse_get_course_download( $course_id, $format = 'object' ) {
 		'post_status'    => 'any',
 		'posts_per_page' => 1,
 		'meta_query'     => array(
-			'key'   => 'ecourse',
-			'value' => $course_id,
-			'type'  => 'NUMERIC'
+			array(
+				'key'   => 'ecourse',
+				'value' => absint( $course_id ),
+				'type'  => 'NUMERIC'
+			)
 		)
 	);
 
