@@ -157,3 +157,43 @@ function edd_ecourse_template_include( $template ) {
 }
 
 add_action( 'template_include', 'edd_ecourse_template_include' );
+
+/**
+ * Get Sidebar
+ *
+ * Includes a sidebar file, depending on which page we're on.
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_get_sidebar() {
+
+	if ( is_singular( 'ecourse_lesson' ) ) {
+		edd_get_template_part( 'ecourse', 'sidebar-lesson' );
+	} else {
+		edd_get_template_part( 'ecourse', 'sidebar' );
+	}
+
+}
+
+/**
+ * Get Dashboard URL
+ *
+ * URL to the e-course dashboard page.
+ *
+ * @todo  Maybe move to misc. functions.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_get_dashboard_url() {
+	$dashboard = edd_get_option( 'ecourse_dashboard_page' );
+
+	if ( $dashboard ) {
+		$url = get_permalink( $dashboard );
+	} else {
+		$url = false;
+	}
+
+	return apply_filters( 'edd_ecourse_dashboard_url', $url, $dashboard );
+}

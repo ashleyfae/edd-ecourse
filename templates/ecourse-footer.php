@@ -8,3 +8,14 @@
  * @copyright Copyright (c) 2016, Ashley Gibson
  * @license   GPL2+
  */
+
+?>
+
+</main>
+
+</div> <!-- #wrapper -->
+
+<?php wp_footer(); ?>
+
+</body>
+</html>
