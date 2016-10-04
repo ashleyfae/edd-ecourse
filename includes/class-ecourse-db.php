@@ -98,12 +98,15 @@ class EDD_eCourse_DB extends EDD_DB {
 			return false;
 		}
 
-		$course = $this->get_course_by( 'id', $args['id'] );
+		// Updating an existing course.
+		if ( array_key_exists( 'id', $args ) ) {
+			$course = $this->get_course_by( 'id', $args['id'] );
 
-		if ( $course ) {
-			$this->update( $course->id, $args );
+			if ( $course ) {
+				$this->update( $course->id, $args );
 
-			return $course->id;
+				return $course->id;
+			}
 		}
 
 		return $this->insert( $data, 'ecourse' );

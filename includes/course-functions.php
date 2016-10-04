@@ -104,9 +104,49 @@ function edd_ecourse_get_courses( $args = array() ) {
  * @return int|bool Course ID on success or false on failure.
  */
 function edd_ecourse_insert_course( $args = array() ) {
+	// Auto create slug.
+	if ( ! array_key_exists( 'id', $args ) && ! array_key_exists( 'slug', $args ) ) {
+		$slug         = sanitize_title( $args['title'] );
+		$args['slug'] = edd_ecourse_unique_course_slug( $slug );
+	}
+
 	$course_id = edd_ecourse_load()->courses->add( $args );
 
 	return $course_id;
+}
+
+/**
+ * Create a Unique Course Slug
+ *
+ * Checks to see if the given slug already exists. If so, numbers are appended
+ * until the slug becomes available.
+ *
+ * @see   wp_unique_post_slug() - Based on this.
+ *
+ * @param string $slug Desired slug.
+ *
+ * @since 1.0.0
+ * @return string Unique slug.
+ */
+function edd_ecourse_unique_course_slug( $slug ) {
+	// Check if this slug already exists.
+	$courses = edd_ecourse_load()->courses->get_courses( array( 'slug' => $slug ) );
+
+	$new_slug = $slug;
+
+	if ( $courses ) {
+		$suffix = 2;
+
+		do {
+			$alt_slug = _truncate_post_slug( $slug, 200 - ( strlen( $suffix ) + 1 ) ) . "-$suffix";
+			$courses  = edd_ecourse_load()->courses->get_courses( array( 'slug' => $alt_slug ) );
+			$suffix ++;
+		} while ( $courses );
+
+		$new_slug = $alt_slug;
+	}
+
+	return apply_filters( 'edd_ecourse_unique_course_slug', $new_slug, $slug );
 }
 
 /**

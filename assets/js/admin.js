@@ -59,6 +59,8 @@ jQuery(document).ready(function ($) {
                     dataType: "json",
                     success: function (response) {
 
+                        console.log(response);
+
                         if (true === response.success) {
 
                             // Remove spinner.
