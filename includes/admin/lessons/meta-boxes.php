@@ -56,7 +56,7 @@ function edd_ecourse_render_lesson_details_box( $post ) {
 
 	if ( is_array( $courses ) && count( $courses ) ) : ?>
 		<p>
-			<label for="course"><?php _e( 'Course', 'edd-ecourse' ); ?></label>
+			<label for="course"><?php _e( 'Course:', 'edd-ecourse' ); ?></label>
 			<select id="course" name="course">
 				<?php foreach ( $courses as $course ) : ?>
 					<option value="<?php echo esc_attr( $course->id ); ?>" <?php selected( $selected_course, $course->id ); ?>><?php echo esc_html( $course->title ); ?></option>
@@ -66,7 +66,7 @@ function edd_ecourse_render_lesson_details_box( $post ) {
 
 		<?php if ( false !== $modules ) : ?>
 			<p>
-				<label for="module"><?php _e( 'Module', 'edd-ecourse' ); ?></label>
+				<label for="module"><?php _e( 'Module:', 'edd-ecourse' ); ?></label>
 				<select id="module" name="module">
 					<?php foreach ( $modules as $module ) : ?>
 						<option value="<?php echo esc_attr( $module->id ); ?>" <?php selected( $selected_module, $module->id ); ?>><?php echo esc_html( $module->title ); ?></option>
@@ -77,7 +77,7 @@ function edd_ecourse_render_lesson_details_box( $post ) {
 	<?php endif; ?>
 
 	<p>
-		<label for="lesson_type"><?php _e( 'Lesson Type', 'edd-ecourse' ); ?></label>
+		<label for="lesson_type"><?php _e( 'Lesson Type:', 'edd-ecourse' ); ?></label>
 		<select id="lesson_type" name="lesson_type[]" multiple>
 			<?php foreach ( edd_ecourse_get_available_lesson_types() as $id => $options ) : ?>
 				<option value="<?php echo esc_attr( $id ); ?>"<?php echo in_array( $id, $lesson_type ) ? ' selected' : ''; ?>><?php echo esc_html( $options['name'] ); ?></option>
@@ -111,19 +111,18 @@ function edd_ecourse_render_lesson_permissions_box( $post ) {
 		$price_restrict = get_post_meta( $post->ID, 'required_price_id', true );
 		?>
 		<p>
-			<label><?php _e( 'Restrict to Price ID', 'edd-ecourse' ); ?></label>
-			<?php // @todo make these change if the course changes ?>
-			<span id="edd-ecourse-price-restrictions">
-				<?php foreach ( edd_get_variable_prices( $download_id ) as $price_id => $price ) :
-					$selected = ( is_array( $price_restrict ) && in_array( $price_id, $price_restrict ) ) ? ' checked' : '';
-					?>
-					<br>
-					<label for="required_price_id_<?php echo sanitize_html_class( $price_id ); ?>">
-						<input type="checkbox" id="required_price_id_<?php echo sanitize_html_class( $price_id ); ?>" name="required_price_id[]" value="<?php echo esc_attr( $price_id ); ?>"<?php echo $selected; ?>>
-						<?php echo esc_html( $price_id ); ?>
-					</label>
-				<?php endforeach; ?>
-			</span>
+			<label><?php _e( 'Restrict to Price ID:', 'edd-ecourse' ); ?></label>
+		</p>
+		<?php // @todo make these change if the course changes ?>
+		<p id="edd-ecourse-price-restrictions">
+			<?php foreach ( edd_get_variable_prices( $download_id ) as $price_id => $price ) :
+				$selected = ( is_array( $price_restrict ) && in_array( $price_id, $price_restrict ) ) ? ' checked' : '';
+				?>
+				<label for="required_price_id_<?php echo sanitize_html_class( $price_id ); ?>">
+					<input type="checkbox" id="required_price_id_<?php echo sanitize_html_class( $price_id ); ?>" name="required_price_id[]" value="<?php echo esc_attr( $price_id ); ?>"<?php echo $selected; ?>>
+					<?php echo esc_html( sprintf( '%s (%s)', $price['name'], edd_currency_filter( $price['amount'] ) ) ); ?>
+				</label>
+			<?php endforeach; ?>
 		</p>
 		<?php
 	}
@@ -190,6 +189,15 @@ function edd_ecourse_save_lesson_meta( $post_id, $post ) {
 		update_post_meta( $post_id, 'lesson_type', $sanitized_type );
 	} else {
 		delete_post_meta( $post_id, 'lesson_type' );
+	}
+
+	// Price restriction
+	$price_restrict = array_key_exists( 'required_price_id', $_POST ) ? $_POST['required_price_id'] : false;
+	if ( is_array( $price_restrict ) ) {
+		$sanitized_restrict = array_map( 'absint', $price_restrict );
+		update_post_meta( $post_id, 'required_price_id', $sanitized_restrict );
+	} else {
+		delete_post_meta( $post_id, 'required_price_id' );
 	}
 
 	// Set the lesson position in the module.
