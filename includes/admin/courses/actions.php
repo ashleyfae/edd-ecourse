@@ -212,6 +212,40 @@ function edd_ecourse_update_module_title() {
 add_action( 'wp_ajax_edd_ecourse_update_module_title', 'edd_ecourse_update_module_title' );
 
 /**
+ * Save Module Positions
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_save_module_positions() {
+
+	// Security check.
+	check_ajax_referer( 'edd_ecourse_manage_course', 'nonce' );
+
+	// Permission check.
+	if ( ! current_user_can( 'manage_options' ) ) { // @todo change this
+		wp_die( __( 'You don\'t have permission to delete this module.', 'edd-ecourse' ) );
+	}
+
+	$modules = $_POST['modules'];
+
+	if ( ! is_array( $modules ) ) {
+		wp_die();
+	}
+
+	foreach ( $modules as $position => $module_id ) {
+		if ( is_numeric( $position ) ) {
+			$result = edd_ecourse_load()->modules->update( $module_id, array( 'position' => absint( $position ) ) );
+		}
+	}
+
+	wp_send_json_success();
+
+}
+
+add_action( 'wp_ajax_edd_ecourse_save_module_positions', 'edd_ecourse_save_module_positions' );
+
+/**
  * Load Underscore.js Course Template
  *
  * @since 1.0.0

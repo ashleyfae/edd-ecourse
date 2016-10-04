@@ -200,11 +200,11 @@ jQuery(document).ready(function ($) {
                 wrap.on('keypress click', function (e) {
                     //wrap.on('click', '.edd-ecourse-submit-edit-course-title', function (e) {
 
-                    if (! wrap.hasClass('edd-ecourse-is-editing')) {
+                    if (!wrap.hasClass('edd-ecourse-is-editing')) {
                         return;
                     }
 
-                    if ('click' == e.type && ! $(e.target).hasClass('edd-ecourse-submit-edit-course-title')) {
+                    if ('click' == e.type && !$(e.target).hasClass('edd-ecourse-submit-edit-course-title')) {
                         return;
                     }
 
@@ -257,8 +257,59 @@ jQuery(document).ready(function ($) {
          * Initialize all the things.
          */
         init: function () {
+            this.sort();
             this.add();
             this.editTitle();
+        },
+
+        /**
+         * Sort Modules
+         * Change the order of the modules and save.
+         */
+        sort: function () {
+            $('#edd-ecourse-module-sortables').sortable({
+                items: '.postbox:not(.edd-ecourse-add-module)',
+                handle: '.hndle'
+            }).on('sortstop', function (event, ui) {
+
+                var modules = [];
+
+                $('.edd-ecourse-module-group').each(function () {
+                    modules.push($(this).data('module'));
+                });
+
+                // Save positioning.
+                var data = {
+                    action: 'edd_ecourse_save_module_positions',
+                    modules: modules,
+                    nonce: $('#edd_ecourse_manage_course_nonce').val()
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+
+                        console.log(response);
+
+                        if (true !== response.success) {
+
+                            if (window.console && window.console.log) {
+                                console.log(response);
+                            }
+
+                        }
+
+                    }
+                }).fail(function (response) {
+                    if (window.console && window.console.log) {
+                        console.log(response);
+                    }
+                });
+
+            });
         },
 
         /**

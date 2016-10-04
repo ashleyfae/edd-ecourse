@@ -197,6 +197,8 @@ function edd_ecourse_render_course_edit() {
 					</div>
 				</div>
 
+				<?php wp_nonce_field( 'edd_ecourse_manage_course', 'edd_ecourse_manage_course_nonce' ); ?>
+
 			</div>
 		</div>
 	</div>
