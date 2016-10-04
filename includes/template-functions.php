@@ -85,13 +85,15 @@ function edd_ecourse_modify_styles_queue() {
 
 	$new_queue = array();
 
+	$upload_dir = wp_get_upload_dir();
+
 	foreach ( $wp_styles->queue as $handle ) {
 		if ( ! array_key_exists( $handle, $wp_styles->registered ) ) {
 			continue;
 		}
 
 		// Only add to new queue if the style isn't from the theme.
-		if ( false === strpos( $wp_styles->registered[ $handle ]->src, get_theme_root_uri() ) ) {
+		if ( false === strpos( $wp_styles->registered[ $handle ]->src, get_theme_root_uri() ) && false === strpos( $wp_styles->registered[ $handle ]->src, $upload_dir['baseurl'] ) ) {
 			$new_queue[] = $handle;
 		}
 	}
