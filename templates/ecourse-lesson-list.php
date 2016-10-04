@@ -19,3 +19,13 @@
  *      `description` - Course description.
  */
 global $edd_ecourse;
+
+/**
+ * Include the header.
+ */
+edd_get_template_part( 'ecourse', 'header' );
+
+/**
+ * Include the footer.
+ */
+edd_get_template_part( 'ecourse', 'footer' );
