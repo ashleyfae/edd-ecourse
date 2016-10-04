@@ -148,7 +148,7 @@ function edd_ecourse_get_course_modules( $course_id, $args = array() ) {
 function edd_ecourse_get_course_lessons( $course_id, $query_args = array() ) {
 
 	$default_args = array(
-		'post_type'      => 'ecourse',
+		'post_type'      => 'ecourse_lesson',
 		'posts_per_page' => 500,
 		'meta_query'     => array(
 			array(
@@ -157,6 +157,10 @@ function edd_ecourse_get_course_lessons( $course_id, $query_args = array() ) {
 			)
 		)
 	);
+
+	if ( current_user_can( 'manage_options' ) ) {
+		$default_args['post_status'] = 'any';
+	}
 
 	$query_args = wp_parse_args( $query_args, $default_args );
 

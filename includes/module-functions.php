@@ -55,6 +55,10 @@ function edd_ecourse_get_module_lessons( $module_id, $args = array() ) {
 		)
 	);
 
+	if ( current_user_can( 'manage_options' ) ) {
+		$default_args['post_status'] = 'any';
+	}
+
 	$query_args = wp_parse_args( $args, $default_args );
 
 	$lessons = get_posts( $query_args );
