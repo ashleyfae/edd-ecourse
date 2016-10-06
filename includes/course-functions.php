@@ -291,6 +291,35 @@ function edd_ecourse_get_course_download( $course_id, $format = 'object' ) {
 }
 
 /**
+ * Get Course Permalink
+ *
+ * Returns the URL to the "public" facing course archive page.
+ *
+ * @param int|object|string $id_or_slug Course ID, object, or slug.
+ *
+ * @since 1.0.0
+ * @return string|false URL or false on failure.
+ */
+function edd_ecourse_get_course_permalink( $id_or_slug ) {
+	if ( is_numeric( $id_or_slug ) ) {
+		$course = edd_ecourse_get_course( $id_or_slug );
+		$slug   = is_object( $course ) ? $course->slug : false;
+	} elseif ( is_object( $id_or_slug ) ) {
+		$slug = $id_or_slug->slug;
+	} else {
+		$slug = wp_strip_all_tags( $id_or_slug );
+	}
+
+	if ( ! $slug ) {
+		return false;
+	}
+
+	$url = sprintf( home_url( '/%s/%s/'), edd_ecourse_get_endpoint(), urlencode( $slug ) );
+
+	return apply_filters( 'edd_ecourse_course_permalink', $url, $slug, $id_or_slug );
+}
+
+/**
  * Get Current Course
  *
  * @since 1.0.0
@@ -341,6 +370,14 @@ function edd_ecourse_get_id() {
 	return $edd_ecourse->id;
 }
 
+/**
+ * Get Modules
+ *
+ * Returns an array of modules that are in the current course.
+ *
+ * @since 1.0.0
+ * @return array|false
+ */
 function edd_ecourse_get_modules() {
 	$course_id = edd_ecourse_get_id();
 	$modules   = edd_ecourse_get_course_modules( $course_id );

@@ -85,6 +85,10 @@ function edd_ecourse_render_course_overview() {
 								<span class="dashicons dashicons-edit"></span>
 							</a>
 
+							<a href="<?php echo esc_url( edd_ecourse_get_course_permalink( $course->slug ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-view" title="<?php esc_attr_e( 'View Course', 'edd-ecourse' ); ?>" target="_blank">
+								<span class="dashicons dashicons-visibility"></span>
+							</a>
+
 							<button href="#" class="button edd-ecourse-tip edd-ecourse-action-delete" title="<?php esc_attr_e( 'Delete Course', 'edd-ecourse' ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'delete_course_' . $course->id ) ); ?>">
 								<span class="dashicons dashicons-trash"></span>
 							</button>

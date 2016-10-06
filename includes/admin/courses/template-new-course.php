@@ -27,6 +27,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<span class="dashicons dashicons-edit"></span>
 				</a>
 
+				<a href="{{ data.view_course_url }}" class="button edd-ecourse-tip edd-ecourse-action-view" title="<?php esc_attr_e( 'View Course', 'edd-ecourse' ); ?>" target="_blank">
+					<span class="dashicons dashicons-visibility"></span>
+				</a>
+
 				<button href="#" class="button edd-ecourse-tip edd-ecourse-action-delete" title="<?php esc_attr_e( 'Delete Course', 'edd-ecourse' ); ?>" data-nonce="{{ data.nonce }}">
 					<span class="dashicons dashicons-trash"></span>
 				</button>

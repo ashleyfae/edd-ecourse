@@ -45,6 +45,7 @@ function edd_ecourse_add_course_cb() {
 		'ID'              => $course_id,
 		'name'            => $course_name,
 		'edit_course_url' => edd_ecourse_get_manage_course_url( $course_id ),
+		'view_course_url' => edd_ecourse_get_course_permalink( $course_id ),
 		'nonce'           => wp_create_nonce( 'delete_course_' . $course_id )
 	);
 
