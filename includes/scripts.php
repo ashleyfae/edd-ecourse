@@ -21,6 +21,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function edd_ecourse_scripts( $hook ) {
+	if ( ! edd_ecourse_is_course_page() ) {
+		return;
+	}
+
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
