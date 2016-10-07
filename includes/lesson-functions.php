@@ -172,8 +172,104 @@ function edd_ecourse_get_lesson_position( $lesson ) {
 
 }
 
-function edd_ecourse_lesson_completion() {
+/**
+ * Get Lesson Completion
+ *
+ * Determines whether a given user has completed a lesson, not started a lesson, or is
+ * in the middle of one.
+ *
+ * @param WP_Post|int  $lesson Post object or ID.
+ * @param bool|WP_User $user   User object or leave blank to use current user.
+ *
+ * @since 1.0.0
+ * @return string Will return `complete`, `in-progress`, or `not-started`.
+ */
+function edd_ecourse_get_lesson_completion( $lesson, $user = false ) {
 
+	if ( ! $user ) {
+		$user = wp_get_current_user();
+	}
+
+	$lesson_id = is_a( $lesson, 'WP_Post' ) ? $lesson->ID : $lesson;
+
+	$status = 'not-started'; // Default
+	$course = edd_ecourse_get_lesson_course( $lesson, false );
+
+	if ( $course ) {
+		$started_lessons   = edd_ecourse_get_started_lessons( $course, $user );
+		$completed_lessons = edd_ecourse_get_completed_lessons( $course, $user );
+
+		if ( array_key_exists( $lesson_id, $completed_lessons ) ) {
+			$status = 'complete';
+		} elseif ( array_key_exists( $lesson_id, $started_lessons ) ) {
+			$status = 'in-progress';
+		} else {
+			$status = 'not-started';
+		}
+	}
+
+	return apply_filters( 'edd_ecourse_lesson_completion', $status, $lesson_id, $course );
+
+}
+
+/**
+ * Get Lesson Completion Icon
+ *
+ * Will return a different icon based on the completion status:
+ *      + Completed
+ *      + In Progress
+ *      + Not Started
+ *
+ * @param WP_Post|int  $lesson Post object or ID.
+ * @param bool|WP_User $user   User object or leave blank to use current user.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_get_lesson_completion_icon( $lesson, $user = false ) {
+
+	$status = edd_ecourse_get_lesson_completion( $lesson, $user );
+
+	switch ( $status ) {
+
+		case 'complete' :
+			$icon = apply_filters( 'edd_ecourse_lesson_complete_icon', 'check-circle' );
+			$html = '<i class="fa fa-' . sanitize_html_class( $icon ) . '"></i>';
+			break;
+
+		case 'in-progress' :
+			$icon = apply_filters( 'edd_ecourse_lesson_complete_in_progress', 'adjust' );
+			$html = '<i class="fa fa-' . sanitize_html_class( $icon ) . '"></i>';
+			break;
+
+		default :
+			$icon = apply_filters( 'edd_ecourse_lesson_complete_not_started', 'circle-o' );
+			$html = '<i class="fa fa-' . sanitize_html_class( $icon ) . '"></i>';
+
+	}
+
+	return apply_filters( 'edd_ecourse_lesson_completion_icon_html', $html, $icon, $status, $lesson, $user );
+
+}
+
+/**
+ * Display Lesson Completion Icon
+ *
+ * Will display a different icon based on the completion status:
+ *      + Completed
+ *      + In Progress
+ *      + Not Started
+ *
+ * @param WP_Post|int  $lesson Post object or ID.
+ * @param bool|WP_User $user   User object or leave blank to use current user.
+ *
+ * @uses  edd_ecourse_get_lesson_completion_icon()
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_lesson_completion_icon( $lesson, $user = false ) {
+	echo edd_ecourse_get_lesson_completion_icon( $lesson, $user );
 }
 
 /**
