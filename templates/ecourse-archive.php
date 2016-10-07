@@ -37,7 +37,7 @@ edd_get_template_part( 'ecourse', 'header' );
 						<h2><?php echo esc_html( $module->title ); ?></h2>
 						<ul>
 							<?php foreach ( $lessons as $lesson ) : ?>
-								<li>
+								<li id="lesson-<?php echo esc_attr( $lesson->ID ); ?>"<?php edd_ecourse_lesson_class( $lesson ); ?>>
 									<a href="<?php echo esc_url( get_permalink( $lesson ) ); ?>">
 										<span class="ecourse-lesson-status"><?php edd_ecourse_lesson_completion_icon( $lesson ); ?></span>
 										<span class="ecourse-lesson-title"><?php echo esc_html( get_the_title( $lesson ) ); ?></span>

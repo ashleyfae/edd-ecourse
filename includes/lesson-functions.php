@@ -182,11 +182,15 @@ function edd_ecourse_get_lesson_position( $lesson ) {
  * @param bool|WP_User $user   User object or leave blank to use current user.
  *
  * @since 1.0.0
- * @return string Will return `complete`, `in-progress`, or `not-started`.
+ * @return string|false Will return `complete`, `in-progress`, or `not-started`. False if not logged in.
  */
 function edd_ecourse_get_lesson_completion( $lesson, $user = false ) {
 
 	if ( ! $user ) {
+		if ( ! is_user_logged_in() ) {
+			return false;
+		}
+
 		$user = wp_get_current_user();
 	}
 
@@ -314,4 +318,65 @@ function edd_ecourse_get_lesson_type_icon( $lesson ) {
  */
 function edd_ecourse_lesson_type_icon( $lesson ) {
 	echo edd_ecourse_get_lesson_type_icon( $lesson );
+}
+
+/**
+ * Get Lesson Classes
+ *
+ * Returns an array of HTML classes for a given lesson. Includes
+ * class names that indicate tehe lesson type and view status.
+ *
+ * @param int|WP_Post $lesson Post object or ID.
+ *
+ * @since 1.0.0
+ * @return array
+ */
+function edd_ecourse_get_lesson_classes( $lesson ) {
+
+	$classes = array();
+
+	// Completion status.
+	$status = edd_ecourse_get_lesson_completion( $lesson );
+	if ( $status ) {
+		$classes[] = 'lesson-completion-' . $status;
+	}
+
+	// Status.
+	$status    = edd_ecourse_get_lesson_status( $lesson );
+	$classes[] = 'lesson-status-' . $status;
+
+	// Type(s)
+	$types = edd_ecourse_get_lesson_type( $lesson );
+	if ( is_array( $types ) ) {
+		foreach ( $types as $type ) {
+			$classes[] = 'lesson-type-' . $type;
+		}
+	}
+
+	// Sanitize them all.
+	$sanitized_classes = array();
+	foreach ( $classes as $class ) {
+		$sanitized_classes[] = sanitize_html_class( strtolower( $class ) );
+	}
+
+	return apply_filters( 'edd_ecourse_lesson_classes', $sanitized_classes, $lesson );
+
+}
+
+/**
+ * Display Lesson Class Attribute
+ *
+ * @param int|WP_Post $lesson
+ *
+ * @uses  edd_ecourse_get_lesson_classes()
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_lesson_class( $lesson ) {
+	$classes = edd_ecourse_get_lesson_classes( $lesson );
+
+	if ( count( $classes ) ) {
+		echo ' class="' . esc_attr( implode( ' ', $classes ) ) . '"';
+	}
 }
