@@ -2,5 +2,23 @@
     @media (min-width: 768px) {
         background: #f9f9f9;
         border-right: 1px solid #e5e5e5;
+
+        .ecourse-module-group {
+            margin-right: -1px;
+        }
+    }
+
+    .edd-ecourse-title {
+        padding: 1em;
+        margin: 0;
+        text-align: center;
+
+        a {
+            display: block;
+        }
+
+        + .ecourse-module-group {
+            margin-top: 0;
+        }
     }
 }

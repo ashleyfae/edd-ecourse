@@ -314,7 +314,7 @@ function edd_ecourse_get_course_permalink( $id_or_slug ) {
 		return false;
 	}
 
-	$url = sprintf( home_url( '/%s/%s/'), edd_ecourse_get_endpoint(), urlencode( $slug ) );
+	$url = sprintf( home_url( '/%s/%s/' ), edd_ecourse_get_endpoint(), urlencode( $slug ) );
 
 	return apply_filters( 'edd_ecourse_course_permalink', $url, $slug, $id_or_slug );
 }
@@ -368,6 +368,40 @@ function edd_ecourse_get_id() {
 	global $edd_ecourse;
 
 	return $edd_ecourse->id;
+}
+
+/**
+ * Display Current E-Course Permalink
+ *
+ * @param bool $escape Whether or not to escape the URL.
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_permalink( $escape = true ) {
+	global $edd_ecourse;
+
+	$slug = $edd_ecourse->slug;
+
+	$url = edd_ecourse_get_course_permalink( $slug );
+
+	if ( $escape ) {
+		echo esc_url( $url );
+	} else {
+		echo $url;
+	}
+}
+
+/**
+ * Display Current E-Course ID
+ *
+ * @uses  edd_ecourse_get_id()
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_id() {
+	echo edd_ecourse_get_id();
 }
 
 /**
