@@ -1,0 +1,59 @@
+.ecourse-module-group {
+    margin: 1.5em 0;
+
+    // Module heading.
+    > h2 {
+        @include font-size(2.0);
+        background: white;
+        border: 1px solid #ddd;
+        margin: 0;
+        padding: 10px 15px;
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            clear: both;
+
+            &:before, &:after {
+                @include clearfix;
+            }
+        }
+
+        a {
+            color: $color-text;
+            display: block;
+            padding: 10px 15px;
+            position: relative;
+
+            &:hover {
+                background: #f5f5f5;
+            }
+        }
+    }
+}
+
+.ecourse-lesson-status {
+    display: inline-block;
+    width: 40px;
+
+    &:after {
+        background: #ddd;
+        content: '';
+        height: 100%;
+        width: 1px;
+        position: absolute;
+        top: 0;
+        left: 44px;
+    }
+}
+
+.ecourse-lesson-type {
+    float: right;
+}
