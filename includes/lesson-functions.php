@@ -333,7 +333,7 @@ function edd_ecourse_lesson_type_icon( $lesson ) {
  */
 function edd_ecourse_get_lesson_classes( $lesson ) {
 
-	$classes = array();
+	$classes = array( 'ecourse-lesson' );
 
 	// Completion status.
 	$status = edd_ecourse_get_lesson_completion( $lesson );
@@ -367,14 +367,19 @@ function edd_ecourse_get_lesson_classes( $lesson ) {
  * Display Lesson Class Attribute
  *
  * @param int|WP_Post $lesson
+ * @param string      $extra_classes Additional class name(s) to add.
  *
  * @uses  edd_ecourse_get_lesson_classes()
  *
  * @since 1.0.0
  * @return void
  */
-function edd_ecourse_lesson_class( $lesson ) {
+function edd_ecourse_lesson_class( $lesson, $extra_classes = '' ) {
 	$classes = edd_ecourse_get_lesson_classes( $lesson );
+
+	if ( $extra_classes ) {
+		$classes[] = $extra_classes;
+	}
 
 	if ( count( $classes ) ) {
 		echo ' class="' . esc_attr( implode( ' ', $classes ) ) . '"';

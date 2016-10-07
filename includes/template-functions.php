@@ -170,6 +170,19 @@ function edd_ecourse_template_include( $template ) {
 		$lesson_template = edd_get_template_part( 'ecourse', 'lesson', false );
 
 		if ( $lesson_template ) {
+			// Set global variable.
+			global $post, $edd_ecourse;
+
+			$course_id = edd_ecourse_get_lesson_course( $post );
+
+			if ( $course_id ) {
+				$course = edd_ecourse_load()->courses->get_course_by( 'id', absint( $course_id ) );
+
+				if ( $course ) {
+					$edd_ecourse = $course;
+				}
+			}
+
 			$template = $lesson_template;
 		}
 
