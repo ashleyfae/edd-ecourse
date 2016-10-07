@@ -2,6 +2,8 @@
 /**
  * EDD Actions
  *
+ * @todo      Integrate with recurring payments.
+ *
  * @package   edd-ecourse
  * @copyright Copyright (c) 2016, Ashley Gibson
  * @license   GPL2+
@@ -103,3 +105,30 @@ function edd_ecourse_remove_access_after_refund( $payment_id, $new_status, $old_
 }
 
 add_action( 'edd_update_payment_status', 'edd_ecourse_remove_access_after_refund', 10, 3 );
+
+/**
+ * Add link to course material instead of "no files found".
+ *
+ * @param string $text        Existing text that reads "No downloadable files found".
+ * @param int    $download_id Download ID.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_view_course_material_link( $text, $download_id ) {
+
+	$course = get_post_meta( $download_id, 'ecourse', true );
+
+	// Not a course - bail.
+	if ( ! $course ) {
+		return $text;
+	}
+
+	$course_url  = edd_ecourse_get_course_permalink( $course );
+	$course_link = '<a href="' . esc_url( $course_url ) . '">' . __( 'View course material', 'edd-ecourse' ) . '</a>';
+
+	return apply_filters( 'edd_ecourse_view_course_material_link', $course_link, $text, $download_id, $course );
+
+}
+
+add_filter( 'edd_receipt_no_files_found_text', 'edd_ecourse_view_course_material_link', 10, 2 );
