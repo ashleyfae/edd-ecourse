@@ -9,11 +9,13 @@
     }
 
     .edd-ecourse-title {
+        background: $color-primary;
         padding: 1em;
         margin: 0;
         text-align: center;
 
         a {
+            color: white;
             display: block;
         }
 
