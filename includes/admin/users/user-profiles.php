@@ -94,9 +94,9 @@ function edd_ecourse_edit_user_profile( $user_id ) {
 		$permission = array_key_exists( 'edd_view_ecourse_' . absint( $course->id ), $_POST ) ? $_POST[ 'edd_view_ecourse_' . absint( $course->id ) ] : false;
 
 		if ( $permission && ! user_can( $user, $capability ) ) {
-			$user->add_cap( $capability );
+			edd_ecourse_grant_course_access( $course->id, $user );
 		} elseif ( ! $permission && user_can( $user, $capability ) ) {
-			$user->remove_cap( $capability );
+			edd_ecourse_revoke_course_access( $course->id, $user );
 		}
 	}
 

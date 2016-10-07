@@ -114,3 +114,106 @@ function edd_ecourse_user_has_completed_lesson( $lesson_id, $user = false ) {
 	return apply_filters( 'edd_ecourse_user_has_completed_course', $has_completed, $lesson_id, $user_id, $course );
 
 }
+
+/**
+ * Has Course Access
+ *
+ * Checks whether or not a given user has access to a given course.
+ *
+ * @param int              $course_id ID of the course to grant access to.
+ * @param bool|WP_User|int $user      User object/ID or leave false to use current user.
+ *
+ * @since 1.0.0
+ * @return bool
+ */
+function edd_ecourse_has_course_access( $course_id, $user = false ) {
+
+	if ( is_numeric( $user ) ) {
+		$user = new WP_User( $user );
+	} elseif ( ! $user ) {
+		$user = wp_get_current_user();
+	}
+
+	if ( ! is_a( $user, 'WP_User' ) ) {
+		return false;
+	}
+
+	$capability = 'view_course_' . absint( $course_id );
+
+	$has_access = user_can( $user, $capability );
+
+	return apply_filters( 'edd_ecourse_has_course_access', $has_access, $course_id, $user, $capability );
+
+}
+
+/**
+ * Grant Access to Course
+ *
+ * @param int              $course_id ID of the course to grant access to.
+ * @param bool|WP_User|int $user      User object/ID or leave false to use current user.
+ *
+ * @since 1.0.0
+ * @return bool
+ */
+function edd_ecourse_grant_course_access( $course_id, $user = false ) {
+
+	if ( is_numeric( $user ) ) {
+		$user = new WP_User( $user );
+	} elseif ( ! $user ) {
+		$user = wp_get_current_user();
+	}
+
+	if ( ! is_a( $user, 'WP_User' ) ) {
+		return false;
+	}
+
+	// If they already have access, bail.
+	if ( edd_ecourse_has_course_access( $course_id, $user ) ) {
+		return true;
+	}
+
+	$capability = 'view_course_' . absint( $course_id );
+
+	$user->add_cap( $capability );
+
+	do_action( 'edd_ecourse_grant_course_access', $course_id, $user );
+
+	return true;
+
+}
+
+/**
+ * Revoke Access to Course
+ *
+ * @param int              $course_id ID of the course to grant access to.
+ * @param bool|WP_User|int $user      User object/ID or leave false to use current user.
+ *
+ * @since 1.0.0
+ * @return bool
+ */
+function edd_ecourse_revoke_course_access( $course_id, $user = false ) {
+
+	if ( is_numeric( $user ) ) {
+		$user = new WP_User( $user );
+	} elseif ( ! $user ) {
+		$user = wp_get_current_user();
+	}
+
+	if ( ! is_a( $user, 'WP_User' ) ) {
+		return false;
+	}
+
+	// If they don't have access, bail.
+	if ( ! edd_ecourse_has_course_access( $course_id, $user ) ) {
+		return true;
+	}
+
+	$capability = 'view_course_' . absint( $course_id );
+
+	$user->remove_cap( $capability );
+
+	do_action( 'edd_ecourse_revoke_course_access', $course_id, $user );
+
+	return true;
+
+}

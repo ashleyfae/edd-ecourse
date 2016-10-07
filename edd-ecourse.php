@@ -107,6 +107,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 			// Include scripts
 			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db.php';
 			require_once EDD_ECOURSE_DIR . 'includes/class-modules-db.php';
+			require_once EDD_ECOURSE_DIR . 'includes/edd-actions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/scripts.php';
 			require_once EDD_ECOURSE_DIR . 'includes/functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/course-functions.php';
