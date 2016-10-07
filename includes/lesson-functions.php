@@ -83,6 +83,8 @@ function edd_ecourse_get_lesson_type( $lesson ) {
  * Get Available Lesson Types
  *
  * Returns an array of all the available lesson type choices.
+ * The icon should be the name of a Font Awesome icon (without the
+ * `fa fa-` prefixes).
  *
  * @since 1.0.0
  * @return array
@@ -91,19 +93,19 @@ function edd_ecourse_get_available_lesson_types() {
 	$types = array(
 		'audio'    => array(
 			'name' => __( 'Audio', 'edd-ecourse' ),
-			'icon' => ''
+			'icon' => 'microphone'
 		),
 		'document' => array(
 			'name' => __( 'Document', 'edd-ecourse' ),
-			'icon' => ''
+			'icon' => 'paperclip'
 		),
 		'text'     => array(
 			'name' => __( 'Text', 'edd-ecourse' ),
-			'icon' => ''
+			'icon' => 'file-text'
 		),
 		'video'    => array(
 			'name' => __( 'Video', 'edd-ecourse' ),
-			'icon' => ''
+			'icon' => 'video'
 		)
 	);
 
@@ -168,4 +170,52 @@ function edd_ecourse_get_lesson_position( $lesson ) {
 
 	return apply_filters( 'edd_ecourse_get_lesson_position', $position, $lesson );
 
+}
+
+function edd_ecourse_lesson_completion() {
+
+}
+
+/**
+ * Get Lesson Type Icon(s)
+ *
+ * @param WP_Post|int $lesson Post object or ID.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_get_lesson_type_icon( $lesson ) {
+
+	$types     = edd_ecourse_get_lesson_type( $lesson );
+	$icons     = array();
+	$all_types = edd_ecourse_get_available_lesson_types();
+
+	if ( is_array( $types ) ) {
+		foreach ( $types as $type ) {
+			if ( array_key_exists( $type, $all_types ) && isset( $all_types[ $type ]['icon'] ) ) {
+				$icons[ $type ] = '<i class="fa fa-' . sanitize_html_class( $all_types[ $type ]['icon'] ) . '"></i>';
+			}
+		}
+	}
+
+	$icons = apply_filters( 'edd_ecourse_lesson_type_icon_array', $icons, $lesson, $types, $all_types );
+
+	$html = implode( '', $icons );
+
+	return apply_filters( 'edd_ecourse_lesson_type_icon_html', $html, $icons, $lesson, $types, $all_types );
+
+}
+
+/**
+ * Display Lesson Type Icon(s)
+ *
+ * @param WP_Post|int $lesson Post object or ID.
+ *
+ * @uses  edd_ecourse_get_lesson_type_icon()
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_lesson_type_icon( $lesson ) {
+	echo edd_ecourse_get_lesson_type_icon( $lesson );
 }

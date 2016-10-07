@@ -26,6 +26,19 @@
 		<a href="<?php echo esc_url( edd_ecourse_get_dashboard_url() ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
 	</h1>
 
+	<nav id="primary-menu" class="menu" role="navigation">
+		<ul>
+			<li><a href=""><?php _e( 'Dashboard', 'edd-ecourse' ); ?></a></li>
+			<li>
+				<a href="#"><?php _e( 'Courses', 'edd-ecourse' ); ?></a>
+				<ul>
+					<li><a href="#">All</a></li>
+					<li><a href="#">My First Course</a></li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+
 	<div id="top-search">
 		<form action="" method="POST">
 			<input type="search" id="lesson-search" name="s" placeholder="<?php esc_attr_e( 'Search for a lesson', 'edd-ecourse' ); ?>">

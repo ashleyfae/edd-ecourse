@@ -1,0 +1,41 @@
+#masthead {
+    background: $color-header;
+    padding: 1em;
+    text-align: center;
+
+    a {
+        color: #9a9a9a;
+        text-decoration: none;
+
+        &:hover {
+            color: white;
+        }
+    }
+}
+
+.site-title {
+    letter-spacing: -0.05em;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    #masthead {
+        align-items: center;
+        display: flex;
+        padding: 0;
+    }
+
+    .site-title {
+        flex: 0 0 350px;
+        padding: 0 1em;
+    }
+
+    #primary-menu {
+        padding: 0 2em;
+    }
+
+    #top-search {
+        margin-left: auto;
+        padding: 0 1em;
+    }
+}

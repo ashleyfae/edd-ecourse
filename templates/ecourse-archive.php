@@ -28,16 +28,28 @@ edd_get_template_part( 'ecourse', 'header' );
 
 		<div class="entry-content">
 
-			<?php foreach ( edd_ecourse_get_modules() as $module ) : ?>
+			<?php foreach ( edd_ecourse_get_modules() as $module ) :
+				$lessons = edd_ecourse_get_module_lessons( $module->id );
 
-				<div class="ecourse-module-group">
-					<h2><?php echo esc_html( $module->title ); ?></h2>
-					<ul>
-						
-					</ul>
-				</div>
-
-			<?php endforeach; ?>
+				if ( $lessons ) :
+					?>
+					<div class="ecourse-module-group">
+						<h2><?php echo esc_html( $module->title ); ?></h2>
+						<ul>
+							<?php foreach ( $lessons as $lesson ) : ?>
+								<li>
+									<a href="<?php echo esc_url( get_permalink( $lesson ) ); ?>">
+										<span class="ecourse-lesson-status"><?php edd_ecourse_lesson_completion( $lesson ); ?></span>
+										<span class="ecourse-lesson-title"><?php echo esc_html( get_the_title( $lesson ) ); ?></span>
+										<span class="ecourse-lesson-type"><?php edd_ecourse_lesson_type_icon( $lesson ); ?></span>
+									</a>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+					<?php
+				endif;
+			endforeach; ?>
 
 		</div>
 
