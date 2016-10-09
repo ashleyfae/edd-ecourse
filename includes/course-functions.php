@@ -158,18 +158,23 @@ function edd_ecourse_unique_course_slug( $slug ) {
  * @param object|int|string $course Course object, ID, or slug.
  *
  * @since 1.0.0
- * @return string
+ * @return string|false URL or false if there was an error.
  */
 function edd_ecourse_get_course_url( $course ) {
 	if ( is_object( $course ) ) {
 		$slug = $course->slug;
 	} elseif ( is_numeric( $course ) ) {
-		// @todo work with course ID
+		$course_obj = edd_ecourse_get_course( $course );
+		$slug       = is_object( $course_obj ) ? $course_obj->slug : false;
 	} else {
 		$slug = $course;
 	}
 
-	$url = home_url( '/' . edd_ecourse_get_endpoint() . '/' . urlencode( $slug ) );
+	if ( $slug ) {
+		$url = home_url( '/' . edd_ecourse_get_endpoint() . '/' . urlencode( $slug ) );
+	} else {
+		$url = false;
+	}
 
 	return apply_filters( 'edd_ecourse_get_course_url', $url, $slug, $course );
 }
