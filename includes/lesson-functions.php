@@ -385,3 +385,21 @@ function edd_ecourse_lesson_class( $lesson, $extra_classes = '' ) {
 		echo ' class="' . esc_attr( implode( ' ', $classes ) ) . '"';
 	}
 }
+
+/**
+ * Is Free Preview
+ *
+ * Whether or not the lesson is a free preview and should be publicly accessible.
+ *
+ * @param WP_Post|int $lesson Post object or ID.
+ *
+ * @since 1.0.0
+ * @return bool
+ */
+function edd_ecourse_is_free_preview( $lesson ) {
+	$lesson_id  = is_object( $lesson ) ? $lesson->ID : $lesson;
+	$preview    = get_post_meta( $lesson_id, 'free_lesson_preview', true );
+	$is_preview = $preview ? true : false;
+
+	return apply_filters( 'edd_ecourse_is_free_lesson_preview', $is_preview, $lesson_id );
+}

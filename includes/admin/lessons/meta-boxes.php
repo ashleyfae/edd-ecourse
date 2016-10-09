@@ -102,8 +102,19 @@ function edd_ecourse_render_lesson_permissions_box( $post ) {
 
 	do_action( 'edd_ecourse_lesson_permissions_meta_box_before', $post );
 
-	$course_id   = edd_ecourse_get_lesson_course( $post );
-	$download_id = edd_ecourse_get_course_download( $course_id, 'id' );
+	$free_preview = edd_ecourse_is_free_preview( $post );
+	$course_id    = edd_ecourse_get_lesson_course( $post );
+	$download_id  = edd_ecourse_get_course_download( $course_id, 'id' );
+
+	// Free preview.
+	?>
+	<p id="edd-ecourse-free-preview">
+		<label for="free_lesson_preview">
+			<input type="checkbox" id="free_lesson_preview" name="free_preview" value="1" <?php checked( $free_preview ); ?>>
+			<?php _e( 'Make free preview', 'edd-ecourse' ); ?>
+		</label>
+	</p>
+	<?php
 
 	// Restrict to price option.
 	if ( $download_id && edd_has_variable_prices( $download_id ) ) {
@@ -188,6 +199,14 @@ function edd_ecourse_save_lesson_meta( $post_id, $post ) {
 		update_post_meta( $post_id, 'lesson_type', $sanitized_type );
 	} else {
 		delete_post_meta( $post_id, 'lesson_type' );
+	}
+
+	// Free preview
+	$free_preview = ( array_key_exists( 'free_preview', $_POST ) && $_POST['free_preview'] ) ? true : false;
+	if ( $free_preview ) {
+		update_post_meta( $post_id, 'free_lesson_preview', 1 );
+	} else {
+		delete_post_meta( $post_id, 'free_lesson_preview' );
 	}
 
 	// Price restriction
