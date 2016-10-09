@@ -278,3 +278,27 @@ function edd_ecourse_load_page_template() {
 	}
 
 }
+
+/**
+ * Document Title
+ *
+ * Adds the title of the e-course on course archive pages.
+ *
+ * @param array $title Title parts, including these keys:
+ *                     `title` - Title of the viewed page.
+ *                     `page` - Page number if paginated.
+ *                     `tagline` - Site description when on home page.
+ *                     `site` - Site title when not on homepage.
+ *
+ * @since 1.0.0
+ * @return array
+ */
+function edd_ecourse_title_tag( $title ) {
+	if ( edd_ecourse_is_course_archive() ) {
+		$title['title'] = edd_ecourse_get_title();
+	}
+
+	return $title;
+}
+
+add_filter( 'document_title_parts', 'edd_ecourse_title_tag', 1 );
