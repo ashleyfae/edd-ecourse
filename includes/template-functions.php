@@ -56,6 +56,8 @@ add_filter( 'edd_template_paths', 'edd_ecourse_template_paths' );
  *
  * Checks whether or not we're on an official e-course page.
  *
+ * @uses edd_ecourse_is_dashboard_page()
+ *
  * @since 1.0.0
  * @return bool
  */
@@ -63,12 +65,8 @@ function edd_ecourse_is_course_page() {
 
 	$is_course_page = false;
 
-	global $post;
-
-	$dashboard = edd_get_option( 'ecourse_dashboard_page' );
-
 	// Dashboard page.
-	if ( is_object( $post ) && $dashboard == $post->ID ) {
+	if ( edd_ecourse_is_dashboard_page() ) {
 		$is_course_page = true;
 	}
 
@@ -84,6 +82,23 @@ function edd_ecourse_is_course_page() {
 
 	return apply_filters( 'edd_ecourse_is_course_page', $is_course_page );
 
+}
+
+/**
+ * Is Dashboard Page
+ *
+ * Returns true if the current page is the chosen dashboard page.
+ *
+ * @since 1.0.0
+ * @return bool
+ */
+function edd_ecourse_is_dashboard_page() {
+	global $post;
+
+	$dashboard         = edd_get_option( 'ecourse_dashboard_page' );
+	$is_dashboard_page = is_object( $post ) && $post->ID == $dashboard;
+
+	return apply_filters( 'edd_ecourse_is_dashboard_page', $is_dashboard_page, $dashboard, $post );
 }
 
 /**
@@ -149,10 +164,8 @@ function edd_ecourse_template_include( $template ) {
 		}
 	}
 
-	$dashboard = edd_get_option( 'ecourse_dashboard_page' );
-
 	// Dashboard page.
-	if ( is_object( $post ) && $dashboard == $post->ID ) {
+	if ( edd_ecourse_is_dashboard_page() ) {
 
 	} elseif ( $course_slug = get_query_var( edd_ecourse_get_endpoint() ) ) {
 
@@ -172,7 +185,7 @@ function edd_ecourse_template_include( $template ) {
 		// Lesson page.
 
 		// Set global variable.
-		global $post, $edd_ecourse;
+		global $edd_ecourse;
 
 		$course_id = edd_ecourse_get_lesson_course( $post );
 
@@ -243,11 +256,7 @@ function edd_ecourse_get_dashboard_url() {
  */
 function edd_ecourse_load_page_template() {
 
-	global $post;
-
-	$dashboard = edd_get_option( 'ecourse_dashboard_page' );
-
-	if ( is_object( $post ) && $dashboard == $post->ID ) {
+	if ( edd_ecourse_is_dashboard_page() ) {
 
 		edd_get_template_part( 'ecourse', 'dashboard' );
 
