@@ -66,7 +66,10 @@ function edd_ecourse_render_course_overview() {
 		if ( is_array( $courses ) ) {
 
 			foreach ( $courses as $course ) {
-				$download = edd_ecourse_get_course_download( $course->id );
+				$download       = edd_ecourse_get_course_download( $course->id );
+				$number_lessons = edd_ecourse_get_number_course_lessons( $course->id );
+				$sales          = $download ? edd_get_download_earnings_stats( $download->ID ) : 0;
+				$students       = $download ? edd_get_download_sales_stats( $download->ID ) : 0;
 				?>
 				<div class="edd-ecourse" data-course-id="<?php echo esc_attr( $course->id ); ?>">
 					<div class="edd-ecourse-inner">
@@ -74,13 +77,13 @@ function edd_ecourse_render_course_overview() {
 
 						<div class="edd-ecourse-stats">
 							<div class="edd-ecourse-lessons">
-								<?php printf( __( '%s Lessons', 'edd-ecourse' ), '#' ); ?>
+								<?php printf( _n( '%s Lesson', '%s Lessons', $number_lessons, 'edd-ecourse' ), '<strong>' . $number_lessons . '</strong>' ); ?>
 							</div>
 							<div class="edd-ecourse-sales">
-								<?php printf( __( '%s Sales', 'edd-ecourse' ), '#' ); ?>
+								<?php printf( __( '%s Sales', 'edd-ecourse' ), '<strong>' . edd_currency_filter( $sales ) . '</strong>' ); ?>
 							</div>
 							<div class="edd-ecourse-students">
-								<?php printf( __( '%s Students', 'edd-ecourse' ), '#' ); ?>
+								<?php printf( __( '%s Students', 'edd-ecourse' ), '<strong>' . $students . '</strong>' ); ?>
 							</div>
 						</div>
 
