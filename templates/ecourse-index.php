@@ -17,4 +17,12 @@ if ( edd_ecourse_user_can_view_page() ) {
 
 } else {
 
+	// User is logged in, but doesn't have course access. Show an error message.
+	if ( is_user_logged_in() ) {
+		edd_get_template_part( 'ecourse', 'denied' );
+	} else {
+		// User isn't logged in, so show login form.
+		edd_get_template_part( 'ecourse', 'login' );
+	}
+
 }

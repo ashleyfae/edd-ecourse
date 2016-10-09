@@ -10,3 +10,5 @@
  * @copyright Copyright (c) 2016, Ashley Gibson
  * @license   GPL2+
  */
+
+wp_die( __( 'You don\'t have access to this e-course.', 'edd-ecourse' ) );
