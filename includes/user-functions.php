@@ -248,9 +248,34 @@ function edd_ecourse_user_can_view_page( $user = false ) {
 	$current_course_id = edd_ecourse_get_id();
 
 	if ( $current_course_id ) {
+		// Can view only if they have access to the course.
 		$can_view_page = edd_ecourse_has_course_access( $current_course_id, $user_id );
+	} else {
+		// Check to see if we're on the dashboard page and grant access to all logged in users.
+		if ( edd_ecourse_is_dashboard_page() && $user_id > 0 ) {
+			$can_view_page = true;
+		}
 	}
 
 	return apply_filters( 'edd_ecourse_user_can_view_page', $can_view_page, $current_course_id, $user_id );
 
 }
+
+/**
+ * @param bool      $can_view_page     Whether or not the user can view the page.
+ * @param int|false $current_course_id ID of the current course.
+ * @param int       $user_id           ID of the user to check.
+ *
+ * @return bool
+ */
+function edd_ecourse_grant_admin_access_to_pages( $can_view_page, $current_course_id, $user_id ) {
+
+	if ( user_can( $user_id, 'manage_options' ) ) {
+		return true;
+	}
+
+	return $can_view_page;
+
+}
+
+add_filter( 'edd_ecourse_user_can_view_page', 'edd_ecourse_grant_admin_access_to_pages', 10, 3 );
