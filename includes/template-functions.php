@@ -179,14 +179,11 @@ function edd_ecourse_template_include( $template ) {
 		}
 	}
 
-	// Dashboard page.
-	if ( edd_ecourse_is_dashboard_page() ) {
+	// Set up global course variable.
+	if ( edd_ecourse_is_course_archive() ) {
 
-	} elseif ( edd_ecourse_is_course_archive() ) {
+		/** Course Archive Page */
 
-		// Course archive page.
-
-		// Set global variable.
 		global $edd_ecourse;
 
 		$course = edd_ecourse_get_current_course();
@@ -197,9 +194,8 @@ function edd_ecourse_template_include( $template ) {
 
 	} elseif ( is_singular( 'ecourse_lesson' ) ) {
 
-		// Lesson page.
+		/** Single Lesson Page */
 
-		// Set global variable.
 		global $edd_ecourse;
 
 		$course_id = edd_ecourse_get_lesson_course( $post );
