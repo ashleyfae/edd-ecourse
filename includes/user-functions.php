@@ -224,7 +224,6 @@ function edd_ecourse_revoke_course_access( $course_id, $user = false ) {
  * Checks whether or not a user is allowed to view the current e-course page.
  *
  * @todo  :
- *      Check for free lesson preview.
  *      Check for extra EDD pricing restrictions.
  *
  * @param WP_User|int|false $user User object/ID or leave false to use current user.
@@ -249,6 +248,13 @@ function edd_ecourse_user_can_view_page( $user = false ) {
 	if ( $current_course_id ) {
 		// Can view only if they have access to the course.
 		$can_view_page = edd_ecourse_has_course_access( $current_course_id, $user_id );
+
+		// Extra checks for single lesson pages.
+		if ( is_singular( 'ecourse_lesson' ) ) {
+			if ( edd_ecourse_is_free_preview( get_post() ) ) {
+				$can_view_page = true;
+			}
+		}
 	} else {
 		// Check to see if we're on the dashboard page and grant access to all logged in users.
 		if ( edd_ecourse_is_dashboard_page() && $user_id > 0 ) {
