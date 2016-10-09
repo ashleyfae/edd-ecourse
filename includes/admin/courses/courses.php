@@ -72,6 +72,18 @@ function edd_ecourse_render_course_overview() {
 					<div class="edd-ecourse-inner">
 						<h2><?php echo esc_html( $course->title ); ?></h2>
 
+						<div class="edd-ecourse-stats">
+							<div class="edd-ecourse-lessons">
+								<?php printf( __( '%s Lessons', 'edd-ecourse' ), '#' ); ?>
+							</div>
+							<div class="edd-ecourse-sales">
+								<?php printf( __( '%s Sales', 'edd-ecourse' ), '#' ); ?>
+							</div>
+							<div class="edd-ecourse-students">
+								<?php printf( __( '%s Students', 'edd-ecourse' ), '#' ); ?>
+							</div>
+						</div>
+
 						<div class="edd-ecourse-product">
 							<?php if ( $download ) : ?>
 								<p><?php printf( __( 'Product: %s', 'edd-ecourse' ), '<a href="' . esc_url( get_edit_post_link( $download->ID ) ) . '">' . esc_html( $download->post_title ) . '</a>' ); ?></p>
