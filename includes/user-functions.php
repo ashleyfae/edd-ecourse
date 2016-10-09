@@ -224,7 +224,6 @@ function edd_ecourse_revoke_course_access( $course_id, $user = false ) {
  * Checks whether or not a user is allowed to view the current e-course page.
  *
  * @todo  :
- *      Check for admin access.
  *      Check for free lesson preview.
  *      Check for extra EDD pricing restrictions.
  *
@@ -262,10 +261,13 @@ function edd_ecourse_user_can_view_page( $user = false ) {
 }
 
 /**
+ * Grant All Admins Access to E-Course Pages
+ *
  * @param bool      $can_view_page     Whether or not the user can view the page.
  * @param int|false $current_course_id ID of the current course.
  * @param int       $user_id           ID of the user to check.
  *
+ * @since 1.0.0
  * @return bool
  */
 function edd_ecourse_grant_admin_access_to_pages( $can_view_page, $current_course_id, $user_id ) {
