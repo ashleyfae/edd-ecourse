@@ -185,8 +185,8 @@ function edd_ecourse_grant_course_access( $course_id, $user = false ) {
 /**
  * Revoke Access to Course
  *
- * @param int              $course_id ID of the course to grant access to.
- * @param bool|WP_User|int $user      User object/ID or leave false to use current user.
+ * @param int               $course_id ID of the course to grant access to.
+ * @param WP_User|int|false $user      User object/ID or leave false to use current user.
  *
  * @since 1.0.0
  * @return bool
@@ -217,3 +217,65 @@ function edd_ecourse_revoke_course_access( $course_id, $user = false ) {
 	return true;
 
 }
+
+/**
+ * User Can View Current Page
+ *
+ * Checks whether or not a user is allowed to view the current e-course page.
+ *
+ * @todo  :
+ *      Check for admin access.
+ *      Check for free lesson preview.
+ *      Check for extra EDD pricing restrictions.
+ *
+ * @param WP_User|int|false $user User object/ID or leave false to use current user.
+ *
+ * @since 1.0.0
+ * @return bool Whether or not the user can view this e-course page.
+ */
+function edd_ecourse_user_can_view_page( $user = false ) {
+
+	if ( is_numeric( $user ) ) {
+		$user_id = $user;
+	} elseif ( is_a( $user, 'WP_User' ) ) {
+		$user_id = $user->ID;
+	} else {
+		$user    = wp_get_current_user();
+		$user_id = $user->ID;
+	}
+
+	$can_view_page     = false;
+	$current_course_id = edd_ecourse_get_id();
+
+	if ( $current_course_id ) {
+		// Can view only if they have access to the course.
+		$can_view_page = edd_ecourse_has_course_access( $current_course_id, $user_id );
+	} else {
+		// Check to see if we're on the dashboard page and grant access to all logged in users.
+		if ( edd_ecourse_is_dashboard_page() && $user_id > 0 ) {
+			$can_view_page = true;
+		}
+	}
+
+	return apply_filters( 'edd_ecourse_user_can_view_page', $can_view_page, $current_course_id, $user_id );
+
+}
+
+/**
+ * @param bool      $can_view_page     Whether or not the user can view the page.
+ * @param int|false $current_course_id ID of the current course.
+ * @param int       $user_id           ID of the user to check.
+ *
+ * @return bool
+ */
+function edd_ecourse_grant_admin_access_to_pages( $can_view_page, $current_course_id, $user_id ) {
+
+	if ( user_can( $user_id, 'manage_options' ) ) {
+		return true;
+	}
+
+	return $can_view_page;
+
+}
+
+add_filter( 'edd_ecourse_user_can_view_page', 'edd_ecourse_grant_admin_access_to_pages', 10, 3 );

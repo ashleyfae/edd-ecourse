@@ -11,25 +11,26 @@
 
 /* Grid */
 #edd-ecourse-grid {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
     margin: 0 -1em;
 
-    @media (min-width: 600px) {
+    &, * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    @media (min-width: 768px) {
         display: flex;
         flex-flow: row wrap;
 
         > .edd-ecourse {
-            flex-grow: 1;
-            flex-basis: auto;
-            max-width: 50%;
+            flex: 0 0 50%;
         }
     }
 
-    @media (min-width: 992px) {
+    @media (min-width: 1200px) {
         > .edd-ecourse {
-            max-width: 33.3%;
+            flex: 0 0 33.3%;
         }
     }
 }
@@ -42,12 +43,15 @@
 .edd-ecourse-inner {
     background: white;
     border: 1px solid #e5e5e5;
-    padding: 3em;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+    padding: 0 3em 3em;
     position: relative;
     text-align: center;
 
     h2 {
-        margin: 0 0 2em;
+        border-bottom: 1px solid #eee;
+        margin: 0 -3em;
+        padding: 1em 3em;
     }
 
     a {
@@ -59,6 +63,27 @@
             position: absolute;
             right: 3em;
             bottom: 3em;
+        }
+    }
+}
+
+.edd-ecourse-stats {
+    background: #f1f1f1;
+    font: {
+        size: 1.2em;
+    }
+    margin: 2em auto;
+
+    > div {
+        padding: 1em;
+    }
+
+    @media (min-width: 1200px) {
+        display: flex;
+        max-width: 500px;
+
+        > div {
+            flex: 0 0 33.3%;
         }
     }
 }

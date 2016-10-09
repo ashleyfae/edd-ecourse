@@ -63,7 +63,22 @@ add_filter( 'edd_is_admin_page', 'edd_ecourse_filter_edd_is_admin_page', 10, 5 )
  * @return void
  */
 function edd_ecourse_admin_pages() {
-	add_menu_page( __( 'E-Courses', 'edd-ecourse' ), __( 'E-Courses', 'edd-ecourse' ), 'manage_options', 'ecourses', 'edd_ecourse_render_page', 'dashicons-welcome-learn-more', 26 );
+	global $submenu;
+
+	// Main Pages
+	$hook = add_menu_page( __( 'E-Courses', 'edd-ecourse' ), __( 'E-Courses', 'edd-ecourse' ), 'manage_options', 'ecourses', 'edd_ecourse_render_page', 'dashicons-welcome-learn-more', 26 );
+
+	/* Need to add one submenu page to get this to show up in `$submenu` global.
+	 * Is there a better way? I could just modify the global to begin with but I'm
+	 * not sure I like that any more..
+	 */
+	add_submenu_page( 'ecourses', '', '', 'manage_options', 'settings', '' );
+
+	// Add Custom Links
+	$courses_link           = admin_url( 'edit.php?post_type=download&page=edd-settings&tab=extensions&section=main' ); // @todo verify section
+	$submenu['ecourses'][1] = array( __( 'Settings', 'edd-ecourse' ), 'manage_options', $courses_link );
+
+
 }
 
 add_action( 'admin_menu', 'edd_ecourse_admin_pages' );

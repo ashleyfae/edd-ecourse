@@ -158,18 +158,23 @@ function edd_ecourse_unique_course_slug( $slug ) {
  * @param object|int|string $course Course object, ID, or slug.
  *
  * @since 1.0.0
- * @return string
+ * @return string|false URL or false if there was an error.
  */
 function edd_ecourse_get_course_url( $course ) {
 	if ( is_object( $course ) ) {
 		$slug = $course->slug;
 	} elseif ( is_numeric( $course ) ) {
-		// @todo work with course ID
+		$course_obj = edd_ecourse_get_course( $course );
+		$slug       = is_object( $course_obj ) ? $course_obj->slug : false;
 	} else {
 		$slug = $course;
 	}
 
-	$url = home_url( '/' . edd_ecourse_get_endpoint() . '/' . urlencode( $slug ) );
+	if ( $slug ) {
+		$url = home_url( '/' . edd_ecourse_get_endpoint() . '/' . urlencode( $slug ) );
+	} else {
+		$url = false;
+	}
 
 	return apply_filters( 'edd_ecourse_get_course_url', $url, $slug, $course );
 }
@@ -217,8 +222,8 @@ function edd_ecourse_get_course_lessons( $course_id, $query_args = array() ) {
 		'posts_per_page' => 500,
 		'meta_query'     => array(
 			array(
-				'key'   => 'ecourse',
-				'value' => $course_id,
+				'key'   => 'course',
+				'value' => absint( $course_id ),
 				'type'  => 'NUMERIC'
 			)
 		)
@@ -234,6 +239,30 @@ function edd_ecourse_get_course_lessons( $course_id, $query_args = array() ) {
 
 	return $lessons;
 
+}
+
+/**
+ * Get Number of Lessons in an E-Course
+ *
+ * @param int   $course_id  ID of the course.
+ * @param array $query_args WP_Query arguments to override the defaults.
+ *
+ * @uses  edd_ecourse_get_course_lessons()
+ *
+ * @since 1.0.0
+ * @return int
+ */
+function edd_ecourse_get_number_course_lessons( $course_id, $query_args = array() ) {
+	$default_args = array(
+		'fields' => 'ids'
+	);
+
+	$query_args = wp_parse_args( $query_args, $default_args );
+
+	$lessons        = edd_ecourse_get_course_lessons( $course_id, $query_args );
+	$number_lessons = is_array( $lessons ) ? count( $lessons ) : 0;
+
+	return apply_filters( 'edd_ecourse_number_course_lessons', $number_lessons, $lessons, $course_id, $query_args );
 }
 
 /**

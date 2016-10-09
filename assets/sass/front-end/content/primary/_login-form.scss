@@ -1,0 +1,20 @@
+#ecourse-login {
+    margin: 2em auto;
+    max-width: 600px;
+
+    fieldset {
+        background: #f9f9f9;
+        border: 1px solid #e5e5e5;
+        padding: 1em;
+
+        legend {
+            font: {
+                weight: bold;
+            }
+        }
+    }
+
+    .edd-lost-password {
+        margin-bottom: 0;
+    }
+}

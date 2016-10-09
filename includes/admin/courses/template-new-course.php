@@ -15,12 +15,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+edd_currency_filter()
 ?>
 <script id="tmpl-edd-ecourse-new" type="text/html">
 
 	<div class="edd-ecourse" data-course-id="{{ data.ID }}">
 		<div class="edd-ecourse-inner">
 			<h2>{{{ data.name }}}</h2>
+
+			<div class="edd-ecourse-stats">
+				<div class="edd-ecourse-lessons">
+					<?php _e( '<strong>0</strong> Lessons', 'edd-ecourse' ); ?>
+				</div>
+				<div class="edd-ecourse-sales">
+					<?php printf( __( '%s Sales', 'edd-ecourse' ), '<strong>' . edd_currency_filter( '0' ) . '</strong>' ); ?>
+				</div>
+				<div class="edd-ecourse-students">
+					<?php _e( '<strong>0</strong> Students', 'edd-ecourse' ); ?>
+				</div>
+			</div>
 
 			<div class="edd-ecourse-actions">
 				<a href="{{ data.edit_course_url }}" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Manage Course', 'edd-ecourse' ); ?>">
