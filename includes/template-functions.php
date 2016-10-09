@@ -141,6 +141,14 @@ function edd_ecourse_template_include( $template ) {
 
 	global $post;
 
+	if ( edd_ecourse_is_course_page() ) {
+		$course_template = edd_get_template_part( 'ecourse', 'index', false );
+
+		if ( $course_template ) {
+			$template = $course_template;
+		}
+	}
+
 	$dashboard = edd_get_option( 'ecourse_dashboard_page' );
 
 	// Dashboard page.
@@ -148,42 +156,32 @@ function edd_ecourse_template_include( $template ) {
 
 	} elseif ( $course_slug = get_query_var( edd_ecourse_get_endpoint() ) ) {
 
-		// Course lesson list.
-		$course_template = edd_get_template_part( 'ecourse', 'archive', false );
+		// Course archive page.
 
-		if ( $course_template ) {
-			// Set global variable.
-			global $edd_ecourse;
+		// Set global variable.
+		global $edd_ecourse;
 
-			$course = edd_ecourse_get_current_course();
+		$course = edd_ecourse_get_current_course();
 
-			if ( $course ) {
-				$edd_ecourse = $course;
-			}
-
-			$template = $course_template;
+		if ( $course ) {
+			$edd_ecourse = $course;
 		}
 
 	} elseif ( is_singular( 'ecourse_lesson' ) ) {
 
 		// Lesson page.
-		$lesson_template = edd_get_template_part( 'ecourse', 'lesson', false );
 
-		if ( $lesson_template ) {
-			// Set global variable.
-			global $post, $edd_ecourse;
+		// Set global variable.
+		global $post, $edd_ecourse;
 
-			$course_id = edd_ecourse_get_lesson_course( $post );
+		$course_id = edd_ecourse_get_lesson_course( $post );
 
-			if ( $course_id ) {
-				$course = edd_ecourse_load()->courses->get_course_by( 'id', absint( $course_id ) );
+		if ( $course_id ) {
+			$course = edd_ecourse_load()->courses->get_course_by( 'id', absint( $course_id ) );
 
-				if ( $course ) {
-					$edd_ecourse = $course;
-				}
+			if ( $course ) {
+				$edd_ecourse = $course;
 			}
-
-			$template = $lesson_template;
 		}
 
 	}
