@@ -159,7 +159,7 @@ function edd_ecourse_render_course_edit() {
 						<strong><?php _e( 'Permalink:', 'edd-ecourse' ); ?></strong>
 						<span id="sample-permalink">
 							<?php // @todo Make this editable ?>
-							<a href="<?php echo esc_url( edd_ecourse_get_course_url( $course->slug ) ); ?>">
+							<a href="<?php echo esc_url( edd_ecourse_get_course_url( $course->slug ) ); ?>" target="_blank">
 								<?php echo home_url( '/' . edd_ecourse_get_endpoint() . '/' ) . '<span id="editable-post-name">' . esc_html( $course->slug ) . '</span>/'; ?>
 							</a>
 						</span>
