@@ -275,7 +275,7 @@ function edd_ecourse_load_page_template() {
 
 		edd_get_template_part( 'ecourse', 'dashboard' );
 
-	} elseif ( $course_slug = get_query_var( edd_ecourse_get_endpoint() ) ) {
+	} elseif ( edd_ecourse_is_course_archive() ) {
 
 		edd_get_template_part( 'ecourse', 'archive' );
 
