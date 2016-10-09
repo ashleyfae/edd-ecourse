@@ -10,3 +10,11 @@
  * @copyright Copyright (c) 2016, Ashley Gibson
  * @license   GPL2+
  */
+
+if ( edd_ecourse_user_can_view_page() ) {
+
+	edd_ecourse_load_page_template();
+
+} else {
+
+}

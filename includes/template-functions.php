@@ -231,3 +231,34 @@ function edd_ecourse_get_dashboard_url() {
 
 	return apply_filters( 'edd_ecourse_dashboard_url', $url, $dashboard );
 }
+
+/**
+ * Load Page Template
+ *
+ * Loads the correct e-course page template for the current page.
+ * This gets run after permissions are confirmed.
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_load_page_template() {
+
+	global $post;
+
+	$dashboard = edd_get_option( 'ecourse_dashboard_page' );
+
+	if ( is_object( $post ) && $dashboard == $post->ID ) {
+
+		edd_get_template_part( 'ecourse', 'dashboard' );
+
+	} elseif ( $course_slug = get_query_var( edd_ecourse_get_endpoint() ) ) {
+
+		edd_get_template_part( 'ecourse', 'archive' );
+
+	} elseif ( is_singular( 'ecourse_lesson' ) ) {
+
+		edd_get_template_part( 'ecourse', 'lesson' );
+
+	}
+
+}
