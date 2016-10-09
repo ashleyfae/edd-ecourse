@@ -456,3 +456,73 @@ function edd_ecourse_get_modules() {
 
 	return is_array( $modules ) ? $modules : array();
 }
+
+/**
+ * Get Edit Course URL
+ *
+ * Returns the URL to the "Edit Course" page.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_get_manage_course_url( $course_id = 0 ) {
+	$url = add_query_arg( array(
+		'page'   => 'ecourses',
+		'view'   => 'edit',
+		'course' => absint( $course_id )
+	), admin_url( 'admin.php' ) );
+
+	return apply_filters( 'edd_ecourse_get_manage_course_url', $url );
+}
+
+/**
+ * Get Add Course URL
+ *
+ * Returns the URL to the "Add Course" page.
+ *
+ * @param int $course_id ID of the course to add the lesson to.
+ * @param int $module_id ID of the module to add the lesson to.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_get_add_lesson_url( $course_id = 0, $module_id = 0 ) {
+	$args = array(
+		'post_type' => 'ecourse_lesson',
+		'course'    => absint( $course_id ),
+		'module'    => absint( $module_id )
+	);
+
+	$url = add_query_arg( $args, admin_url( 'post-new.php' ) );
+
+	return apply_filters( 'edd_ecourse_get_add_lesson_url', $url );
+}
+
+/**
+ * Admin Bar Node
+ *
+ * Adds a new node to the admin bar to "Manage Course". This only appears
+ * on course archive pages and single lesson pages.
+ *
+ * @param WP_Admin_Bar $wp_admin_bar
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_admin_bar_node( $wp_admin_bar ) {
+	if ( edd_ecourse_is_course_page() ) {
+		$course_id = edd_ecourse_get_id();
+
+		if ( $course_id ) {
+			$args = array(
+				'id'    => 'ecourse_edit',
+				'title' => __( 'Manage Course', 'edd-ecourse' ),
+				'href'  => edd_ecourse_get_manage_course_url( $course_id )
+			);
+
+			$wp_admin_bar->add_node( $args );
+		}
+	}
+}
+
+add_action( 'admin_bar_menu', 'edd_ecourse_admin_bar_node', 999 );

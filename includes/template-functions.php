@@ -56,7 +56,7 @@ add_filter( 'edd_template_paths', 'edd_ecourse_template_paths' );
  *
  * Checks whether or not we're on an official e-course page.
  *
- * @uses edd_ecourse_is_dashboard_page()
+ * @uses  edd_ecourse_is_dashboard_page()
  *
  * @since 1.0.0
  * @return bool
@@ -71,7 +71,7 @@ function edd_ecourse_is_course_page() {
 	}
 
 	// Course lesson list.
-	if ( $course_slug = get_query_var( edd_ecourse_get_endpoint() ) ) {
+	if ( edd_ecourse_is_course_archive() ) {
 		$is_course_page = true;
 	}
 
@@ -82,6 +82,21 @@ function edd_ecourse_is_course_page() {
 
 	return apply_filters( 'edd_ecourse_is_course_page', $is_course_page );
 
+}
+
+/**
+ * Is Course Archive Page
+ *
+ * Checks to see if we're on a public course archive page.
+ *
+ * @since 1.0.0
+ * @return bool
+ */
+function edd_ecourse_is_course_archive() {
+	$course_slug       = get_query_var( edd_ecourse_get_endpoint() );
+	$is_course_archive = $course_slug ? true : false;
+
+	return apply_filters( 'edd_ecourse_is_course_archive', $is_course_archive, $course_slug );
 }
 
 /**
@@ -167,7 +182,7 @@ function edd_ecourse_template_include( $template ) {
 	// Dashboard page.
 	if ( edd_ecourse_is_dashboard_page() ) {
 
-	} elseif ( $course_slug = get_query_var( edd_ecourse_get_endpoint() ) ) {
+	} elseif ( edd_ecourse_is_course_archive() ) {
 
 		// Course archive page.
 
