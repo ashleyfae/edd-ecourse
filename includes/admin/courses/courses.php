@@ -222,7 +222,9 @@ function edd_ecourse_render_course_edit() {
 											<ul class="edd-ecourse-lesson-list">
 												<?php foreach ( $lessons as $lesson ) : ?>
 													<li data-id="<?php echo esc_attr( $lesson->ID ); ?>" data-position="<?php echo esc_attr( 1 ); ?>">
-														<span class="edd-ecourse-lesson-title"><?php echo esc_html( $lesson->post_title ); ?></span>
+														<span class="edd-ecourse-lesson-title">
+															<a href="<?php echo esc_url( get_edit_post_link( $lesson->ID ) ); ?>"><?php echo esc_html( $lesson->post_title ); ?></a>
+														</span>
 														<span class="edd-ecourse-lesson-status edd-ecourse-lesson-status-<?php echo sanitize_html_class( $lesson->post_status ); ?>"><?php echo esc_html( edd_ecourse_get_lesson_status( $lesson ) ); ?></span>
 														<span class="edd-ecourse-lesson-actions">
 															<a href="<?php echo esc_url( get_edit_post_link( $lesson->ID ) ); ?>" class="edd-ecourse-lesson-edit-link edd-ecourse-tip" title="<?php esc_attr_e( 'Edit', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-edit"></span></a>
