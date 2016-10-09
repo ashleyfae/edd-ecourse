@@ -4,11 +4,7 @@
  *
  * For modifying the front-end of the site.
  *
- * @todo      Plan for these pages:
- *       Dashboard - widgetized
- *       Course list (including ones not purchased)
- *       Single course page with list of modules/lessons
- *       Single lesson view
+ * @todo      Widgetized dashboard page.
  *
  * @package   edd-ecourse
  * @copyright Copyright (c) 2016, Ashley Gibson
