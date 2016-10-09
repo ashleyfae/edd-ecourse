@@ -22,7 +22,12 @@
 <body <?php body_class(); ?>>
 
 <div id="ecourse-login">
-	<?php echo edd_login_form(); ?>
+	<?php
+	/**
+	 * Display the login form.
+	 */
+	echo edd_login_form();
+	?>
 </div>
 
 <?php wp_footer(); ?>
