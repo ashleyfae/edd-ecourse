@@ -133,11 +133,14 @@ add_action( 'edd_ecourse_render_course_overview', 'edd_ecourse_render_course_ove
  */
 function edd_ecourse_render_course_edit() {
 
+	global $post;
+
 	if ( ! isset( $_GET['course'] ) ) {
 		wp_die( __( 'Missing course ID.', 'edd-ecourse' ) );
 	}
 
 	$course = get_post( absint( $_GET['course'] ) );
+	$post   = $course;
 
 	if ( ! $course ) {
 		wp_die( __( 'Invalid course ID.', 'edd-ecourse' ) );
@@ -183,12 +186,32 @@ function edd_ecourse_render_course_edit() {
 							<div class="inside">
 								<div class="edd-admin-box">
 									<div class="edd-admin-box-inside">
+
 										<p>
-											<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
-											<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
-											<input type="text" id="course-start-date" name="course_start_date" class="large-text" value="<?php echo esc_attr( $course->start_date ); ?>">
+											<label for="course_status" class="label"><?php _e( 'Status:', 'edd-ecourse' ); ?></label>
+											<select id="course_status" name="course_status">
+												<option value="draft" <?php selected( $course->post_status, 'draft' ); ?>><?php _e( 'Draft', 'edd-ecourse' ); ?></option>
+												<option value="publish" <?php selected( $course->post_status, 'publish' ); ?>><?php _e( 'Published', 'edd-ecourse' ); ?></option>
+												<option value="future" <?php selected( $course->post_status, 'future' ); ?>><?php _e( 'Scheduled', 'edd-ecourse' ); ?></option>
+											</select>
 										</p>
-										<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
+
+										<div class="misc-pub-section curtime misc-pub-curtime">
+											<?php
+											$datef = __( 'M j, Y @ H:i' );
+											$stamp = __( 'Start Date: <b>%s</b>', 'edd-ecourse' );
+											$date  = date_i18n( $datef, strtotime( $course->post_date ) );
+											?>
+											<span id="timestamp">
+												<?php printf( $stamp, $date ); ?>
+											</span>
+											<a href="#edit_timestamp" class="edit-timestamp hide-if-no-js"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span>
+												<span class="screen-reader-text"><?php _e( 'Edit date and time' ); ?></span></a>
+											<fieldset id="timestampdiv" class="hide-if-js">
+												<legend class="screen-reader-text"><?php _e( 'Date and time' ); ?></legend>
+												<?php touch_time( true, 1 ); ?>
+											</fieldset>
+										</div>
 									</div>
 								</div>
 							</div>
