@@ -89,10 +89,9 @@ function edd_ecourse_is_course_page() {
  * @return bool
  */
 function edd_ecourse_is_course_archive() {
-	$course_slug       = get_query_var( edd_ecourse_get_endpoint() );
-	$is_course_archive = $course_slug ? true : false;
+	$is_course_archive = is_singular( 'ecourse' ) ? true : false;
 
-	return apply_filters( 'edd_ecourse_is_course_archive', $is_course_archive, $course_slug );
+	return apply_filters( 'edd_ecourse_is_course_archive', $is_course_archive );
 }
 
 /**

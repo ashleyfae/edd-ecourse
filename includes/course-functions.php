@@ -58,18 +58,6 @@ function edd_ecourse_insert_demo_course() {
 }
 
 /**
- * Get Course by ID
- *
- * @param int $course_id
- *
- * @since 1.0.0
- * @return object|false Course object or false on failure.
- */
-function edd_ecourse_get_course( $course_id ) {
-	return edd_ecourse_load()->courses->get_course_by( 'id', $course_id );
-}
-
-/**
  * Get E-Courses
  *
  * @param array $args
@@ -80,12 +68,18 @@ function edd_ecourse_get_course( $course_id ) {
 function edd_ecourse_get_courses( $args = array() ) {
 
 	$defaults = array(
-		'number' => - 1
+		'post_status' => 'publish',
+		'post_type'   => 'ecourse',
+		'number'      => - 1
 	);
+
+	if ( current_user_can( 'manage_options' ) ) {
+		$defaults['post_status'] = 'any';
+	}
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$courses = edd_ecourse_load()->courses->get_courses( $args );
+	$courses = get_posts( $args );
 
 	if ( ! is_array( $courses ) ) {
 		return false;
@@ -98,85 +92,24 @@ function edd_ecourse_get_courses( $args = array() ) {
 /**
  * Insert a Course
  *
- * @param array $args Arguments, including `title` (required), `description`, `status`, `type`, `start_date`
+ * @param string $title Course title.
+ * @param array  $args  Arguments to override the defaults.
  *
  * @since 1.0.0
  * @return int|bool Course ID on success or false on failure.
  */
-function edd_ecourse_insert_course( $args = array() ) {
-	// Auto create slug.
-	if ( ! array_key_exists( 'id', $args ) && ! array_key_exists( 'slug', $args ) ) {
-		$slug         = sanitize_title( $args['title'] );
-		$args['slug'] = edd_ecourse_unique_course_slug( $slug );
-	}
+function edd_ecourse_insert_course( $title, $args = array() ) {
+	$defaults = array(
+		'post_title'  => wp_strip_all_tags( $title ),
+		'post_status' => 'draft',
+		'ping_status' => 'closed'
+	);
 
-	$course_id = edd_ecourse_load()->courses->add( $args );
+	$args = wp_parse_args( $args, $defaults );
+
+	$course_id = wp_insert_post( $args );
 
 	return $course_id;
-}
-
-/**
- * Create a Unique Course Slug
- *
- * Checks to see if the given slug already exists. If so, numbers are appended
- * until the slug becomes available.
- *
- * @see   wp_unique_post_slug() - Based on this.
- *
- * @param string $slug Desired slug.
- *
- * @since 1.0.0
- * @return string Unique slug.
- */
-function edd_ecourse_unique_course_slug( $slug ) {
-	// Check if this slug already exists.
-	$courses = edd_ecourse_load()->courses->get_courses( array( 'slug' => $slug ) );
-
-	$new_slug = $slug;
-
-	if ( $courses ) {
-		$suffix = 2;
-
-		do {
-			$alt_slug = _truncate_post_slug( $slug, 200 - ( strlen( $suffix ) + 1 ) ) . "-$suffix";
-			$courses  = edd_ecourse_load()->courses->get_courses( array( 'slug' => $alt_slug ) );
-			$suffix ++;
-		} while ( $courses );
-
-		$new_slug = $alt_slug;
-	}
-
-	return apply_filters( 'edd_ecourse_unique_course_slug', $new_slug, $slug );
-}
-
-/**
- * Get Course URL
- *
- * Returns the public-facing URL to the course archive page. This is where
- * all the modules and lessons are listed for a given course.
- *
- * @param object|int|string $course Course object, ID, or slug.
- *
- * @since 1.0.0
- * @return string|false URL or false if there was an error.
- */
-function edd_ecourse_get_course_url( $course ) {
-	if ( is_object( $course ) ) {
-		$slug = $course->slug;
-	} elseif ( is_numeric( $course ) ) {
-		$course_obj = edd_ecourse_get_course( $course );
-		$slug       = is_object( $course_obj ) ? $course_obj->slug : false;
-	} else {
-		$slug = $course;
-	}
-
-	if ( $slug ) {
-		$url = home_url( '/' . edd_ecourse_get_endpoint() . '/' . urlencode( $slug ) );
-	} else {
-		$url = false;
-	}
-
-	return apply_filters( 'edd_ecourse_get_course_url', $url, $slug, $course );
 }
 
 /**
@@ -187,22 +120,15 @@ function edd_ecourse_get_course_url( $course ) {
  * @since 1.0.0
  * @return array|false Array of module objects or false on failure.
  */
-function edd_ecourse_get_course_modules( $course_id, $args = array() ) {
+function edd_ecourse_get_course_modules( $course_id ) {
 
-	$defaults = array(
-		'course' => $course_id,
-		'number' => - 1
-	);
-
-	$args = wp_parse_args( $args, $defaults );
-
-	$modules = edd_ecourse_load()->modules->get_modules( $args );
+	$modules = get_post_meta( $course_id, 'modules', true );
 
 	if ( ! is_array( $modules ) || ! count( $modules ) ) {
 		$modules = false;
 	}
 
-	return apply_filters( 'edd_ecourse_get_course_modules', $modules, $course_id, $args );
+	return apply_filters( 'edd_ecourse_get_course_modules', $modules, $course_id );
 
 }
 
@@ -271,10 +197,10 @@ function edd_ecourse_get_number_course_lessons( $course_id, $query_args = array(
  * @param int $course_id ID of the course to delete.
  *
  * @since 1.0.0
- * @return int|false The number of courses deleted, or false on error.
+ * @return WP_Post|false Post object of the deleted course or false on failure.
  */
 function edd_ecourse_delete( $course_id ) {
-	return edd_ecourse_load()->courses->delete( $course_id );
+	return wp_delete_post( $course_id, true );
 }
 
 /**
@@ -320,43 +246,19 @@ function edd_ecourse_get_course_download( $course_id, $format = 'object' ) {
 }
 
 /**
- * Get Course Permalink
- *
- * Returns the URL to the "public" facing course archive page.
- *
- * @param int|object|string $id_or_slug Course ID, object, or slug.
- *
- * @since 1.0.0
- * @return string|false URL or false on failure.
- */
-function edd_ecourse_get_course_permalink( $id_or_slug ) {
-	if ( is_numeric( $id_or_slug ) ) {
-		$course = edd_ecourse_get_course( $id_or_slug );
-		$slug   = is_object( $course ) ? $course->slug : false;
-	} elseif ( is_object( $id_or_slug ) ) {
-		$slug = $id_or_slug->slug;
-	} else {
-		$slug = wp_strip_all_tags( $id_or_slug );
-	}
-
-	if ( ! $slug ) {
-		return false;
-	}
-
-	$url = sprintf( home_url( '/%s/%s/' ), edd_ecourse_get_endpoint(), urlencode( $slug ) );
-
-	return apply_filters( 'edd_ecourse_course_permalink', $url, $slug, $id_or_slug );
-}
-
-/**
  * Get Current Course
  *
  * @since 1.0.0
  * @return object|false Course object or false on failure.
  */
 function edd_ecourse_get_current_course() {
-	$course_slug = get_query_var( edd_ecourse_get_endpoint() );
-	$course      = edd_ecourse_load()->courses->get_course_by( 'slug', $course_slug );
+	global $post;
+
+	if ( is_object( $post ) && 'ecourse' == $post->post_type ) {
+		$course = $post;
+	} else {
+		$course = false;
+	}
 
 	return $course;
 }
@@ -370,9 +272,9 @@ function edd_ecourse_get_current_course() {
  * @return string|false
  */
 function edd_ecourse_get_title() {
-	global $edd_ecourse;
+	$course = edd_ecourse_get_current_course();
 
-	return is_object( $edd_ecourse ) ? $edd_ecourse->title : false;
+	return is_object( $course ) ? $course->post_title : false;
 }
 
 /**
@@ -394,9 +296,9 @@ function edd_ecourse_title() {
  * @return int|false
  */
 function edd_ecourse_get_id() {
-	global $edd_ecourse;
+	$course = edd_ecourse_get_current_course();
 
-	return is_object( $edd_ecourse ) ? $edd_ecourse->id : false;
+	return is_object( $course ) ? $course->ID : false;
 }
 
 /**
@@ -408,15 +310,13 @@ function edd_ecourse_get_id() {
  * @return void
  */
 function edd_ecourse_permalink( $escape = true ) {
-	global $edd_ecourse;
+	$course = edd_ecourse_get_current_course();
 
-	if ( ! is_object( $edd_ecourse ) ) {
+	if ( ! is_object( $course ) ) {
 		return;
 	}
 
-	$slug = $edd_ecourse->slug;
-
-	$url = edd_ecourse_get_course_permalink( $slug );
+	$url = get_permalink( $course );
 
 	if ( $escape ) {
 		echo esc_url( $url );

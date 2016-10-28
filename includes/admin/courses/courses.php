@@ -91,20 +91,20 @@ function edd_ecourse_render_course_overview() {
 							<?php if ( $download ) : ?>
 								<p><?php printf( __( 'Product: %s', 'edd-ecourse' ), '<a href="' . esc_url( get_edit_post_link( $download->ID ) ) . '">' . esc_html( $download->post_title ) . '</a>' ); ?></p>
 							<?php else : ?>
-								<p><?php printf( __( 'This course doesn\'t have an associated product yet. Would you like to <a href="%s">create one?</a>', 'edd-ecourse' ), esc_url( admin_url( 'post-new.php?post_type=download&course=' . $course->id ) ) ); ?></p>
+								<p><?php printf( __( 'This course doesn\'t have an associated product yet. Would you like to <a href="%s">create one?</a>', 'edd-ecourse' ), esc_url( admin_url( 'post-new.php?post_type=download&course=' . $course->ID ) ) ); ?></p>
 							<?php endif; ?>
 						</div>
 
 						<div class="edd-ecourse-actions">
-							<a href="<?php echo esc_url( edd_ecourse_get_manage_course_url( $course->id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Manage Course', 'edd-ecourse' ); ?>">
+							<a href="<?php echo esc_url( edd_ecourse_get_manage_course_url( $course->ID ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Manage Course', 'edd-ecourse' ); ?>">
 								<span class="dashicons dashicons-edit"></span>
 							</a>
 
-							<a href="<?php echo esc_url( edd_ecourse_get_course_permalink( $course->slug ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-view" title="<?php esc_attr_e( 'View Course', 'edd-ecourse' ); ?>" target="_blank">
+							<a href="<?php echo esc_url( get_permalink( $course ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-view" title="<?php esc_attr_e( 'View Course', 'edd-ecourse' ); ?>" target="_blank">
 								<span class="dashicons dashicons-visibility"></span>
 							</a>
 
-							<button href="#" class="button edd-ecourse-tip edd-ecourse-action-delete" title="<?php esc_attr_e( 'Delete Course', 'edd-ecourse' ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'delete_course_' . $course->id ) ); ?>">
+							<button href="#" class="button edd-ecourse-tip edd-ecourse-action-delete" title="<?php esc_attr_e( 'Delete Course', 'edd-ecourse' ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'delete_course_' . $course->ID ) ); ?>">
 								<span class="dashicons dashicons-trash"></span>
 							</button>
 						</div>
@@ -137,16 +137,16 @@ function edd_ecourse_render_course_edit() {
 		wp_die( __( 'Missing course ID.', 'edd-ecourse' ) );
 	}
 
-	$course = edd_ecourse_get_course( absint( $_GET['course'] ) );
+	$course = get_post( absint( $_GET['course'] ) );
 
 	if ( ! $course ) {
 		wp_die( __( 'Invalid course ID.', 'edd-ecourse' ) );
 	}
 
-	$modules = edd_ecourse_get_course_modules( $course->id );
+	$modules = edd_ecourse_get_course_modules( $course->ID );
 	?>
-	<h1 id="edd-ecourse-title" data-course="<?php echo esc_attr( $course->id ); ?>">
-		<span><?php echo esc_html( $course->title ); ?></span>
+	<h1 id="edd-ecourse-title" data-course="<?php echo esc_attr( $course->ID ); ?>">
+		<span><?php echo esc_html( $course->post_title ); ?></span>
 		<button id="edd-ecourse-edit-course-title" class="page-title-action"><?php _e( 'Edit Title', 'edd-ecourse' ); ?></button>
 	</h1>
 
@@ -159,8 +159,8 @@ function edd_ecourse_render_course_edit() {
 						<strong><?php _e( 'Permalink:', 'edd-ecourse' ); ?></strong>
 						<span id="sample-permalink">
 							<?php // @todo Make this editable ?>
-							<a href="<?php echo esc_url( edd_ecourse_get_course_url( $course->slug ) ); ?>" target="_blank">
-								<?php echo home_url( '/' . edd_ecourse_get_endpoint() . '/' ) . '<span id="editable-post-name">' . esc_html( $course->slug ) . '</span>/'; ?>
+							<a href="<?php echo esc_url( get_permalink( $course ) ); ?>" target="_blank">
+								<?php echo home_url( '/course/' ) . '<span id="editable-post-name">' . esc_html( $course->post_name ) . '</span>/'; ?><?php // @todo fix this ?>
 							</a>
 						</span>
 						&lrm;
