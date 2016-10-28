@@ -25,12 +25,14 @@
 				<h2><?php echo esc_html( $module->title ); ?></h2>
 				<ul>
 					<?php foreach ( $lessons as $lesson ) :
+						/* If the lesson status isn't 'publish' then prepend the status name to the title. */
+						$title = ( $lesson->post_status == 'publish' ) ? get_the_title( $lesson ) : sprintf( '[%s] %s', edd_ecourse_get_lesson_status( $lesson ), get_the_title( $lesson ) );
 						$extra_class = ( $lesson->ID == get_the_ID() ) ? 'is-current-lesson' : '';
 						?>
 						<li id="lesson-<?php echo esc_attr( $lesson->ID ); ?>"<?php edd_ecourse_lesson_class( $lesson, $extra_class ); ?>>
 							<a href="<?php echo esc_url( get_permalink( $lesson ) ); ?>">
 								<span class="ecourse-lesson-status"><?php edd_ecourse_lesson_completion_icon( $lesson ); ?></span>
-								<span class="ecourse-lesson-title"><?php echo esc_html( get_the_title( $lesson ) ); ?></span>
+								<span class="ecourse-lesson-title"><?php echo esc_html( $title ); ?></span>
 							</a>
 						</li>
 					<?php endforeach; ?>
