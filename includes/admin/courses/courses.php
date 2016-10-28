@@ -196,22 +196,18 @@ function edd_ecourse_render_course_edit() {
 											</select>
 										</p>
 
-										<div class="misc-pub-section curtime misc-pub-curtime">
-											<?php
-											$datef = __( 'M j, Y @ H:i' );
-											$stamp = __( 'Start Date: <b>%s</b>', 'edd-ecourse' );
-											$date  = date_i18n( $datef, strtotime( $course->post_date ) );
-											?>
-											<span id="timestamp">
-												<?php printf( $stamp, $date ); ?>
-											</span>
-											<a href="#edit_timestamp" class="edit-timestamp hide-if-no-js"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span>
-												<span class="screen-reader-text"><?php _e( 'Edit date and time' ); ?></span></a>
-											<fieldset id="timestampdiv" class="hide-if-js">
-												<legend class="screen-reader-text"><?php _e( 'Date and time' ); ?></legend>
-												<?php touch_time( true, 1 ); ?>
-											</fieldset>
+										<div id="ecourse-start-date-wrap"<?php echo 'future' != $course->post_status ? ' style="display: none;"' : ''; ?>>
+											<p>
+												<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
+												<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
+												<input type="text" id="course-start-date" name="course_start_date" class="large-text" value="<?php echo esc_attr( edd_ecourse_get_readable_course_date( $course ) ); ?>">
+											</p>
+											<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
 										</div>
+
+										<p id="ecourse-save">
+											<button type="button" id="ecourse-save-status" class="button button-primary"><?php _e( 'Save', 'edd-ecourse' ); ?></button>
+										</p>
 									</div>
 								</div>
 							</div>

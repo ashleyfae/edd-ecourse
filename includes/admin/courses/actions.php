@@ -183,6 +183,69 @@ function edd_ecourse_update_course_title() {
 add_action( 'wp_ajax_edd_ecourse_update_course_title', 'edd_ecourse_update_course_title' );
 
 /**
+ * Update E-Course
+ *
+ * @since 1.0.0
+ * @return void
+ */
+function edd_ecourse_update_course() {
+
+	// Permission check.
+	if ( ! current_user_can( 'manage_options' ) ) { // @todo change this
+		wp_die( __( 'You don\'t have permission to delete this module.', 'edd-ecourse' ) );
+	}
+
+	$args = $_POST['args'];
+
+	if ( ! is_array( $args ) ) {
+		wp_die( __( 'Error: Invalid arguments.', 'edd-ecourse' ) );
+	}
+
+	$sanitized_args = array_map( 'wp_strip_all_tags', $args );
+
+	if ( ! array_key_exists( 'ID', $sanitized_args ) || empty( $sanitized_args['ID'] ) || ! is_numeric( $sanitized_args['ID'] ) ) {
+		wp_die( __( 'Error: Invalid course ID.', 'edd-ecourse' ) );
+	}
+
+	$course = get_post( $sanitized_args['ID'] );
+	if ( ! $course || ! is_a( $course, 'WP_Post' ) || 'ecourse' != $course->post_type ) {
+		wp_die( __( 'Error: Not a valid e-course.', 'edd-ecourse' ) );
+	}
+
+	/* Okay we can start saving. */
+
+	if ( array_key_exists( 'post_date', $sanitized_args ) && $sanitized_args['post_date'] ) {
+
+		$date_string                 = $sanitized_args['post_date'];
+		$sanitized_args['post_date'] = date( 'Y-m-d H:i:s', strtotime( $date_string ) );
+
+		// Add post date GMT
+		if ( ! array_key_exists( 'post_date_gmt', $sanitized_args ) ) {
+			$sanitized_args['post_date_gmt'] = get_gmt_from_date( $sanitized_args['post_date'] );
+		}
+
+		// Maybe change post status.
+		if ( strtotime( $date_string ) > time() ) {
+			$sanitized_args['post_status'] = 'future';
+		}
+
+	}
+
+	$course_data = $sanitized_args;
+
+	$result = wp_update_post( $course_data );
+
+	if ( ! $result ) {
+		wp_die( __( 'An unexpected error occurred while trying to update this course.', 'edd-ecourse' ) );
+	}
+
+	wp_send_json_success();
+
+}
+
+add_action( 'wp_ajax_edd_ecourse_update_course', 'edd_ecourse_update_course' );
+
+/**
  * Update Module Title
  *
  * @since 1.0.0

@@ -115,6 +115,24 @@ function edd_ecourse_insert_course( $title, $args = array() ) {
 }
 
 /**
+ * Get Readable Course Date
+ *
+ * @param WP_Post|int $course Course ID or post object.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function edd_ecourse_get_readable_course_date( $course ) {
+	if ( is_numeric( $course ) ) {
+		$course = get_post( $course );
+	}
+
+	$formatted_date = get_the_time( 'F jS Y, g:i A', $course );
+
+	return apply_filters( 'edd_ecourse_get_readable_course_date', $formatted_date, $course );
+}
+
+/**
  * Get Course Modules
  *
  * @param int   $course_id ID of the course.

@@ -28,6 +28,9 @@ jQuery(document).ready(function ($) {
             this.remove();
             this.editTitle();
             this.editSlug();
+
+            $('#course_status').on('change', this.maybeHideDate);
+            $('#ecourse-save-status').on('click', this.updateCourseDetails);
         },
 
         /**
@@ -259,6 +262,84 @@ jQuery(document).ready(function ($) {
 
             // @todo
 
+        },
+
+        /**
+         * Update Course
+         * @param args
+         */
+        updateCourse: function (args) {
+
+            var saveWrap = $('#ecourse-save');
+            var saveButton = $('#ecourse-save-status');
+
+            saveButton.attr('disabled', true);
+            saveWrap.append('<span class="spinner is-active" style="float: none"></span>');
+
+            var data = {
+                action: 'edd_ecourse_update_course',
+                args: args
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+
+                    console.log(response);
+
+                    saveButton.attr('disabled', false);
+                    saveWrap.find('.spinner').remove();
+
+                }
+            }).fail(function (response) {
+                if (window.console && window.console.log) {
+                    console.log(response);
+                }
+            });
+
+        },
+
+        /**
+         * Maybe Hide Course Date
+         */
+        maybeHideDate: function () {
+
+            // First hide it.
+            var startDateWrap = $('#ecourse-start-date-wrap');
+            startDateWrap.hide();
+
+            var courseStatus = $('#course_status').find('option:selected').val();
+
+            if ('future' == courseStatus) {
+                startDateWrap.slideDown();
+            } else {
+                $('course-start-date').val(''); // empty value
+            }
+
+        },
+
+        /**
+         * Update Course Details
+         * @param e
+         */
+        updateCourseDetails: function (e) {
+            e.preventDefault();
+
+            var args = {
+                ID: $('#edd-ecourse-title').data('course'),
+                post_status: $('#course_status').find('option:selected').val()
+            };
+
+            var startDate = $('#course-start-date').val();
+
+            if (startDate) {
+                args.post_date = startDate;
+            }
+
+            EDD_ECourse.updateCourse(args);
         }
 
     };
