@@ -282,14 +282,14 @@ function edd_ecourse_activation() {
 	// Only add DB tables if EDD_DB class exists.
 	if ( class_exists( 'EDD_DB' ) ) {
 		if ( ! class_exists( 'EDD_eCourse_DB' ) ) {
-			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db.php';
+			require_once 'includes/class-ecourse-db.php';
 		}
 
 		$db = new EDD_eCourse_DB();
 		@$db->create_table();
 
 		if ( ! class_exists( 'EDD_eCourse_Modules_DB' ) ) {
-			require_once EDD_ECOURSE_DIR . 'includes/class-modules-db.php';
+			require_once 'includes/class-modules-db.php';
 		}
 
 		$db = new EDD_eCourse_Modules_DB();
