@@ -281,9 +281,9 @@ function edd_ecourse_get_current_course() {
  * @return string|false
  */
 function edd_ecourse_get_title() {
-	$course = edd_ecourse_get_current_course();
+	global $edd_ecourse;
 
-	return is_object( $course ) ? $course->post_title : false;
+	return is_object( $edd_ecourse ) ? $edd_ecourse->post_title : false;
 }
 
 /**
@@ -305,9 +305,9 @@ function edd_ecourse_title() {
  * @return int|false
  */
 function edd_ecourse_get_id() {
-	$course = edd_ecourse_get_current_course();
+	global $edd_ecourse;
 
-	return is_object( $course ) ? $course->ID : false;
+	return is_object( $edd_ecourse ) ? $edd_ecourse->ID : false;
 }
 
 /**
@@ -319,13 +319,13 @@ function edd_ecourse_get_id() {
  * @return void
  */
 function edd_ecourse_permalink( $escape = true ) {
-	$course = edd_ecourse_get_current_course();
+	global $edd_ecourse;
 
-	if ( ! is_object( $course ) ) {
+	if ( ! is_object( $edd_ecourse ) ) {
 		return;
 	}
 
-	$url = get_permalink( $course );
+	$url = get_permalink( $edd_ecourse );
 
 	if ( $escape ) {
 		echo esc_url( $url );
@@ -356,12 +356,11 @@ function edd_ecourse_id() {
  */
 function edd_ecourse_get_modules() {
 	$course_id = edd_ecourse_get_id();
+	$modules   = array();
 
-	if ( ! $course_id ) {
-		return false;
+	if ( $course_id ) {
+		$modules = edd_ecourse_get_course_modules( $course_id );
 	}
-
-	$modules = edd_ecourse_get_course_modules( $course_id );
 
 	return is_array( $modules ) ? $modules : array();
 }

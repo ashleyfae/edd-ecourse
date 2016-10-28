@@ -196,7 +196,7 @@ function edd_ecourse_template_include( $template ) {
 		$course_id = edd_ecourse_get_lesson_course( $post );
 
 		if ( $course_id ) {
-			$course = edd_ecourse_load()->courses->get_course_by( 'id', absint( $course_id ) );
+			$course = get_post( absint( $course_id ) );
 
 			if ( $course ) {
 				$edd_ecourse = $course;
