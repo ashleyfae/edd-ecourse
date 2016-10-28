@@ -100,7 +100,8 @@ function edd_ecourse_get_courses( $args = array() ) {
  */
 function edd_ecourse_insert_course( $title, $args = array() ) {
 	$defaults = array(
-		'post_title'  => wp_strip_all_tags( $title ),
+		'post_title'  => sanitize_text_field( wp_strip_all_tags( $title ) ),
+		'post_name'   => sanitize_title( $title ),
 		'post_type'   => 'ecourse',
 		'post_status' => 'draft',
 		'ping_status' => 'closed'
