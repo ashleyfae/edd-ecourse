@@ -114,7 +114,6 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 			require_once EDD_ECOURSE_DIR . 'includes/lesson-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/module-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/post-types.php';
-			require_once EDD_ECOURSE_DIR . 'includes/rewrite-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/shortcodes.php';
 			require_once EDD_ECOURSE_DIR . 'includes/template-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/user-functions.php';
@@ -266,18 +265,11 @@ function edd_ecourse_activation() {
 		include_once 'includes/course-functions.php';
 	}
 
-	if ( ! function_exists( 'edd_ecourse_add_endpoint' ) ) {
-		include_once 'includes/rewrite-functions.php';
-	}
-
 	// Register post type.
 	edd_ecourse_post_type();
 
 	// Insert demo content.
 	//edd_ecourse_insert_demo_course();
-
-	// Add course endpoint.
-	edd_ecourse_add_endpoint();
 
 	// Only add DB tables if EDD_DB class exists.
 	if ( class_exists( 'EDD_DB' ) ) {
