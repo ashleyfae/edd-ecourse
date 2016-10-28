@@ -117,14 +117,21 @@ function edd_ecourse_insert_course( $title, $args = array() ) {
 /**
  * Get Course Modules
  *
- * @param int $course_id ID of the course.
+ * @param int   $course_id ID of the course.
+ * @param array $args      Arguments to override the defaults.
  *
  * @since 1.0.0
  * @return array|false Array of module objects or false on failure.
  */
-function edd_ecourse_get_course_modules( $course_id ) {
+function edd_ecourse_get_course_modules( $course_id, $args = array() ) {
 
-	$modules = get_post_meta( $course_id, 'modules', true );
+	$defaults = array(
+		'course' => $course_id,
+		'number' => - 1
+	);
+	$args     = wp_parse_args( $args, $defaults );
+
+	$modules = edd_ecourse_load()->modules->get_modules( $args );
 
 	if ( ! is_array( $modules ) || ! count( $modules ) ) {
 		$modules = false;
