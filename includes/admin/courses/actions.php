@@ -35,7 +35,7 @@ function edd_ecourse_add_course_cb() {
 		wp_die( __( 'A course name is required.', 'edd-ecourse' ) );
 	}
 
-	$course_id = edd_ecourse_insert_course( array( 'title' => $course_name ) );
+	$course_id = edd_ecourse_insert_course( $course_name );
 
 	if ( ! $course_id ) {
 		wp_die( __( 'An error occurred while creating the e-course.', 'edd-ecourse' ) );
@@ -45,7 +45,7 @@ function edd_ecourse_add_course_cb() {
 		'ID'              => $course_id,
 		'name'            => $course_name,
 		'edit_course_url' => edd_ecourse_get_manage_course_url( $course_id ),
-		'view_course_url' => edd_ecourse_get_course_permalink( $course_id ),
+		'view_course_url' => get_permalink( $course_id ),
 		'nonce'           => wp_create_nonce( 'delete_course_' . $course_id )
 	);
 
@@ -165,11 +165,14 @@ function edd_ecourse_update_course_title() {
 		wp_die( __( 'Error: Not a valid course.', 'edd-ecourse' ) );
 	}
 
-	$course_id = absint( $course_id );
+	$course_data = array(
+		'ID'         => absint( $course_id ),
+		'post_title' => sanitize_text_field( $_POST['title'] )
+	);
 
-	$result = edd_ecourse_load()->courses->update( $course_id, array( 'title' => sanitize_text_field( $_POST['title'] ) ) );
+	$result = wp_update_post( $course_data );
 
-	if ( false === $result ) {
+	if ( ! $result ) {
 		wp_die( __( 'An unexpected error occurred while trying to update this course.', 'edd-ecourse' ) );
 	}
 
