@@ -66,14 +66,14 @@ function edd_ecourse_render_course_overview() {
 		if ( is_array( $courses ) ) {
 
 			foreach ( $courses as $course ) {
-				$download       = edd_ecourse_get_course_download( $course->id );
-				$number_lessons = edd_ecourse_get_number_course_lessons( $course->id );
+				$download       = edd_ecourse_get_course_download( $course->ID );
+				$number_lessons = edd_ecourse_get_number_course_lessons( $course->ID );
 				$sales          = $download ? edd_get_download_earnings_stats( $download->ID ) : 0;
 				$students       = $download ? edd_get_download_sales_stats( $download->ID ) : 0;
 				?>
-				<div class="edd-ecourse" data-course-id="<?php echo esc_attr( $course->id ); ?>">
+				<div class="edd-ecourse" data-course-id="<?php echo esc_attr( $course->ID ); ?>">
 					<div class="edd-ecourse-inner">
-						<h2><?php echo esc_html( $course->title ); ?></h2>
+						<h2><?php echo esc_html( $course->post_title ); ?></h2>
 
 						<div class="edd-ecourse-stats">
 							<div class="edd-ecourse-lessons">
@@ -250,7 +250,7 @@ function edd_ecourse_render_course_edit() {
 									<label for="edd-ecourse-module-name" class="screen-reader-text"><?php _e( 'Enter module name', 'edd-ecourse' ); ?></label>
 									<input type="text" id="edd-ecourse-module-name" placeholder="<?php esc_attr_e( 'Module name', 'edd-ecourse' ); ?>" required>
 									<button type="submit" class="button"><?php _e( 'Add Module', 'edd-ecourse' ); ?></button>
-									<input type="hidden" id="edd-ecourse-id" value="<?php echo esc_attr( $course->id ); ?>">
+									<input type="hidden" id="edd-ecourse-id" value="<?php echo esc_attr( $course->ID ); ?>">
 									<?php wp_nonce_field( 'edd_ecourse_add_module', 'edd_ecourse_add_module_nonce' ); ?>
 								</form>
 							</div>
