@@ -319,6 +319,8 @@ function edd_ecourse_title() {
 /**
  * Get Current E-Course ID
  *
+ * @global WP_Post $edd_ecourse
+ *
  * @since 1.0.0
  * @return int|false
  */
@@ -326,6 +328,20 @@ function edd_ecourse_get_id() {
 	global $edd_ecourse;
 
 	return is_object( $edd_ecourse ) ? $edd_ecourse->ID : false;
+}
+
+/**
+ * Get Current E-Course Status
+ *
+ * @global WP_Post $edd_ecourse
+ *
+ * @since 1.0.0
+ * @return int|false
+ */
+function edd_ecourse_get_status() {
+	global $edd_ecourse;
+
+	return is_object( $edd_ecourse ) ? $edd_ecourse->post_status : false;
 }
 
 /**

@@ -246,20 +246,27 @@ function edd_ecourse_user_can_view_page( $user = false ) {
 	$current_course_id = edd_ecourse_get_id();
 
 	if ( $current_course_id ) {
-		// Can view only if they have access to the course.
-		$can_view_page = edd_ecourse_has_course_access( $current_course_id, $user_id );
 
-		// Extra checks for single lesson pages.
-		if ( is_singular( 'ecourse_lesson' ) ) {
-			if ( edd_ecourse_is_free_preview( get_post() ) ) {
-				$can_view_page = true;
+		// Permission is only granted if the e-course is published.
+		if ( 'publish' == edd_ecourse_get_status() ) {
+			// Can view only if they have access to the course.
+			$can_view_page = edd_ecourse_has_course_access( $current_course_id, $user_id );
+
+			// Extra checks for single lesson pages.
+			if ( is_singular( 'ecourse_lesson' ) ) {
+				if ( edd_ecourse_is_free_preview( get_post() ) ) {
+					$can_view_page = true;
+				}
 			}
 		}
+
 	} else {
+
 		// Check to see if we're on the dashboard page and grant access to all logged in users.
 		if ( edd_ecourse_is_dashboard_page() && $user_id > 0 ) {
 			$can_view_page = true;
 		}
+
 	}
 
 	return apply_filters( 'edd_ecourse_user_can_view_page', $can_view_page, $current_course_id, $user_id );
