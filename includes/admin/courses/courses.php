@@ -194,6 +194,7 @@ function edd_ecourse_render_course_edit() {
 												<option value="publish" <?php selected( $course->post_status, 'publish' ); ?>><?php _e( 'Published', 'edd-ecourse' ); ?></option>
 												<option value="future" <?php selected( $course->post_status, 'future' ); ?>><?php _e( 'Scheduled', 'edd-ecourse' ); ?></option>
 											</select>
+											<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( '"Draft" to make all lessons private, "Published" to make the course available for purchase, "Scheduled" to schedule the release in the future for pre-selling.', 'edd-ecourse' ); ?>"></span>
 										</p>
 
 										<div id="ecourse-start-date-wrap"<?php echo 'future' != $course->post_status ? ' style="display: none;"' : ''; ?>>
@@ -201,13 +202,15 @@ function edd_ecourse_render_course_edit() {
 												<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
 												<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
 												<input type="text" id="course-start-date" name="course_start_date" class="large-text" value="<?php echo esc_attr( edd_ecourse_get_readable_course_date( $course ) ); ?>">
+												<span class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></span>
 											</p>
-											<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
 										</div>
 
-										<p id="ecourse-save">
-											<button type="button" id="ecourse-save-status" class="button button-primary"><?php _e( 'Save', 'edd-ecourse' ); ?></button>
-										</p>
+										<div id="major-publishing-actions">
+											<p id="ecourse-save">
+												<button type="button" id="ecourse-save-status" class="button button-primary"><?php _e( 'Save', 'edd-ecourse' ); ?></button>
+											</p>
+										</div>
 									</div>
 								</div>
 							</div>

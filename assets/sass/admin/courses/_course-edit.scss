@@ -10,9 +10,27 @@
         padding: 0;
     }
 
-    .misc-pub-section {
-        margin: 1em 0;
-        padding: 0;
+    hr {
+        margin: 2em 0;
+    }
+
+    #major-publishing-actions {
+        margin: 0 -12px -3px;
+        text-align: right;
+
+        p {
+            margin: 0;
+        }
+    }
+
+    .description {
+        color: #666;
+        display: block;
+        font: {
+            size: 13px;
+            style: italic;
+        }
+        margin: 4px 0 5px;
     }
 }
 

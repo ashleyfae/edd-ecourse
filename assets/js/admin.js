@@ -274,7 +274,7 @@ jQuery(document).ready(function ($) {
             var saveButton = $('#ecourse-save-status');
 
             saveButton.attr('disabled', true);
-            saveWrap.append('<span class="spinner is-active" style="float: none"></span>');
+            saveWrap.prepend('<span class="spinner is-active" style="float: none"></span>');
 
             var data = {
                 action: 'edd_ecourse_update_course',
