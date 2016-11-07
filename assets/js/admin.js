@@ -282,8 +282,8 @@ jQuery(document).ready(function ($) {
                 editButton.hide();
 
                 // Add submit and cancel buttons.
-                editButton.after('<button href="#" class="button edd-ecourse-cancel-edit-course-slug">' + edd_ecourse_vars.l10n.cancel + '</button>');
-                editButton.after('<button href="#" class="button button-primary edd-ecourse-submit-edit-course-slug">' + edd_ecourse_vars.l10n.save + '</button>');
+                editButton.after('<button href="#" class="button button-small edd-ecourse-cancel-edit-course-slug">' + edd_ecourse_vars.l10n.cancel + '</button>');
+                editButton.after('<button href="#" class="button button-small button-primary edd-ecourse-submit-edit-course-slug">' + edd_ecourse_vars.l10n.save + '</button>');
 
                 /** Cancel Edit **/
                 wrap.on('click', '.edd-ecourse-cancel-edit-course-slug', function (e) {
