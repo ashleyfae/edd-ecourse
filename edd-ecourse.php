@@ -117,6 +117,8 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 			require_once EDD_ECOURSE_DIR . 'includes/shortcodes.php';
 			require_once EDD_ECOURSE_DIR . 'includes/template-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/user-functions.php';
+			require_once EDD_ECOURSE_DIR . 'includes/widgets/class-completed-courses.php';
+			require_once EDD_ECOURSE_DIR . 'includes/widgets/class-ecourse-progress.php';
 
 			if ( is_admin() ) {
 				require_once EDD_ECOURSE_DIR . 'includes/admin/admin-pages.php';
