@@ -23,9 +23,17 @@ while ( have_posts() ) : the_post(); ?>
 			<h1 class="entry-title"><?php the_title(); ?></h1>
 		</header>
 
-		<div class="entry-content box">
-			<?php the_content(); ?>
-		</div>
+		<?php if ( get_the_content() ) : ?>
+			<div class="entry-content box">
+				<?php the_content(); ?>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( is_active_sidebar( 'ecourse-dashboard' ) ) : ?>
+			<div id="ecourse-dashboard-widgets">
+				<?php dynamic_sidebar( 'ecourse-dashboard' ); ?>
+			</div>
+		<?php endif; ?>
 
 	</article>
 

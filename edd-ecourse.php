@@ -109,7 +109,6 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 			require_once EDD_ECOURSE_DIR . 'includes/class-modules-db.php';
 			require_once EDD_ECOURSE_DIR . 'includes/edd-actions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/scripts.php';
-			require_once EDD_ECOURSE_DIR . 'includes/functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/course-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/lesson-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/misc-functions.php';
@@ -299,7 +298,7 @@ function edd_ecourse_activation() {
 	if ( ! array_key_exists( 'ecourse_dashboard_page', $existing_settings ) ) {
 		$dashboard = wp_insert_post( array(
 			'post_title'     => __( 'Dashboard', 'edd-ecourse' ),
-			'post_content'   => '[course-dashboard]',
+			'post_content'   => '',
 			'post_status'    => 'publish',
 			'post_author'    => 1,
 			'post_type'      => 'page',

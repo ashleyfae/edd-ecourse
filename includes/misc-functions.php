@@ -2,7 +2,7 @@
 /**
  * Misc. Functions
  *
- * @package   edd-ecourse
+ * @package   EDD\E-Course\Misc Functions
  * @copyright Copyright (c) 2016, Ashley Gibson
  * @license   GPL2+
  */
