@@ -260,7 +260,94 @@ jQuery(document).ready(function ($) {
          */
         editSlug: function () {
 
-            // @todo
+            $('#edd-ecourse-dashboard-widgets-wrap').on('click', '.edit-slug', function (e) {
+
+                e.preventDefault();
+
+                var editButton = $(this);
+                var wrap = $(this).parents('#edit-slug-box');
+                var courseID = $('#edd-ecourse-title').data('course');
+                var courseSlugWrap = wrap.find('#editable-post-name');
+                var currentSlug = courseSlugWrap.text();
+
+                wrap.addClass('edd-ecourse-is-editing');
+
+                // Turn the title into an input box.
+                courseSlugWrap.html('<input type="text" id="new-post-slug" size="30" spellcheck="true" autocomplete="off" value="">');
+
+                var inputBox = courseSlugWrap.find('input');
+                inputBox.focus().val(currentSlug);
+
+                // Hide edit button.
+                editButton.hide();
+
+                // Add submit and cancel buttons.
+                editButton.after('<button href="#" class="button edd-ecourse-cancel-edit-course-slug">' + edd_ecourse_vars.l10n.cancel + '</button>');
+                editButton.after('<button href="#" class="button button-primary edd-ecourse-submit-edit-course-slug">' + edd_ecourse_vars.l10n.save + '</button>');
+
+                /** Cancel Edit **/
+                wrap.on('click', '.edd-ecourse-cancel-edit-course-slug', function (e) {
+
+                    e.preventDefault();
+
+                    $('.edd-ecourse-cancel-edit-course-slug, .edd-ecourse-submit-edit-course-slug').remove();
+                    editButton.show();
+
+                    courseSlugWrap.html(currentSlug);
+
+                    wrap.removeClass('edd-ecourse-is-editing');
+
+                });
+
+                /** Save Edit **/
+                // I'm doing some funky shit here so it will trigger when pressing "enter" or clicking.
+                wrap.on('keypress click', function (e) {
+                    if (!wrap.hasClass('edd-ecourse-is-editing')) {
+                        return;
+                    }
+
+                    if ('click' == e.type && !$(e.target).hasClass('edd-ecourse-submit-edit-course-slug')) {
+                        return;
+                    }
+
+                    if (e.type != 'click' && e.which !== 13) {
+                        return;
+                    }
+
+                    e.preventDefault();
+
+                    $(this).attr('disabled', true);
+
+                    var data = {
+                        action: 'edd_ecourse_update_course_slug',
+                        course: courseID,
+                        slug: inputBox.val()
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: ajaxurl,
+                        data: data,
+                        dataType: "json",
+                        success: function (response) {
+
+                            $('.edd-ecourse-cancel-edit-course-slug, .edd-ecourse-submit-edit-course-slug').remove();
+                            editButton.show();
+
+                            courseSlugWrap.html(data.slug);
+
+                            wrap.removeClass('edd-ecourse-is-editing');
+
+                        }
+                    }).fail(function (response) {
+                        if (window.console && window.console.log) {
+                            console.log(response);
+                        }
+                    });
+
+                });
+
+            });
 
         },
 
