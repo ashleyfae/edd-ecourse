@@ -11,6 +11,11 @@
  * @license   GPL2+
  */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Get Templates Directory
  *
@@ -227,28 +232,6 @@ function edd_ecourse_get_sidebar() {
 		edd_get_template_part( 'ecourse', 'sidebar' );
 	}
 
-}
-
-/**
- * Get Dashboard URL
- *
- * URL to the e-course dashboard page.
- *
- * @todo  Maybe move to misc. functions.
- *
- * @since 1.0.0
- * @return string
- */
-function edd_ecourse_get_dashboard_url() {
-	$dashboard = edd_get_option( 'ecourse_dashboard_page' );
-
-	if ( $dashboard ) {
-		$url = get_permalink( $dashboard );
-	} else {
-		$url = false;
-	}
-
-	return apply_filters( 'edd_ecourse_dashboard_url', $url, $dashboard );
 }
 
 /**
