@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class EDD_eCourse_Modules_DB extends EDD_DB {
+class EDD_eCourse_Modules_DB extends EDD_eCourse_DB_Base {
 
 	/**
 	 * EDD_eCourse_Modules_DB constructor.
@@ -329,8 +329,6 @@ class EDD_eCourse_Modules_DB extends EDD_DB {
 	 * @return void
 	 */
 	public function create_table() {
-
-		global $wpdb;
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
