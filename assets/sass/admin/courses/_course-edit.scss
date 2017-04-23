@@ -111,6 +111,16 @@
     }
 }
 
+.edd-ecourse-delete-module {
+    float: right;
+    color: #bfbfbf;
+    text-decoration: none;
+
+    &:hover {
+        color: red;
+    }
+}
+
 .edd-ecourse-lesson-list {
     margin: 0;
 

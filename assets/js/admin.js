@@ -1,803 +1,1023 @@
 jQuery(document).ready(function ($) {
 
-    // Tooltips
-    $('.edd-ecourse-tip').tooltip({
-        content: function () {
-            return $(this).prop('title');
-        },
-        tooltipClass: 'edd-ecourse-tooltip',
-        position: {
-            my: 'center top',
-            at: 'center bottom+10',
-            collision: 'flipfit'
-        },
-        hide: false,
-        show: false
-    });
-
-    /**
-     * E-Courses
-     */
-    var EDD_ECourse = {
+	// Tooltips
+	$('.edd-ecourse-tip').tooltip({
+		content: function () {
+			return $(this).prop('title');
+		},
+		tooltipClass: 'edd-ecourse-tooltip',
+		position: {
+			my: 'center top',
+			at: 'center bottom+10',
+			collision: 'flipfit'
+		},
+		hide: false,
+		show: false
+	});
+
+	/**
+	 * E-Courses
+	 */
+	var EDD_ECourse = {
+
+		/**
+		 * Initialize all the things.
+		 */
+		init: function () {
+			this.add();
+			this.delete();
+			this.editTitle();
+			this.editSlug();
+
+			$('#course_status').on('change', this.maybeHideDate);
+			$('#ecourse-save-status').on('click', this.updateCourseDetails);
+		},
+
+		/**
+		 * Add E-Course
+		 */
+		add: function () {
+
+			$('.toplevel_page_ecourses').on('click', '.page-title-action', function (e) {
+				e.preventDefault();
+				swal({
+					title: edd_ecourse_vars.l10n.add_ecourse,
+					type: 'input',
+					showCancelButton: true,
+					closeOnConfirm: true,
+					showLoaderOnConfirm: true,
+					allowOutsideClick: true,
+					animation: false, // pop, slide-from-top, slide-from-bottom
+					inputPlaceholder: edd_ecourse_vars.l10n.ecourse_title
+				}, function (inputValue) {
+
+					if (inputValue === false) {
+						return false;
+					}
+
+					var data = {
+						action: 'edd_ecourse_add_course',
+						course_name: inputValue,
+						nonce: $('#edd_ecourse_add_course_nonce').val()
+					};
+
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: data,
+						dataType: "json",
+						success: function (response) {
+
+							console.log(response);
+
+							if (true === response.success) {
+
+								// Load template data.
+								var courseTemplate = wp.template('edd-ecourse-new');
+								$('#edd-ecourse-grid').prepend(courseTemplate(response.data));
+
+							} else {
+
+								if (window.console && window.console.log) {
+									console.log(response);
+								}
+
+							}
+
+						}
+					}).fail(function (response) {
+						if (window.console && window.console.log) {
+							console.log(response);
+						}
+					});
+
+				});
+			});
+
+		},
+
+		/**
+		 * Remove E-Course
+		 */
+		delete: function () {
+
+			$(document.body).on('click', '.edd-ecourse-action-delete', function (e) {
 
-        /**
-         * Initialize all the things.
-         */
-        init: function () {
-            this.add();
-            this.remove();
-            this.editTitle();
-            this.editSlug();
+				e.preventDefault();
 
-            $('#course_status').on('change', this.maybeHideDate);
-            $('#ecourse-save-status').on('click', this.updateCourseDetails);
-        },
+				var button = $(this);
+				var courseWrap = $(this).parents('.edd-ecourse');
+				var course_id = courseWrap.data('course-id');
 
-        /**
-         * Add E-Course
-         */
-        add: function () {
-
-            $('#edd-ecourse-add').on('submit', 'form', function (e) {
-
-                e.preventDefault();
-
-                var form = $(this);
-
-                // Add spinner.
-                form.append('<span class="spinner is-active"></span>');
-
-                // Disable submit.
-                form.find('button').attr('disabled', true);
-
-                var data = {
-                    action: 'edd_ecourse_add_course',
-                    course_name: $('#edd-ecourse-name-new').val(),
-                    nonce: $('#edd_ecourse_add_course_nonce').val()
-                };
-
-                $.ajax({
-                    type: 'POST',
-                    url: ajaxurl,
-                    data: data,
-                    dataType: "json",
-                    success: function (response) {
-
-                        console.log(response);
-
-                        if (true === response.success) {
-
-                            // Remove spinner.
-                            form.find('.spinner').remove();
-
-                            // Re-enable submit.
-                            form.find('button').attr('disabled', false);
-
-                            // Clear course title field.
-                            $('#edd-ecourse-name-new').val('');
-
-                            // Load template data.
-                            var courseTemplate = wp.template('edd-ecourse-new');
-                            $('#edd-ecourse-grid').prepend(courseTemplate(response.data));
-
-                        } else {
-
-                            if (window.console && window.console.log) {
-                                console.log(response);
-                            }
-
-                        }
+				swal({
+					title: edd_ecourse_vars.l10n.you_sure,
+					text: edd_ecourse_vars.l10n.confirm_delete_course,
+					type: 'warning',
+					showCancelButton: true,
+					closeOnConfirm: true,
+					showLoaderOnConfirm: true,
+					allowOutsideClick: true,
+					animation: false, // pop, slide-from-top, slide-from-bottom
+					confirmButtonText: edd_ecourse_vars.l10n.yes_delete
+				}, function (inputValue) {
 
-                    }
-                }).fail(function (response) {
-                    if (window.console && window.console.log) {
-                        console.log(response);
-                    }
-                });
+					if (inputValue === false) {
+						return false;
+					}
 
-            });
+					var data = {
+						action: 'edd_ecourse_delete_course',
+						course_id: course_id,
+						nonce: button.data('nonce')
+					};
 
-        },
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: data,
+						dataType: "json",
+						success: function (response) {
 
-        /**
-         * Remove E-Course
-         */
-        remove: function () {
+							console.log(response);
 
-            $(document.body).on('click', '.edd-ecourse-action-delete', function (e) {
+							if (true === response.success) {
 
-                e.preventDefault();
+								courseWrap.remove();
 
-                if (!confirm(edd_ecourse_vars.l10n.confirm_delete_course)) {
-                    return false;
-                }
+							} else {
 
-                var courseWrap = $(this).parents('.edd-ecourse');
-                var actionsWrap = $(this).parents('.edd-ecourse-actions');
+								if (window.console && window.console.log) {
+									console.log(response);
+								}
 
-                // Add spinner.
-                actionsWrap.append('<span class="spinner is-active"></span>');
+							}
 
-                // Deactivate all buttons.
-                actionsWrap.find('.button').each(function () {
-                    $(this).addClass('disabled').attr('disabled', true);
-                });
+						}
+					}).fail(function (response) {
+						if (window.console && window.console.log) {
+							console.log(response);
+						}
+					});
 
-                var course_id = courseWrap.data('course-id');
+				});
 
-                var data = {
-                    action: 'edd_ecourse_delete_course',
-                    course_id: course_id,
-                    nonce: $(this).data('nonce')
-                };
+			});
 
-                $.ajax({
-                    type: 'POST',
-                    url: ajaxurl,
-                    data: data,
-                    dataType: "json",
-                    success: function (response) {
+		},
 
-                        if (true === response.success) {
-                            courseWrap.remove();
-                        } else {
-                            if (window.console && window.console.log) {
-                                console.log(response);
-                            }
-                        }
+		/**
+		 * Edit Course Title
+		 */
+		editTitle: function () {
 
-                    }
-                }).fail(function (response) {
-                    if (window.console && window.console.log) {
-                        console.log(response);
-                    }
-                });
+			$('#edd-ecourse-edit-course-title').on('click', function (e) {
 
-            });
+				e.preventDefault();
 
-        },
+				var editButton = $(this);
+				var wrap = $(this).parent();
+				var courseID = wrap.data('course');
+				var courseTitleWrap = wrap.find('span');
+				var currentTitle = courseTitleWrap.text();
 
-        /**
-         * Edit Course Title
-         */
-        editTitle: function () {
+				wrap.addClass('edd-ecourse-is-editing');
 
-            $('#edd-ecourse-edit-course-title').on('click', function (e) {
+				// Turn the title into an input box.
+				courseTitleWrap.html('<input type="text" size="30" spellcheck="true" autocomplete="off" value="">');
 
-                e.preventDefault();
+				var inputBox = courseTitleWrap.find('input');
+				inputBox.focus().val(currentTitle);
 
-                var editButton = $(this);
-                var wrap = $(this).parent();
-                var courseID = wrap.data('course');
-                var courseTitleWrap = wrap.find('span');
-                var currentTitle = courseTitleWrap.text();
+				// Hide edit button.
+				editButton.hide();
 
-                wrap.addClass('edd-ecourse-is-editing');
+				// Add submit and cancel buttons.
+				editButton.after('<button href="#" class="button edd-ecourse-cancel-edit-course-title">' + edd_ecourse_vars.l10n.cancel + '</button>');
+				editButton.after('<button href="#" class="button button-primary edd-ecourse-submit-edit-course-title">' + edd_ecourse_vars.l10n.save + '</button>');
 
-                // Turn the title into an input box.
-                courseTitleWrap.html('<input type="text" size="30" spellcheck="true" autocomplete="off" value="">');
+				/** Cancel Edit **/
+				wrap.on('click', '.edd-ecourse-cancel-edit-course-title', function (e) {
 
-                var inputBox = courseTitleWrap.find('input');
-                inputBox.focus().val(currentTitle);
+					e.preventDefault();
 
-                // Hide edit button.
-                editButton.hide();
+					$('.edd-ecourse-cancel-edit-course-title, .edd-ecourse-submit-edit-course-title').remove();
+					editButton.show();
 
-                // Add submit and cancel buttons.
-                editButton.after('<button href="#" class="button edd-ecourse-cancel-edit-course-title">' + edd_ecourse_vars.l10n.cancel + '</button>');
-                editButton.after('<button href="#" class="button button-primary edd-ecourse-submit-edit-course-title">' + edd_ecourse_vars.l10n.save + '</button>');
+					courseTitleWrap.html(currentTitle);
 
-                /** Cancel Edit **/
-                wrap.on('click', '.edd-ecourse-cancel-edit-course-title', function (e) {
+					wrap.removeClass('edd-ecourse-is-editing');
 
-                    e.preventDefault();
+				});
 
-                    $('.edd-ecourse-cancel-edit-course-title, .edd-ecourse-submit-edit-course-title').remove();
-                    editButton.show();
+				/** Save Edit **/
+				// I'm doing some funky shit here so it will trigger when pressing "enter" or clicking.
+				wrap.on('keypress click', function (e) {
+					//wrap.on('click', '.edd-ecourse-submit-edit-course-title', function (e) {
 
-                    courseTitleWrap.html(currentTitle);
+					if (!wrap.hasClass('edd-ecourse-is-editing')) {
+						return;
+					}
 
-                    wrap.removeClass('edd-ecourse-is-editing');
+					if ('click' == e.type && !$(e.target).hasClass('edd-ecourse-submit-edit-course-title')) {
+						return;
+					}
 
-                });
+					if (e.type != 'click' && e.which !== 13) {
+						return;
+					}
 
-                /** Save Edit **/
-                // I'm doing some funky shit here so it will trigger when pressing "enter" or clicking.
-                wrap.on('keypress click', function (e) {
-                    //wrap.on('click', '.edd-ecourse-submit-edit-course-title', function (e) {
+					e.preventDefault();
 
-                    if (!wrap.hasClass('edd-ecourse-is-editing')) {
-                        return;
-                    }
+					$(this).attr('disabled', true);
 
-                    if ('click' == e.type && !$(e.target).hasClass('edd-ecourse-submit-edit-course-title')) {
-                        return;
-                    }
+					var data = {
+						action: 'edd_ecourse_update_course_title',
+						course: courseID,
+						title: inputBox.val()
+					};
 
-                    if (e.type != 'click' && e.which !== 13) {
-                        return;
-                    }
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: data,
+						dataType: "json",
+						success: function (response) {
 
-                    e.preventDefault();
+							$('.edd-ecourse-cancel-edit-course-title, .edd-ecourse-submit-edit-course-title').remove();
+							editButton.show();
 
-                    $(this).attr('disabled', true);
+							courseTitleWrap.html(data.title);
 
-                    var data = {
-                        action: 'edd_ecourse_update_course_title',
-                        course: courseID,
-                        title: inputBox.val()
-                    };
+							wrap.removeClass('edd-ecourse-is-editing');
 
-                    $.ajax({
-                        type: 'POST',
-                        url: ajaxurl,
-                        data: data,
-                        dataType: "json",
-                        success: function (response) {
+						}
+					}).fail(function (response) {
+						if (window.console && window.console.log) {
+							console.log(response);
+						}
+					});
 
-                            $('.edd-ecourse-cancel-edit-course-title, .edd-ecourse-submit-edit-course-title').remove();
-                            editButton.show();
+				});
 
-                            courseTitleWrap.html(data.title);
+			});
 
-                            wrap.removeClass('edd-ecourse-is-editing');
+		},
 
-                        }
-                    }).fail(function (response) {
-                        if (window.console && window.console.log) {
-                            console.log(response);
-                        }
-                    });
+		/**
+		 * Edit Slug
+		 */
+		editSlug: function () {
 
-                });
+			$('#edd-ecourse-dashboard-widgets-wrap').on('click', '.edit-slug', function (e) {
 
-            });
+				e.preventDefault();
 
-        },
+				var editButton = $(this);
+				var wrap = $(this).parents('#edit-slug-box');
+				var courseID = $('#edd-ecourse-title').data('course');
+				var courseSlugWrap = wrap.find('#editable-post-name');
+				var currentSlug = courseSlugWrap.text();
 
-        /**
-         * Edit Slug
-         */
-        editSlug: function () {
+				wrap.addClass('edd-ecourse-is-editing');
 
-            $('#edd-ecourse-dashboard-widgets-wrap').on('click', '.edit-slug', function (e) {
+				// Turn the title into an input box.
+				courseSlugWrap.html('<input type="text" id="new-post-slug" size="30" spellcheck="true" autocomplete="off" value="">');
 
-                e.preventDefault();
+				var inputBox = courseSlugWrap.find('input');
+				inputBox.focus().val(currentSlug);
 
-                var editButton = $(this);
-                var wrap = $(this).parents('#edit-slug-box');
-                var courseID = $('#edd-ecourse-title').data('course');
-                var courseSlugWrap = wrap.find('#editable-post-name');
-                var currentSlug = courseSlugWrap.text();
+				// Hide edit button.
+				editButton.hide();
 
-                wrap.addClass('edd-ecourse-is-editing');
+				// Add submit and cancel buttons.
+				editButton.after('<button href="#" class="button button-small edd-ecourse-cancel-edit-course-slug">' + edd_ecourse_vars.l10n.cancel + '</button>');
+				editButton.after('<button href="#" class="button button-small button-primary edd-ecourse-submit-edit-course-slug">' + edd_ecourse_vars.l10n.save + '</button>');
 
-                // Turn the title into an input box.
-                courseSlugWrap.html('<input type="text" id="new-post-slug" size="30" spellcheck="true" autocomplete="off" value="">');
+				/** Cancel Edit **/
+				wrap.on('click', '.edd-ecourse-cancel-edit-course-slug', function (e) {
 
-                var inputBox = courseSlugWrap.find('input');
-                inputBox.focus().val(currentSlug);
+					e.preventDefault();
 
-                // Hide edit button.
-                editButton.hide();
+					$('.edd-ecourse-cancel-edit-course-slug, .edd-ecourse-submit-edit-course-slug').remove();
+					editButton.show();
 
-                // Add submit and cancel buttons.
-                editButton.after('<button href="#" class="button button-small edd-ecourse-cancel-edit-course-slug">' + edd_ecourse_vars.l10n.cancel + '</button>');
-                editButton.after('<button href="#" class="button button-small button-primary edd-ecourse-submit-edit-course-slug">' + edd_ecourse_vars.l10n.save + '</button>');
+					courseSlugWrap.html(currentSlug);
 
-                /** Cancel Edit **/
-                wrap.on('click', '.edd-ecourse-cancel-edit-course-slug', function (e) {
+					wrap.removeClass('edd-ecourse-is-editing');
 
-                    e.preventDefault();
+				});
 
-                    $('.edd-ecourse-cancel-edit-course-slug, .edd-ecourse-submit-edit-course-slug').remove();
-                    editButton.show();
+				/** Save Edit **/
+				// I'm doing some funky shit here so it will trigger when pressing "enter" or clicking.
+				wrap.on('keypress click', function (e) {
+					if (!wrap.hasClass('edd-ecourse-is-editing')) {
+						return;
+					}
 
-                    courseSlugWrap.html(currentSlug);
+					if ('click' == e.type && !$(e.target).hasClass('edd-ecourse-submit-edit-course-slug')) {
+						return;
+					}
 
-                    wrap.removeClass('edd-ecourse-is-editing');
+					if (e.type != 'click' && e.which !== 13) {
+						return;
+					}
 
-                });
+					e.preventDefault();
 
-                /** Save Edit **/
-                // I'm doing some funky shit here so it will trigger when pressing "enter" or clicking.
-                wrap.on('keypress click', function (e) {
-                    if (!wrap.hasClass('edd-ecourse-is-editing')) {
-                        return;
-                    }
+					$(this).attr('disabled', true);
 
-                    if ('click' == e.type && !$(e.target).hasClass('edd-ecourse-submit-edit-course-slug')) {
-                        return;
-                    }
+					var data = {
+						action: 'edd_ecourse_update_course_slug',
+						course: courseID,
+						slug: inputBox.val()
+					};
 
-                    if (e.type != 'click' && e.which !== 13) {
-                        return;
-                    }
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: data,
+						dataType: "json",
+						success: function (response) {
 
-                    e.preventDefault();
+							$('.edd-ecourse-cancel-edit-course-slug, .edd-ecourse-submit-edit-course-slug').remove();
+							editButton.show();
 
-                    $(this).attr('disabled', true);
+							courseSlugWrap.html(data.slug);
 
-                    var data = {
-                        action: 'edd_ecourse_update_course_slug',
-                        course: courseID,
-                        slug: inputBox.val()
-                    };
+							wrap.removeClass('edd-ecourse-is-editing');
 
-                    $.ajax({
-                        type: 'POST',
-                        url: ajaxurl,
-                        data: data,
-                        dataType: "json",
-                        success: function (response) {
+						}
+					}).fail(function (response) {
+						if (window.console && window.console.log) {
+							console.log(response);
+						}
+					});
 
-                            $('.edd-ecourse-cancel-edit-course-slug, .edd-ecourse-submit-edit-course-slug').remove();
-                            editButton.show();
+				});
 
-                            courseSlugWrap.html(data.slug);
+			});
 
-                            wrap.removeClass('edd-ecourse-is-editing');
+		},
 
-                        }
-                    }).fail(function (response) {
-                        if (window.console && window.console.log) {
-                            console.log(response);
-                        }
-                    });
+		/**
+		 * Update Course
+		 * @param args
+		 */
+		updateCourse: function (args) {
 
-                });
+			var saveWrap = $('#ecourse-save');
+			var saveButton = $('#ecourse-save-status');
 
-            });
+			saveButton.attr('disabled', true);
+			saveWrap.prepend('<span class="spinner is-active" style="float: none"></span>');
 
-        },
+			var data = {
+				action: 'edd_ecourse_update_course',
+				args: args
+			};
 
-        /**
-         * Update Course
-         * @param args
-         */
-        updateCourse: function (args) {
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: data,
+				dataType: "json",
+				success: function (response) {
 
-            var saveWrap = $('#ecourse-save');
-            var saveButton = $('#ecourse-save-status');
+					console.log(response);
 
-            saveButton.attr('disabled', true);
-            saveWrap.prepend('<span class="spinner is-active" style="float: none"></span>');
+					saveButton.attr('disabled', false);
+					saveWrap.find('.spinner').remove();
 
-            var data = {
-                action: 'edd_ecourse_update_course',
-                args: args
-            };
+				}
+			}).fail(function (response) {
+				if (window.console && window.console.log) {
+					console.log(response);
+				}
+			});
 
-            $.ajax({
-                type: 'POST',
-                url: ajaxurl,
-                data: data,
-                dataType: "json",
-                success: function (response) {
+		},
 
-                    console.log(response);
+		/**
+		 * Maybe Hide Course Date
+		 */
+		maybeHideDate: function () {
 
-                    saveButton.attr('disabled', false);
-                    saveWrap.find('.spinner').remove();
+			// First hide it.
+			var startDateWrap = $('#ecourse-start-date-wrap');
+			startDateWrap.hide();
 
-                }
-            }).fail(function (response) {
-                if (window.console && window.console.log) {
-                    console.log(response);
-                }
-            });
+			var courseStatus = $('#course_status').find('option:selected').val();
 
-        },
+			if ('future' == courseStatus) {
+				startDateWrap.slideDown();
+			} else {
+				$('course-start-date').val(''); // empty value
+			}
 
-        /**
-         * Maybe Hide Course Date
-         */
-        maybeHideDate: function () {
+		},
 
-            // First hide it.
-            var startDateWrap = $('#ecourse-start-date-wrap');
-            startDateWrap.hide();
+		/**
+		 * Update Course Details
+		 * @param e
+		 */
+		updateCourseDetails: function (e) {
+			e.preventDefault();
 
-            var courseStatus = $('#course_status').find('option:selected').val();
+			var args = {
+				ID: $('#edd-ecourse-title').data('course'),
+				post_status: $('#course_status').find('option:selected').val()
+			};
 
-            if ('future' == courseStatus) {
-                startDateWrap.slideDown();
-            } else {
-                $('course-start-date').val(''); // empty value
-            }
+			var startDate = $('#course-start-date').val();
 
-        },
+			if (startDate) {
+				args.post_date = startDate;
+			}
 
-        /**
-         * Update Course Details
-         * @param e
-         */
-        updateCourseDetails: function (e) {
-            e.preventDefault();
+			EDD_ECourse.updateCourse(args);
+		}
 
-            var args = {
-                ID: $('#edd-ecourse-title').data('course'),
-                post_status: $('#course_status').find('option:selected').val()
-            };
+	};
 
-            var startDate = $('#course-start-date').val();
+	var EDD_ECourse_Module = {
 
-            if (startDate) {
-                args.post_date = startDate;
-            }
+		/**
+		 * Initialize all the things.
+		 */
+		init: function () {
+			this.sort();
+			this.add();
+			this.editTitle();
+			this.delete();
+		},
 
-            EDD_ECourse.updateCourse(args);
-        }
+		/**
+		 * Sort Modules
+		 * Change the order of the modules and save.
+		 */
+		sort: function () {
+			$('#edd-ecourse-module-sortables').sortable({
+				items: '.postbox:not(.edd-ecourse-add-module)',
+				handle: '.hndle'
+			}).on('sortstop', function (event, ui) {
 
-    };
+				var modules = [];
 
-    var EDD_ECourse_Module = {
+				$('.edd-ecourse-module-group').each(function () {
+					modules.push($(this).data('module'));
+				});
 
-        /**
-         * Initialize all the things.
-         */
-        init: function () {
-            this.sort();
-            this.sortLessons();
-            this.add();
-            this.editTitle();
-        },
+				// Save positioning.
+				var data = {
+					action: 'edd_ecourse_save_module_positions',
+					modules: modules,
+					nonce: $('#edd_ecourse_manage_course_nonce').val()
+				};
 
-        /**
-         * Sort Modules
-         * Change the order of the modules and save.
-         */
-        sort: function () {
-            $('#edd-ecourse-module-sortables').sortable({
-                items: '.postbox:not(.edd-ecourse-add-module)',
-                handle: '.hndle'
-            }).on('sortstop', function (event, ui) {
+				$.ajax({
+					type: 'POST',
+					url: ajaxurl,
+					data: data,
+					dataType: "json",
+					success: function (response) {
 
-                var modules = [];
+						console.log(response);
 
-                $('.edd-ecourse-module-group').each(function () {
-                    modules.push($(this).data('module'));
-                });
+						if (true !== response.success) {
 
-                // Save positioning.
-                var data = {
-                    action: 'edd_ecourse_save_module_positions',
-                    modules: modules,
-                    nonce: $('#edd_ecourse_manage_course_nonce').val()
-                };
+							if (window.console && window.console.log) {
+								console.log(response);
+							}
 
-                $.ajax({
-                    type: 'POST',
-                    url: ajaxurl,
-                    data: data,
-                    dataType: "json",
-                    success: function (response) {
+						}
 
-                        console.log(response);
+					}
+				}).fail(function (response) {
+					if (window.console && window.console.log) {
+						console.log(response);
+					}
+				});
 
-                        if (true !== response.success) {
+			});
+		},
 
-                            if (window.console && window.console.log) {
-                                console.log(response);
-                            }
+		/**
+		 * Add Module
+		 */
+		add: function () {
 
-                        }
+			$('.edd-ecourse-add-module').on('click', 'button', function (e) {
+				e.preventDefault();
+				swal({
+					title: edd_ecourse_vars.l10n.add_module,
+					type: 'input',
+					showCancelButton: true,
+					closeOnConfirm: true,
+					showLoaderOnConfirm: true,
+					allowOutsideClick: true,
+					animation: false, // pop, slide-from-top, slide-from-bottom
+					inputPlaceholder: edd_ecourse_vars.l10n.module_name
+				}, function (inputValue) {
 
-                    }
-                }).fail(function (response) {
-                    if (window.console && window.console.log) {
-                        console.log(response);
-                    }
-                });
+					if (inputValue === false) {
+						return false;
+					}
 
-            });
-        },
+					var data = {
+						action: 'edd_ecourse_add_module',
+						title: inputValue,
+						course_id: $('#edd-ecourse-id').val(),
+						position: ($('.edd-ecourse-module-group').length) + 1,
+						nonce: $('#edd-ecourse-module-nonce').val()
+					};
 
-        /**
-         * Sort Lessons
-         * Change the order of the lessons and save.
-         */
-        sortLessons: function () {
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: data,
+						dataType: "json",
+						success: function (response) {
 
-            $('.edd-ecourse-lesson-list').sortable()
-                .on('sortstop', function (event, ui) {
+							console.log(response);
 
-                    var lessons = [];
+							if (true === response.success) {
 
-                    $('.edd-ecourse-lesson-list > li').each(function () {
-                        lessons.push($(this).data('id'));
-                    });
+								// Load template data.
+								var wrap = $('.edd-ecourse-add-module');
+								var moduleTemplate = wp.template('edd-ecourse-new-module');
+								wrap.before(moduleTemplate(response.data));
 
-                    // Save positioning.
-                    var data = {
-                        action: 'edd_ecourse_save_lesson_positions',
-                        lessons: lessons,
-                        nonce: $('#edd_ecourse_manage_course_nonce').val()
-                    };
+								// Initialize adding a lesson.
+								EDD_ECourse_Lesson.add();
+								EDD_ECourse_Module.editTitle();
 
-                    $.ajax({
-                        type: 'POST',
-                        url: ajaxurl,
-                        data: data,
-                        dataType: "json",
-                        success: function (response) {
+							} else {
 
-                            console.log(response);
+								if (window.console && window.console.log) {
+									console.log(response);
+								}
 
-                            if (true !== response.success) {
+							}
 
-                                if (window.console && window.console.log) {
-                                    console.log(response);
-                                }
+						}
+					}).fail(function (response) {
+						if (window.console && window.console.log) {
+							console.log(response);
+						}
+					});
 
-                            }
+				});
+			});
 
-                        }
-                    }).fail(function (response) {
-                        if (window.console && window.console.log) {
-                            console.log(response);
-                        }
-                    });
+		},
 
-                });
+		/**
+		 * Edit Module Title
+		 */
+		editTitle: function () {
 
-        },
+			$('.edd-ecourse-edit-module-title').on('click', function (e) {
 
-        /**
-         * Add Module
-         */
-        add: function () {
+				e.preventDefault();
 
-            $('#edd-ecourse-add-module-form').on('submit', function (e) {
+				var editButton = $(this);
+				var wrap = $(this).parents('.edd-ecourse-module-group');
+				var addLessonButton = wrap.find('.edd-ecourse-add-module-lesson');
+				var moduleID = wrap.data('module');
+				var moduleTitleWrap = wrap.find('.edd-ecourse-module-title');
+				var currentTitle = moduleTitleWrap.text();
 
-                e.preventDefault();
+				wrap.addClass('edd-ecourse-is-editing');
 
-                var form = $(this);
-                var wrap = $('.edd-ecourse-add-module');
+				// Turn the title into an input box.
+				moduleTitleWrap.html('<input type="text" value="">');
 
-                // Add spinner.
-                form.append('<span class="spinner is-active"></span>');
+				var inputBox = moduleTitleWrap.find('input');
+				inputBox.focus().val(currentTitle);
 
-                // Disable submit.
-                form.find('button').attr('disabled', true);
+				// Hide edit button.
+				editButton.hide();
+				// Hide lesson button.
+				addLessonButton.hide();
 
-                var data = {
-                    action: 'edd_ecourse_add_module',
-                    title: $('#edd-ecourse-module-name').val(),
-                    course_id: $('#edd-ecourse-id').val(),
-                    position: ($('.edd-ecourse-module-group').length) + 1,
-                    nonce: $('#edd_ecourse_add_module_nonce').val()
-                };
+				// Add submit and cancel buttons.
+				editButton.after('<button href="#" class="button edd-ecourse-cancel-edit-module-title">' + edd_ecourse_vars.l10n.cancel + '</button>');
+				editButton.after('<button href="#" class="button button-primary edd-ecourse-submit-edit-module-title">' + edd_ecourse_vars.l10n.save + '</button>');
 
-                $.ajax({
-                    type: 'POST',
-                    url: ajaxurl,
-                    data: data,
-                    dataType: "json",
-                    success: function (response) {
+				/** Cancel Edit **/
+				wrap.on('click', '.edd-ecourse-cancel-edit-module-title', function (e) {
 
-                        console.log(response);
+					e.preventDefault();
 
-                        if (true === response.success) {
+					$('.edd-ecourse-cancel-edit-module-title, .edd-ecourse-submit-edit-module-title').remove();
+					editButton.show();
+					addLessonButton.show();
 
-                            // Remove spinner.
-                            form.find('.spinner').remove();
+					moduleTitleWrap.html(currentTitle);
 
-                            // Re-enable submit.
-                            form.find('button').attr('disabled', false);
+					wrap.removeClass('edd-ecourse-is-editing');
 
-                            // Clear course title field.
-                            $('#edd-ecourse-module-name').val('');
+				});
 
-                            // Load template data.
-                            var moduleTemplate = wp.template('edd-ecourse-new-module');
-                            wrap.before(moduleTemplate(response.data));
+				/** Save Edit **/
+				wrap.on('click', '.edd-ecourse-submit-edit-module-title', function (e) {
 
-                        } else {
+					e.preventDefault();
 
-                            if (window.console && window.console.log) {
-                                console.log(response);
-                            }
+					$(this).attr('disabled', true);
 
-                        }
+					var data = {
+						action: 'edd_ecourse_update_module_title',
+						module: moduleID,
+						title: inputBox.val()
+					};
 
-                    }
-                }).fail(function (response) {
-                    if (window.console && window.console.log) {
-                        console.log(response);
-                    }
-                });
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: data,
+						dataType: "json",
+						success: function (response) {
 
-            });
+							console.log(response);
 
-        },
+							$('.edd-ecourse-cancel-edit-module-title, .edd-ecourse-submit-edit-module-title').remove();
+							editButton.show();
+							addLessonButton.show();
 
-        /**
-         * Edit Module Title
-         */
-        editTitle: function () {
+							moduleTitleWrap.html(data.title);
 
-            $('.edd-ecourse-edit-module-title').on('click', function (e) {
+							wrap.removeClass('edd-ecourse-is-editing');
 
-                e.preventDefault();
+						}
+					}).fail(function (response) {
+						if (window.console && window.console.log) {
+							console.log(response);
+						}
+					});
 
-                var editButton = $(this);
-                var wrap = $(this).parents('.edd-ecourse-module-group');
-                var addLessonButton = wrap.find('.edd-ecourse-add-module-lesson');
-                var moduleID = wrap.data('module');
-                var moduleTitleWrap = wrap.find('.edd-ecourse-module-title');
-                var currentTitle = moduleTitleWrap.text();
+				});
 
-                wrap.addClass('edd-ecourse-is-editing');
+			});
 
-                // Turn the title into an input box.
-                moduleTitleWrap.html('<input type="text" value="">');
+		},
 
-                var inputBox = moduleTitleWrap.find('input');
-                inputBox.focus().val(currentTitle);
+		/**
+		 * Delete Module
+		 */
+		delete: function () {
 
-                // Hide edit button.
-                editButton.hide();
-                // Hide lesson button.
-                addLessonButton.hide();
+			$('.edd-ecourse-delete-module').on('click', function (e) {
 
-                // Add submit and cancel buttons.
-                editButton.after('<button href="#" class="button edd-ecourse-cancel-edit-module-title">' + edd_ecourse_vars.l10n.cancel + '</button>');
-                editButton.after('<button href="#" class="button button-primary edd-ecourse-submit-edit-module-title">' + edd_ecourse_vars.l10n.save + '</button>');
+				e.preventDefault();
+				var module = $(this).parents('.edd-ecourse-module-group');
+				var moduleID = module.data('module');
 
-                /** Cancel Edit **/
-                wrap.on('click', '.edd-ecourse-cancel-edit-module-title', function (e) {
+				swal({
+					title: edd_ecourse_vars.l10n.you_sure,
+					text: edd_ecourse_vars.l10n.delete_module_desc,
+					type: 'warning',
+					showCancelButton: true,
+					closeOnConfirm: true,
+					showLoaderOnConfirm: true,
+					allowOutsideClick: true,
+					animation: false, // pop, slide-from-top, slide-from-bottom
+					confirmButtonText: edd_ecourse_vars.l10n.yes_delete
+				}, function (inputValue) {
 
-                    e.preventDefault();
+					if (inputValue === false) {
+						return false;
+					}
 
-                    $('.edd-ecourse-cancel-edit-module-title, .edd-ecourse-submit-edit-module-title').remove();
-                    editButton.show();
-                    addLessonButton.show();
+					var data = {
+						action: 'edd_ecourse_delete_module',
+						module_id: moduleID,
+						nonce: $('#edd-ecourse-module-nonce').val()
+					};
 
-                    moduleTitleWrap.html(currentTitle);
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: data,
+						dataType: "json",
+						success: function (response) {
 
-                    wrap.removeClass('edd-ecourse-is-editing');
+							console.log(response);
 
-                });
+							if (true === response.success) {
 
-                /** Save Edit **/
-                wrap.on('click', '.edd-ecourse-submit-edit-module-title', function (e) {
+								module.remove();
 
-                    e.preventDefault();
+							} else {
 
-                    $(this).attr('disabled', true);
+								if (window.console && window.console.log) {
+									console.log(response);
+								}
 
-                    var data = {
-                        action: 'edd_ecourse_update_module_title',
-                        module: moduleID,
-                        title: inputBox.val()
-                    };
+							}
 
-                    $.ajax({
-                        type: 'POST',
-                        url: ajaxurl,
-                        data: data,
-                        dataType: "json",
-                        success: function (response) {
+						}
+					}).fail(function (response) {
+						if (window.console && window.console.log) {
+							console.log(response);
+						}
+					});
 
-                            console.log(response);
+				});
 
-                            $('.edd-ecourse-cancel-edit-module-title, .edd-ecourse-submit-edit-module-title').remove();
-                            editButton.show();
-                            addLessonButton.show();
+			});
 
-                            moduleTitleWrap.html(data.title);
+		}
 
-                            wrap.removeClass('edd-ecourse-is-editing');
+	};
 
-                        }
-                    }).fail(function (response) {
-                        if (window.console && window.console.log) {
-                            console.log(response);
-                        }
-                    });
+	var EDD_ECourse_Lesson = {
 
-                });
+		/**
+		 * Initialize all the things.
+		 */
+		init: function () {
+			this.add();
+			this.delete();
+			this.sort();
+			this.addBackButton();
+			this.changeModule();
+		},
 
-            });
+		/**
+		 * Add a lesson
+		 */
+		add: function () {
 
-        }
+			$('.edd-ecourse-add-module-lesson').on('click', function (e) {
 
-    };
+				e.preventDefault();
 
-    var EDD_ECourse_Lesson = {
+				var module = $(this).parents('.edd-ecourse-module-group');
+				var moduleID = module.data('module');
+				var lessons = module.find('.edd-ecourse-lesson-list');
+				var nextPosition = lessons.find('> li').length + 1;
 
-        /**
-         * Initialize all the things.
-         */
-        init: function () {
-            this.addBackButton();
-            this.changeModule();
-        },
+				swal({
+					title: edd_ecourse_vars.l10n.add_lesson,
+					type: 'input',
+					showCancelButton: true,
+					closeOnConfirm: true,
+					showLoaderOnConfirm: true,
+					allowOutsideClick: true,
+					animation: false, // pop, slide-from-top, slide-from-bottom
+					inputPlaceholder: edd_ecourse_vars.l10n.lesson_name
+				}, function (inputValue) {
 
-        /**
-         * Add Back Button
-         * Adds a 'back to course' button to the page title actions.
-         */
-        addBackButton: function () {
-            $('body.post-php.post-type-ecourse_lesson').find('.page-title-action').after('<a href="" class="page-title-action edd-ecourse-back-to-manage">' + edd_ecourse_vars.l10n.back_to_course + '</a>');
+					if (inputValue === false) {
+						return false;
+					}
 
-            var currentCourse = $('#lesson_details').find('#course').val();
+					var data = {
+						action: 'edd_ecourse_add_lesson',
+						title: inputValue,
+						course_id: $('#edd-ecourse-id').val(),
+						module_id: moduleID,
+						position: nextPosition,
+						nonce: edd_ecourse_vars.nonce
+					};
 
-            this.changeBackURL(currentCourse);
-        },
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: data,
+						dataType: "json",
+						success: function (response) {
 
-        /**
-         * Change Back URL
-         *
-         * Updates the 'back to course' button with the correct course ID.
-         * @param course_id
-         */
-        changeBackURL: function (course_id) {
-            var baseURL = edd_ecourse_vars.manage_course_url;
-            var newURL = baseURL.replace(/course=([0-9]+)$/, 'course=' + course_id);
+							console.log(response);
 
-            $('.edd-ecourse-back-to-manage').attr('href', newURL);
-        },
+							if (true === response.success) {
 
-        /**
-         * Change module select dropdown when the course dropdown changes.
-         */
-        changeModule: function () {
+								lessons.append(response.data);
+								EDD_ECourse_Lesson.delete(); // re-trigger delete
 
-            $('#lesson_details').on('change', '#course', function (e) {
+							} else {
 
-                var courseID = $(this).val();
-                var moduleWrap = $('#lesson_details').find('#module');
+								if (window.console && window.console.log) {
+									console.log(response);
+								}
 
-                // Change back button.
-                EDD_ECourse_Lesson.changeBackURL(courseID);
+							}
 
-                var data = {
-                    action: 'edd_ecourse_update_course_module_list',
-                    course: courseID,
-                    nonce: $('#save_lesson_details_nonce').val()
-                };
+						}
+					}).fail(function (response) {
+						if (window.console && window.console.log) {
+							console.log(response);
+						}
+					});
 
-                $.ajax({
-                    type: 'POST',
-                    url: ajaxurl,
-                    data: data,
-                    dataType: "json",
-                    success: function (response) {
+				});
 
-                        console.log(response);
+			});
 
-                        console.log(typeof response.data);
+		},
 
-                        if (response.data && 'object' == typeof response.data) {
-                            var moduleOptions = '';
+		/**
+		 * Delete Lesson
+		 */
+		delete: function () {
 
-                            $.each(response.data, function (index, value) {
-                                moduleOptions = moduleOptions + '<option value="' + index + '">' + value + '</option>';
-                            });
+			$('.edd-ecourse-lesson-delete').click(function (e) {
 
-                            moduleWrap.parent().show();
-                            moduleWrap.empty().append(moduleOptions);
-                        } else {
-                            moduleWrap.parent().hide();
-                        }
+				e.preventDefault();
 
-                    }
-                }).fail(function (response) {
-                    if (window.console && window.console.log) {
-                        console.log(response);
-                    }
-                });
+				var lesson = $(this).parents('li');
+				var lessonID = lesson.data('id');
 
-            });
+				swal({
+					title: edd_ecourse_vars.l10n.you_sure,
+					text: edd_ecourse_vars.l10n.delete_lesson_desc,
+					type: 'warning',
+					showCancelButton: true,
+					closeOnConfirm: true,
+					showLoaderOnConfirm: true,
+					allowOutsideClick: true,
+					animation: false, // pop, slide-from-top, slide-from-bottom
+					confirmButtonText: edd_ecourse_vars.l10n.yes_delete
+				}, function (inputValue) {
 
-        }
+					if (inputValue === false) {
+						return false;
+					}
 
-    };
+					var data = {
+						action: 'edd_ecourse_delete_lesson',
+						lesson_id: lessonID,
+						nonce: edd_ecourse_vars.nonce
+					};
 
-    EDD_ECourse.init();
-    EDD_ECourse_Module.init();
-    EDD_ECourse_Lesson.init();
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: data,
+						dataType: "json",
+						success: function (response) {
+
+							console.log(response);
+
+							if (true === response.success) {
+
+								lesson.remove();
+
+							} else {
+
+								if (window.console && window.console.log) {
+									console.log(response);
+								}
+
+							}
+
+						}
+					}).fail(function (response) {
+						if (window.console && window.console.log) {
+							console.log(response);
+						}
+					});
+
+				});
+
+			});
+
+		},
+
+		/**
+		 * Sort Lessons
+		 * Change the order of the lessons and save.
+		 */
+		sort: function () {
+
+			$('.edd-ecourse-lesson-list').sortable()
+				.on('sortstop', function (event, ui) {
+
+					var lessons = [];
+
+					$('.edd-ecourse-lesson-list > li').each(function () {
+						lessons.push($(this).data('id'));
+					});
+
+					// Save positioning.
+					var data = {
+						action: 'edd_ecourse_save_lesson_positions',
+						lessons: lessons,
+						nonce: $('#edd_ecourse_manage_course_nonce').val()
+					};
+
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: data,
+						dataType: "json",
+						success: function (response) {
+
+							console.log(response);
+
+							if (true !== response.success) {
+
+								if (window.console && window.console.log) {
+									console.log(response);
+								}
+
+							}
+
+						}
+					}).fail(function (response) {
+						if (window.console && window.console.log) {
+							console.log(response);
+						}
+					});
+
+				});
+
+		},
+
+		/**
+		 * Add Back Button
+		 * Adds a 'back to course' button to the page title actions.
+		 */
+		addBackButton: function () {
+			$('body.post-php.post-type-ecourse_lesson').find('.page-title-action').after('<a href="" class="page-title-action edd-ecourse-back-to-manage">' + edd_ecourse_vars.l10n.back_to_course + '</a>');
+
+			var currentCourse = $('#lesson_details').find('#course').val();
+
+			this.changeBackURL(currentCourse);
+		},
+
+		/**
+		 * Change Back URL
+		 *
+		 * Updates the 'back to course' button with the correct course ID.
+		 * @param course_id
+		 */
+		changeBackURL: function (course_id) {
+			var baseURL = edd_ecourse_vars.manage_course_url;
+			var newURL = baseURL.replace(/course=([0-9]+)$/, 'course=' + course_id);
+
+			$('.edd-ecourse-back-to-manage').attr('href', newURL);
+		},
+
+		/**
+		 * Change module select dropdown when the course dropdown changes.
+		 */
+		changeModule: function () {
+
+			$('#lesson_details').on('change', '#course', function (e) {
+
+				var courseID = $(this).val();
+				var moduleWrap = $('#lesson_details').find('#module');
+
+				// Change back button.
+				EDD_ECourse_Lesson.changeBackURL(courseID);
+
+				var data = {
+					action: 'edd_ecourse_update_course_module_list',
+					course: courseID,
+					nonce: $('#save_lesson_details_nonce').val()
+				};
+
+				$.ajax({
+					type: 'POST',
+					url: ajaxurl,
+					data: data,
+					dataType: "json",
+					success: function (response) {
+
+						console.log(response);
+
+						console.log(typeof response.data);
+
+						if (response.data && 'object' == typeof response.data) {
+							var moduleOptions = '';
+
+							$.each(response.data, function (index, value) {
+								moduleOptions = moduleOptions + '<option value="' + index + '">' + value + '</option>';
+							});
+
+							moduleWrap.parent().show();
+							moduleWrap.empty().append(moduleOptions);
+						} else {
+							moduleWrap.parent().hide();
+						}
+
+					}
+				}).fail(function (response) {
+					if (window.console && window.console.log) {
+						console.log(response);
+					}
+				});
+
+			});
+
+		}
+
+	};
+
+	EDD_ECourse.init();
+	EDD_ECourse_Module.init();
+	EDD_ECourse_Lesson.init();
 
 });

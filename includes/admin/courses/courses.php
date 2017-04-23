@@ -48,19 +48,6 @@ function edd_ecourse_render_course_overview() {
 		<a href="<?php echo esc_url( edd_ecourse_get_add_course_url() ); ?>" class="page-title-action"><?php _e( 'Add New', 'edd-ecourse' ); ?></a>
 	</h1>
 
-	<div id="edd-ecourse-add" class="metabox-holder">
-		<div class="postbox">
-			<h3 class="hndle"><?php _e( 'New E-Course', 'edd-ecourse' ); ?></h3>
-
-			<form class="inside">
-				<label for="edd-ecourse-name-new" class="screen-reader-text"><?php _e( 'E-Course Name', 'edd-ecourse' ); ?></label>
-				<input type="text" id="edd-ecourse-name-new" placeholder="<?php esc_attr_e( 'Course name', 'edd-ecourse' ); ?>" required>
-				<button type="submit" class="button"><?php _e( 'Create', 'edd-ecourse' ); ?></button>
-				<?php wp_nonce_field( 'edd_ecourse_add_course', 'edd_ecourse_add_course_nonce' ); ?>
-			</form>
-		</div>
-	</div>
-
 	<div id="edd-ecourse-grid">
 		<?php
 		if ( is_array( $courses ) ) {
@@ -225,14 +212,15 @@ function edd_ecourse_render_course_edit() {
 					<div id="edd-ecourse-module-sortables" class="meta-box-sortables ui-sortable">
 
 						<!-- Modules -->
-						<?php if ( is_array( $modules ) ) : ?>
+						<?php if ( is_array( $modules ) ) { ?>
 
-							<?php foreach ( $modules as $module ) : ?>
+							<?php foreach ( $modules as $module ) { ?>
 								<div class="postbox edd-ecourse-module-group" data-module="<?php echo esc_attr( $module->id ); ?>">
 									<h3 class="hndle">
 										<span class="edd-ecourse-module-title"><?php echo esc_html( $module->title ); ?></span>
 										<button class="button edd-ecourse-edit-module-title"><?php _e( 'Edit', 'edd-ecourse' ); ?></button>
 										<a href="<?php echo esc_url( edd_ecourse_get_add_lesson_url( $course->id, $module->id ) ); ?>" class="button edd-ecourse-add-module-lesson"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
+										<a href="#" class="edd-ecourse-delete-module"><span class="dashicons dashicons-trash"></span></a>
 									</h3>
 									<div class="inside">
 
@@ -242,7 +230,7 @@ function edd_ecourse_render_course_edit() {
 										if ( is_array( $lessons ) ) {
 											?>
 											<ul class="edd-ecourse-lesson-list">
-												<?php foreach ( $lessons as $lesson ) : ?>
+												<?php foreach ( $lessons as $lesson ) { ?>
 													<li data-id="<?php echo esc_attr( $lesson->ID ); ?>" data-position="<?php echo esc_attr( 1 ); ?>">
 														<span class="edd-ecourse-lesson-title">
 															<a href="<?php echo esc_url( get_edit_post_link( $lesson->ID ) ); ?>"><?php echo esc_html( $lesson->post_title ); ?></a>
@@ -251,9 +239,10 @@ function edd_ecourse_render_course_edit() {
 														<span class="edd-ecourse-lesson-actions">
 															<a href="<?php echo esc_url( get_edit_post_link( $lesson->ID ) ); ?>" class="edd-ecourse-lesson-edit-link edd-ecourse-tip" title="<?php esc_attr_e( 'Edit', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-edit"></span></a>
 															<a href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>" target="_blank" class="edd-ecourse-lesson-preview-link edd-ecourse-tip" title="<?php esc_attr_e( 'View', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-visibility"></span></a>
+															<a href="#" class="edd-ecourse-lesson-delete edd-ecourse-tip" title="<?php esc_attr_e( 'Delete', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-trash"></span></a>
 														</span>
 													</li>
-												<?php endforeach; ?>
+												<?php } ?>
 											</ul>
 											<?php
 										}
@@ -261,21 +250,14 @@ function edd_ecourse_render_course_edit() {
 
 									</div>
 								</div>
-							<?php endforeach; ?>
+							<?php } ?>
 
-						<?php endif; ?>
+						<?php } ?>
 
-						<div class="postbox edd-ecourse-add-module">
-							<h3 class="hndle"><?php _e( 'Add Module', 'edd-ecourse' ) ?></h3>
-							<div class="inside">
-								<form id="edd-ecourse-add-module-form" method="POST">
-									<label for="edd-ecourse-module-name" class="screen-reader-text"><?php _e( 'Enter module name', 'edd-ecourse' ); ?></label>
-									<input type="text" id="edd-ecourse-module-name" placeholder="<?php esc_attr_e( 'Module name', 'edd-ecourse' ); ?>" required>
-									<button type="submit" class="button"><?php _e( 'Add Module', 'edd-ecourse' ); ?></button>
-									<input type="hidden" id="edd-ecourse-id" value="<?php echo esc_attr( $course->ID ); ?>">
-									<?php wp_nonce_field( 'edd_ecourse_add_module', 'edd_ecourse_add_module_nonce' ); ?>
-								</form>
-							</div>
+						<div class="edd-ecourse-add-module">
+							<input type="hidden" id="edd-ecourse-id" value="<?php echo esc_attr( $course->ID ); ?>">
+							<input type="hidden" id="edd-ecourse-module-nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_ecourse_add_module' ) ); ?>">
+							<button type="button" class="button button-primary"><?php _e( 'Add Module', 'edd-ecourse' ); ?></button>
 						</div>
 
 					</div>

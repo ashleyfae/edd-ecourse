@@ -29,7 +29,7 @@ function edd_ecourse_add_course_cb() {
 		wp_die( __( 'You don\'t have permission to add courses.', 'edd-ecourse' ) );
 	}
 
-	$course_name = wp_strip_all_tags( $_POST['course_name'] );
+	$course_name = wp_strip_all_tags( wp_unslash( $_POST['course_name'] ) );
 
 	if ( ! $course_name ) {
 		wp_die( __( 'A course name is required.', 'edd-ecourse' ) );
@@ -77,23 +77,15 @@ function edd_ecourse_delete_course() {
 		wp_die( __( 'Error: Not a valid e-course.', 'edd-ecourse' ) );
 	}
 
-	// Delete all lessons in this e-course.
-	$lessons = edd_ecourse_get_course_lessons( $course_id, array( 'post_status' => 'any', 'fields' => 'ids' ) );
-
-	if ( is_array( $lessons ) ) {
-		foreach ( $lessons as $lesson_id ) {
-			wp_delete_post( $lesson_id, true );
-		}
-	}
-
-	// Now delete the course itself.
-	$result = edd_ecourse_delete( $course_id );
+	$result = edd_ecourse_delete( $course_id, true, true );
 
 	if ( false === $result ) {
 		wp_die( __( 'There was a problem deleting the course.', 'edd-ecourse' ) );
 	}
 
 	wp_send_json_success();
+
+	exit;
 
 }
 
@@ -110,7 +102,7 @@ function edd_ecourse_add_module_cb() {
 	// Security check.
 	check_ajax_referer( 'edd_ecourse_add_module', 'nonce' );
 
-	$title     = wp_strip_all_tags( $_POST['title'] );
+	$title     = wp_strip_all_tags( wp_unslash( $_POST['title'] ) );
 	$course_id = $_POST['course_id'];
 	$position  = $_POST['position'];
 
@@ -145,6 +137,37 @@ function edd_ecourse_add_module_cb() {
 }
 
 add_action( 'wp_ajax_edd_ecourse_add_module', 'edd_ecourse_add_module_cb' );
+
+/**
+ * Delete Module
+ *
+ * @since 1.0
+ * @return void
+ */
+function edd_ecourse_delete_module_cb() {
+
+	// Security check.
+	check_ajax_referer( 'edd_ecourse_add_module', 'nonce' );
+
+	$module_id = absint( $_POST['module_id'] );
+
+	if ( empty( $module_id ) ) {
+		wp_die( __( 'Missing module ID.', 'edd-ecourse' ) );
+	}
+
+	$success = edd_ecourse_delete_module( $module_id );
+
+	if ( $success ) {
+		wp_send_json_success();
+	} else {
+		wp_send_json_error();
+	}
+
+	exit;
+
+}
+
+add_action( 'wp_ajax_edd_ecourse_delete_module', 'edd_ecourse_delete_module_cb' );
 
 /**
  * Update E-Course Title
@@ -202,7 +225,7 @@ function edd_ecourse_update_course_slug() {
 	}
 
 	$course_data = array(
-		'ID'         => absint( $course_id ),
+		'ID'        => absint( $course_id ),
 		'post_name' => sanitize_title( $_POST['slug'] )
 	);
 
@@ -372,7 +395,10 @@ function edd_ecourse_save_lesson_positions() {
 
 	foreach ( $lessons as $position => $lesson_id ) {
 		if ( is_numeric( $position ) ) {
-			update_post_meta( $lesson_id, 'lesson_position', absint( $position ) );
+			wp_update_post( array(
+				'ID'         => $lesson_id,
+				'menu_order' => absint( $position )
+			) );
 		}
 	}
 
@@ -381,6 +407,99 @@ function edd_ecourse_save_lesson_positions() {
 }
 
 add_action( 'wp_ajax_edd_ecourse_save_lesson_positions', 'edd_ecourse_save_lesson_positions' );
+
+/**
+ * Add Lesson
+ *
+ * @since 1.0
+ * @return void
+ */
+function edd_ecourse_add_lesson_cb() {
+
+	// Security check.
+	check_ajax_referer( 'edd_ecourse_do_ajax', 'nonce' );
+
+	if ( ! current_user_can( 'edit_posts' ) ) {
+		wp_die( __( 'You do not have permission to add lessons.', 'edd-course' ) );
+	}
+
+	$title     = wp_unslash( $_POST['title'] );
+	$course_id = absint( $_POST['course_id'] );
+	$module_id = absint( $_POST['module_id'] );
+	$position  = absint( $_POST['position'] );
+
+	if ( empty( $title ) ) {
+		wp_die( __( 'A lesson title is required.', 'edd-ecourse' ) );
+	}
+
+	$post_data = array(
+		'post_title'   => wp_strip_all_tags( $title ),
+		'post_content' => '',
+		'post_status'  => 'draft',
+		'post_type'    => 'ecourse_lesson',
+		'menu_order'   => $position
+	);
+
+	$lesson_id = wp_insert_post( $post_data );
+
+	if ( empty( $lesson_id ) ) {
+		wp_die( __( 'Error creating lesson.', 'edd-ecourse' ) );
+	}
+
+	update_post_meta( $lesson_id, 'course', absint( $course_id ) );
+	update_post_meta( $lesson_id, 'module', absint( $module_id ) );
+	update_post_meta( $lesson_id, 'lesson_type', 'text' );
+
+	$lesson = get_post( $lesson_id );
+
+	ob_start();
+	?>
+	<li data-id="<?php echo esc_attr( $lesson->ID ); ?>" data-position="<?php echo esc_attr( $position ); ?>">
+		<span class="edd-ecourse-lesson-title">
+			<a href="<?php echo esc_url( get_edit_post_link( $lesson->ID ) ); ?>"><?php echo esc_html( $lesson->post_title ); ?></a>
+		</span>
+		<span class="edd-ecourse-lesson-status edd-ecourse-lesson-status-<?php echo sanitize_html_class( $lesson->post_status ); ?>"><?php echo esc_html( edd_ecourse_get_lesson_status( $lesson ) ); ?></span>
+		<span class="edd-ecourse-lesson-actions">
+			<a href="<?php echo esc_url( get_edit_post_link( $lesson->ID ) ); ?>" class="edd-ecourse-lesson-edit-link edd-ecourse-tip" title="<?php esc_attr_e( 'Edit', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-edit"></span></a>
+			<a href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>" target="_blank" class="edd-ecourse-lesson-preview-link edd-ecourse-tip" title="<?php esc_attr_e( 'View', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-visibility"></span></a>
+			<a href="#" class="edd-ecourse-lesson-delete edd-ecourse-tip" title="<?php esc_attr_e( 'Delete', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-trash"></span></a>
+		</span>
+	</li>
+	<?php
+	wp_send_json_success( ob_get_clean() );
+
+	exit;
+
+}
+
+add_action( 'wp_ajax_edd_ecourse_add_lesson', 'edd_ecourse_add_lesson_cb' );
+
+/**
+ * Delete Lesson
+ *
+ * @since 1.0
+ * @return void
+ */
+function edd_ecourse_delete_lesson_cb() {
+
+	// Security check.
+	check_ajax_referer( 'edd_ecourse_do_ajax', 'nonce' );
+
+	if ( ! current_user_can( 'delete_posts' ) ) {
+		wp_die( __( 'You do not have permission to delete lessons.', 'edd-course' ) );
+	}
+
+	$lesson_id = absint( $_POST['lesson_id'] );
+
+	wp_delete_post( $lesson_id, true );
+
+	wp_send_json_success();
+
+	exit;
+
+}
+
+add_action( 'wp_ajax_edd_ecourse_delete_lesson', 'edd_ecourse_delete_lesson_cb' );
 
 /**
  * Load Underscore.js Course Template

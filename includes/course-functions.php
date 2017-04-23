@@ -230,13 +230,40 @@ function edd_ecourse_get_number_course_lessons( $course_id, $query_args = array(
 /**
  * Delete E-Course
  *
- * @param int $course_id ID of the course to delete.
+ * @param int  $course_id      ID of the course to delete.
+ * @param bool $delete_modules Whether to delete modules in the course.
+ * @param bool $delete_lessons Whether to delete lessons in the course.
  *
  * @since 1.0.0
- * @return WP_Post|false Post object of the deleted course or false on failure.
+ * @return bool Whether it was successfully deleted.
  */
-function edd_ecourse_delete( $course_id ) {
-	return wp_delete_post( $course_id, true );
+function edd_ecourse_delete( $course_id, $delete_modules = false, $delete_lessons = false ) {
+
+	// Delete modules.
+	if ( $delete_modules ) {
+		edd_ecourse_load()->modules->delete_course_modules( $course_id );
+	}
+
+	// Delete lessons.
+	if ( $delete_lessons ) {
+		$lessons = edd_ecourse_get_course_lessons( $course_id, array( 'post_status' => 'any', 'fields' => 'ids' ) );
+
+		if ( is_array( $lessons ) ) {
+			foreach ( $lessons as $lesson_id ) {
+				wp_delete_post( $lesson_id, true );
+			}
+		}
+	}
+
+	// Now delete the course itself.
+	$result = wp_delete_post( $course_id, true );
+
+	if ( empty( $result ) ) {
+		return false;
+	}
+
+	return true;
+
 }
 
 /**

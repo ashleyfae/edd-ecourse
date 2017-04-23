@@ -94,33 +94,51 @@ add_action( 'admin_menu', 'edd_ecourse_admin_pages' );
  */
 function edd_ecourse_admin_scripts( $hook ) {
 
+	if ( ! edd_ecourse_is_admin_page() ) {
+		return;
+	}
+
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	if ( edd_ecourse_is_admin_page() ) {
-		$deps = array(
-			'jquery',
-			'jquery-ui-sortable',
-			'jquery-ui-tooltip',
-			'wp-util'
-		);
+	// Sweetalert
+	wp_enqueue_script( 'sweetalert', EDD_ECOURSE_URL . 'assets/js/sweetalert' . $suffix . '.js', array( 'jquery' ), '1.1.1' );
+	wp_enqueue_style( 'sweetalert', EDD_ECOURSE_URL . 'assets/css/sweetalert.css', array(), '1.1.1' );
 
-		$settings = array(
-			'manage_course_url' => edd_ecourse_get_manage_course_url( 0 ),
-			'l10n'              => array(
-				'back_to_course'        => __( 'Back to Course', 'edd-ecourse' ),
-				'cancel'                => __( 'Cancel', 'edd-ecourse' ),
-				'confirm_delete_course' => __( 'Are you sure you want to delete this e-course and all associated lessons? This cannot be undone.', 'edd-ecourse' ),
-				'save'                  => __( 'Save', 'edd-ecourse' ),
-			)
-		);
+	$deps = array(
+		'jquery',
+		'jquery-ui-sortable',
+		'jquery-ui-tooltip',
+		'wp-util',
+		'sweetalert'
+	);
 
-		wp_enqueue_media();
+	$settings = array(
+		'manage_course_url' => edd_ecourse_get_manage_course_url( 0 ),
+		'nonce'             => wp_create_nonce( 'edd_ecourse_do_ajax' ),
+		'l10n'              => array(
+			'add_ecourse'           => __( 'Add E-Course', 'edd-ecourse' ),
+			'add_lesson'            => __( 'Add Lesson', 'edd-ecourse' ),
+			'add_module'            => __( 'Add Module', 'edd-ecourse' ),
+			'back_to_course'        => __( 'Back to Course', 'edd-ecourse' ),
+			'cancel'                => __( 'Cancel', 'edd-ecourse' ),
+			'confirm_delete_course' => __( 'Are you sure you want to delete this e-course and all associated lessons? This cannot be undone.', 'edd-ecourse' ),
+			'delete_lesson_desc'    => __( 'Are you sure you want to delete this lesson? This cannot be undone.', 'edd-ecourse' ),
+			'delete_module_desc'    => __( 'Are you sure you want to delete this module? All lessons inside the module will be deleted too!', 'edd-ecourse' ),
+			'ecourse_title'         => __( 'E-Course title', 'edd-ecourse' ),
+			'lesson_name'           => __( 'Lesson name', 'edd-ecourse' ),
+			'module_name'           => __( 'Module name', 'edd-ecourse' ),
+			'save'                  => __( 'Save', 'edd-ecourse' ),
+			'yes_delete'            => __( 'Yes, delete it!', 'edd-ecourse' ),
+			'you_sure'              => __( 'Are you sure?', 'edd-ecourse' )
+		)
+	);
 
-		wp_enqueue_script( 'edd-ecourse-admin', EDD_ECOURSE_URL . 'assets/js/admin' . $suffix . '.js', $deps );
-		wp_localize_script( 'edd-ecourse-admin', 'edd_ecourse_vars', $settings );
-		wp_enqueue_style( 'edd-ecourse-admin', EDD_ECOURSE_URL . 'assets/css/admin.css' );
-	}
+	wp_enqueue_media();
+
+	wp_enqueue_script( 'edd-ecourse-admin', EDD_ECOURSE_URL . 'assets/js/admin' . $suffix . '.js', $deps, time() ); // @todo change to actual version
+	wp_localize_script( 'edd-ecourse-admin', 'edd_ecourse_vars', $settings );
+	wp_enqueue_style( 'edd-ecourse-admin', EDD_ECOURSE_URL . 'assets/css/admin.css', array(), time() ); // @todo change to actual version
 
 }
 

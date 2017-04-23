@@ -41,8 +41,7 @@ function edd_ecourse_insert_module( $args = array() ) {
 function edd_ecourse_get_module_lessons( $module_id, $args = array() ) {
 
 	$default_args = array(
-		'meta_key'       => 'lesson_position',
-		'orderby'        => 'meta_value_num',
+		'orderby'        => 'menu_order',
 		'order'          => 'ASC',
 		'posts_per_page' => - 1,
 		'post_type'      => 'ecourse_lesson',
@@ -81,5 +80,39 @@ function edd_ecourse_get_number_module_lessons( $module_id ) {
 	$lessons = edd_ecourse_get_module_lessons( $module_id, $args );
 
 	return is_array( $lessons ) ? count( $lessons ) : 0;
+
+}
+
+/**
+ * Delete Module (and lessons)
+ *
+ * @param int  $module_id      ID of the module to delete.
+ * @param bool $delete_lessons Whether to delete associated lessons as well.
+ *
+ * @since 1.0
+ * @return bool
+ */
+function edd_ecourse_delete_module( $module_id, $delete_lessons = false ) {
+
+	$deleted = edd_ecourse_load()->modules->delete( absint( $module_id ) );
+
+	if ( false === $deleted ) {
+		return false;
+	}
+
+	if ( $delete_lessons ) {
+		$lessons = edd_ecourse_get_module_lessons( absint( $module_id ), array(
+			'post_status' => 'any',
+			'fields'      => 'ids'
+		) );
+
+		if ( $lessons ) {
+			foreach ( $lessons as $lesson_id ) {
+				wp_delete_post( $lesson_id, true );
+			}
+		}
+	}
+
+	return true;
 
 }
