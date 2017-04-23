@@ -264,7 +264,8 @@ function edd_ecourse_load_page_template() {
 /**
  * Document Title
  *
- * Adds the title of the e-course on course archive pages.
+ * Adds the title of the e-course on course archive pages, and changes the title
+ * to "Access Restricted" if the current user doesn't have access.
  *
  * @param array $title Title parts, including these keys:
  *                     `title` - Title of the viewed page.
@@ -276,8 +277,16 @@ function edd_ecourse_load_page_template() {
  * @return array
  */
 function edd_ecourse_title_tag( $title ) {
+	if ( ! edd_ecourse_is_course_page() ) {
+		return $title;
+	}
+
 	if ( edd_ecourse_is_course_archive() ) {
 		$title['title'] = edd_ecourse_get_title();
+	}
+
+	if ( ! edd_ecourse_user_can_view_page() ) {
+		$title['title'] = __( 'Access Restricted', 'edd-ecourse' );
 	}
 
 	return $title;

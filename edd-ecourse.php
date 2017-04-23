@@ -36,15 +36,6 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		private static $instance;
 
 		/**
-		 * E-Course DB Object
-		 *
-		 * @var EDD_eCourse_DB
-		 * @access public
-		 * @since  1.0.0
-		 */
-		public $courses;
-
-		/**
 		 * Modules DB Object
 		 *
 		 * @var EDD_eCourse_Modules_DB
@@ -69,7 +60,6 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 				self::$instance->load_textdomain();
 				self::$instance->hooks();
 
-				self::$instance->courses = new EDD_eCourse_DB;
 				self::$instance->modules = new EDD_eCourse_Modules_DB;
 			}
 
@@ -105,7 +95,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 */
 		private function includes() {
 			// Include scripts
-			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db.php';
+			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db-base.php';
 			require_once EDD_ECOURSE_DIR . 'includes/class-modules-db.php';
 			require_once EDD_ECOURSE_DIR . 'includes/edd-actions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/scripts.php';
@@ -271,24 +261,19 @@ function edd_ecourse_activation() {
 	edd_ecourse_post_type();
 
 	// Insert demo content.
-	//edd_ecourse_insert_demo_course();
+	edd_ecourse_insert_demo_course();
 
-	// Only add DB tables if EDD_DB class exists.
-	if ( class_exists( 'EDD_DB' ) ) {
-		if ( ! class_exists( 'EDD_eCourse_DB' ) ) {
-			require_once 'includes/class-ecourse-db.php';
-		}
-
-		$db = new EDD_eCourse_DB();
-		@$db->create_table();
-
-		if ( ! class_exists( 'EDD_eCourse_Modules_DB' ) ) {
-			require_once 'includes/class-modules-db.php';
-		}
-
-		$db = new EDD_eCourse_Modules_DB();
-		@$db->create_table();
+	// Create database table.
+	if ( ! class_exists( 'EDD_eCourse_DB' ) ) {
+		require_once 'includes/class-ecourse-db-base.php';
 	}
+
+	if ( ! class_exists( 'EDD_eCourse_Modules_DB' ) ) {
+		require_once 'includes/class-modules-db.php';
+	}
+
+	$db = new EDD_eCourse_Modules_DB();
+	@$db->create_table();
 
 	// Flush rewrite rules.
 	flush_rewrite_rules( false );
@@ -321,24 +306,3 @@ function edd_ecourse_activation() {
 }
 
 register_activation_hook( __FILE__, 'edd_ecourse_activation' );
-
-/**
- * On EDD Activation
- *
- * This function exists because some of the installation functions use
- * EDD functions/classes. This is to catch an edge case if this plugin is
- * activated before EDD is. Then we need to run the activation again once
- * EDD is finally activated.
- *
- * @todo  Actually test this edge case.
- *
- * @uses  edd_ecourse_activation()
- *
- * @since 1.0.0
- * @return void
- */
-function edd_ecourse_on_edd_activation() {
-	edd_ecourse_activation();
-}
-
-add_action( 'edd_after_install', 'edd_ecourse_on_edd_activation' );

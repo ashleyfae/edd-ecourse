@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class EDD_eCourse_Modules_DB extends EDD_DB {
+class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 
 	/**
 	 * EDD_eCourse_Modules_DB constructor.

@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Insert Demo Course
  *
- * Adds an e-course and one associated lesson.
+ * Adds an e-course, one module, and one associated lesson.
  *
  * @since 1.0.0
  * @return bool
@@ -29,22 +29,25 @@ function edd_ecourse_insert_demo_course() {
 	}
 
 	// Insert e-course.
-	$course_id = edd_ecourse_load()->courses->add( array(
-		'title' => esc_html__( 'My First Course', 'edd-ecourse' )
-	) );
+	$course_id = edd_ecourse_insert_course( __( 'My First Course', 'edd-ecourse' ) );
 
 	if ( ! $course_id ) {
 		return false;
 	}
 
+	// Insert module.
+	$module_id = edd_ecourse_insert_module( array(
+		'title'    => __( 'Module 1', 'edd-ecourse' ),
+		'course'   => absint( $course_id ),
+		'position' => 1
+	) );
+
+	// Insert lesson.
 	$post_data = array(
 		'post_title'   => __( 'Lesson #1', 'edd-ecourse' ),
 		'post_content' => __( 'This is your first e-course lesson.', 'edd-ecourse' ),
 		'post_status'  => 'publish',
-		'post_type'    => 'ecourse_lesson',
-		'tax_input'    => array(
-			'ecourse' => array( intval( $course_id ) )
-		)
+		'post_type'    => 'ecourse_lesson'
 	);
 
 	$lesson_id = wp_insert_post( $post_data );
@@ -52,6 +55,11 @@ function edd_ecourse_insert_demo_course() {
 	if ( is_wp_error( $lesson_id ) || ! $lesson_id ) {
 		return false;
 	}
+
+	// Associate lesson with course and module.
+	update_post_meta( $lesson_id, 'course', absint( $course_id ) );
+	update_post_meta( $lesson_id, 'module', absint( $module_id ) );
+	update_post_meta( $lesson_id, 'lesson_type', 'text' );
 
 	return true;
 
@@ -68,9 +76,10 @@ function edd_ecourse_insert_demo_course() {
 function edd_ecourse_get_courses( $args = array() ) {
 
 	$defaults = array(
-		'post_status' => 'publish',
+		'post_status' => 'any',
 		'post_type'   => 'ecourse',
-		'number'      => - 1
+		'number'      => 500,
+		'nopaging'    => true
 	);
 
 	if ( current_user_can( 'manage_options' ) ) {
