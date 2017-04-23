@@ -13,6 +13,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Start Lesson
+ *
+ * Mark a lesson as "started" for a current user.
+ *
+ * @param int              $lesson_id ID of the lesson to start.
+ * @param bool|WP_User|int $user_id   User object/ID or leave blank to use current user.
+ */
+function edd_ecourse_user_start_lesson( $lesson_id, $user_id = false ) {
+	$lesson_id = absint( $lesson_id );
+	$course_id = edd_ecourse_get_lesson_course( $lesson_id );
+
+	if ( ! $course_id ) {
+		return new WP_Error( 'invalid-course', __( 'Could not find a course associated with this lesson.', 'edd-ecourse' ) );
+	}
+
+	// Get the lessons started for this course.
+	$started_lessons = edd_ecourse_get_started_lessons( $course_id, $user_id );
+
+	// If the item has already been added - bail.
+	if ( array_key_exists( $lesson_id, $started_lessons ) ) {
+		return true;
+	}
+
+	// Add this one to the array.
+	$started_lessons[ $lesson_id ] = time();
+
+	// Make sure we're working with a user ID.
+	if ( is_numeric( $user_id ) ) {
+		$real_user_id = absint( $user_id );
+	} elseif ( is_a( $user_id, 'WP_User' ) ) {
+		$real_user_id = $user_id->ID;
+	} else {
+		$current_user = wp_get_current_user();
+		$real_user_id = $current_user->ID;
+	}
+
+	update_user_meta( $real_user_id, 'started_course_lessons_' . $course_id, $started_lessons );
+}
+
+function edd_ecourse_user_complete_lesson( $lesson_id, $user_id = false ) {
+
+}
+
+/**
  * Get Started Lessons
  *
  * Returns an array of lesson IDs that the user has started.
