@@ -104,7 +104,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 * @return void
 		 */
 		private function includes() {
-			// Include scripts
+			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db-base.php';
 			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db.php';
 			require_once EDD_ECOURSE_DIR . 'includes/class-modules-db.php';
 			require_once EDD_ECOURSE_DIR . 'includes/edd-actions.php';
@@ -279,22 +279,20 @@ function edd_ecourse_activation() {
 	// Add course endpoint.
 	edd_ecourse_add_endpoint();
 
-	// Only add DB tables if EDD_DB class exists.
-	if ( class_exists( 'EDD_DB' ) ) {
-		if ( ! class_exists( 'EDD_eCourse_DB' ) ) {
-			require_once 'includes/class-ecourse-db.php';
-		}
-
-		$db = new EDD_eCourse_DB();
-		@$db->create_table();
-
-		if ( ! class_exists( 'EDD_eCourse_Modules_DB' ) ) {
-			require_once 'includes/class-modules-db.php';
-		}
-
-		$db = new EDD_eCourse_Modules_DB();
-		@$db->create_table();
+	// Install tables.
+	if ( ! class_exists( 'EDD_eCourse_DB' ) ) {
+		require_once 'includes/class-ecourse-db.php';
 	}
+
+	$db = new EDD_eCourse_DB();
+	@$db->create_table();
+
+	if ( ! class_exists( 'EDD_eCourse_Modules_DB' ) ) {
+		require_once 'includes/class-modules-db.php';
+	}
+
+	$db = new EDD_eCourse_Modules_DB();
+	@$db->create_table();
 
 	// Flush rewrite rules.
 	flush_rewrite_rules( false );
@@ -327,24 +325,3 @@ function edd_ecourse_activation() {
 }
 
 register_activation_hook( __FILE__, 'edd_ecourse_activation' );
-
-/**
- * On EDD Activation
- *
- * This function exists because some of the installation functions use
- * EDD functions/classes. This is to catch an edge case if this plugin is
- * activated before EDD is. Then we need to run the activation again once
- * EDD is finally activated.
- *
- * @todo  Actually test this edge case.
- *
- * @uses  edd_ecourse_activation()
- *
- * @since 1.0.0
- * @return void
- */
-function edd_ecourse_on_edd_activation() {
-	edd_ecourse_activation();
-}
-
-add_action( 'edd_after_install', 'edd_ecourse_on_edd_activation' );
