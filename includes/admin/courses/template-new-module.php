@@ -23,9 +23,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<h3 class="hndle">
 			<span class="edd-ecourse-module-title">{{{ data.title }}}</span>
 			<button class="button edd-ecourse-edit-module-title"><?php _e( 'Edit', 'edd-ecourse' ); ?></button>
-			<a href="{{ data.lesson_url }}" class="button button-primary edd-ecourse-add-module-lesson"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
+			<a href="{{ data.lesson_url }}" class="button edd-ecourse-add-module-lesson"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
 		</h3>
 		<div class="inside">
+			<ul class="edd-ecourse-lesson-list"></ul>
 		</div>
 	</div>
 

@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class EDD_eCourse_Modules_DB extends EDD_eCourse_DB_Base {
+class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 
 	/**
 	 * EDD_eCourse_Modules_DB constructor.
@@ -97,7 +97,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB_Base {
 			return false;
 		}
 
-		$module = $this->get_module_by( 'id', $args['id'] );
+		$module = ! empty( $args['id'] ) ? $this->get_module_by( 'id', $args['id'] ) : false;
 
 		if ( $module ) {
 			$this->update( $module->id, $args );
@@ -113,7 +113,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB_Base {
 	 * Delete Module by ID
 	 *
 	 * NOTE: This should not be called directly. Use edd_ecourse_delete_module() instead.
-	 * @todo   create edd_ecourse_delete_module()
+	 * @see    edd_ecourse_delete_module()
 	 *
 	 * @param bool $id ID of the course to delete.
 	 *
@@ -136,6 +136,26 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB_Base {
 		}
 
 		return false;
+
+	}
+
+	/**
+	 * Delete all modules in a course
+	 *
+	 * @param int $course_id Course ID
+	 *
+	 * @access public
+	 * @since  1.0
+	 * @return int|false Number of rows deleted or false on error
+	 */
+	public function delete_course_modules( $course_id ) {
+
+		global $wpdb;
+
+		$query  = $wpdb->prepare( "DELETE FROM {$this->table_name} WHERE course = %d", absint( $course_id ) );
+		$result = $wpdb->query( $query );
+
+		return $result;
 
 	}
 
@@ -333,11 +353,11 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB_Base {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "CREATE TABLE " . $this->table_name . " (
-		id bigint(20) NOT NULL AUTO_INCREMENT,
-		title mediumtext NOT NULL,
-		description longtext NOT NULL,
-		position bigint(20) NOT NULL,
-		course bigint(20) NOT NULL,
+		id BIGINT(20) NOT NULL AUTO_INCREMENT,
+		title MEDIUMTEXT NOT NULL,
+		description LONGTEXT NOT NULL,
+		position BIGINT(20) NOT NULL,
+		course BIGINT(20) NOT NULL,
 		PRIMARY KEY  (id),
 		KEY course (course)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";

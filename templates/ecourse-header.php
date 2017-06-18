@@ -28,7 +28,11 @@
 
 	<nav id="primary-menu" class="menu" role="navigation">
 		<ul>
-			<li><a href=""><?php _e( 'Dashboard', 'edd-ecourse' ); ?></a></li>
+			<?php if ( $dashboard_url = edd_ecourse_get_dashboard_url() ) : ?>
+				<li>
+					<a href="<?php echo esc_url( $dashboard_url ); ?>"><?php _e( 'Dashboard', 'edd-ecourse' ); ?></a>
+				</li>
+			<?php endif; ?>
 			<li>
 				<a href="#"><?php _e( 'Courses', 'edd-ecourse' ); ?></a>
 				<ul>

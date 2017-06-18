@@ -11,6 +11,11 @@
  * @license   GPL2+
  */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Get Templates Directory
  *
@@ -89,10 +94,9 @@ function edd_ecourse_is_course_page() {
  * @return bool
  */
 function edd_ecourse_is_course_archive() {
-	$course_slug       = get_query_var( edd_ecourse_get_endpoint() );
-	$is_course_archive = $course_slug ? true : false;
+	$is_course_archive = is_singular( 'ecourse' ) ? true : false;
 
-	return apply_filters( 'edd_ecourse_is_course_archive', $is_course_archive, $course_slug );
+	return apply_filters( 'edd_ecourse_is_course_archive', $is_course_archive );
 }
 
 /**
@@ -197,7 +201,7 @@ function edd_ecourse_template_include( $template ) {
 		$course_id = edd_ecourse_get_lesson_course( $post );
 
 		if ( $course_id ) {
-			$course = edd_ecourse_load()->courses->get_course_by( 'id', absint( $course_id ) );
+			$course = get_post( absint( $course_id ) );
 
 			if ( $course ) {
 				$edd_ecourse = $course;
@@ -231,28 +235,6 @@ function edd_ecourse_get_sidebar() {
 }
 
 /**
- * Get Dashboard URL
- *
- * URL to the e-course dashboard page.
- *
- * @todo  Maybe move to misc. functions.
- *
- * @since 1.0.0
- * @return string
- */
-function edd_ecourse_get_dashboard_url() {
-	$dashboard = edd_get_option( 'ecourse_dashboard_page' );
-
-	if ( $dashboard ) {
-		$url = get_permalink( $dashboard );
-	} else {
-		$url = false;
-	}
-
-	return apply_filters( 'edd_ecourse_dashboard_url', $url, $dashboard );
-}
-
-/**
  * Load Page Template
  *
  * Loads the correct e-course page template for the current page.
@@ -282,7 +264,8 @@ function edd_ecourse_load_page_template() {
 /**
  * Document Title
  *
- * Adds the title of the e-course on course archive pages.
+ * Adds the title of the e-course on course archive pages, and changes the title
+ * to "Access Restricted" if the current user doesn't have access.
  *
  * @param array $title Title parts, including these keys:
  *                     `title` - Title of the viewed page.
@@ -294,8 +277,16 @@ function edd_ecourse_load_page_template() {
  * @return array
  */
 function edd_ecourse_title_tag( $title ) {
+	if ( ! edd_ecourse_is_course_page() ) {
+		return $title;
+	}
+
 	if ( edd_ecourse_is_course_archive() ) {
 		$title['title'] = edd_ecourse_get_title();
+	}
+
+	if ( ! edd_ecourse_user_can_view_page() ) {
+		$title['title'] = __( 'Access Restricted', 'edd-ecourse' );
 	}
 
 	return $title;

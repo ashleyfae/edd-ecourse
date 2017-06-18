@@ -158,10 +158,12 @@ function edd_ecourse_get_lesson_status( $lesson ) {
 }
 
 /**
- * @param $lesson
+ * Get the position of a lesson.
+ *
+ * @param WP_Post|int $lesson Lesson ID or object.
  *
  * @since 1.0.0
- * @return mixed|void
+ * @return int
  */
 function edd_ecourse_get_lesson_position( $lesson ) {
 

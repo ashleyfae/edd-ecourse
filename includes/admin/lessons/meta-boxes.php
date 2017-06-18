@@ -59,7 +59,7 @@ function edd_ecourse_render_lesson_details_box( $post ) {
 			<label for="course"><?php _e( 'Course:', 'edd-ecourse' ); ?></label>
 			<select id="course" name="course">
 				<?php foreach ( $courses as $course ) : ?>
-					<option value="<?php echo esc_attr( $course->id ); ?>" <?php selected( $selected_course, $course->id ); ?>><?php echo esc_html( $course->title ); ?></option>
+					<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $selected_course, $course->ID ); ?>><?php echo esc_html( $course->post_title ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>

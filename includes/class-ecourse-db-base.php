@@ -17,11 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class EDD_eCourse_DB_Base
+ * Class EDD_eCourse_DB
  *
  * @since 1.0
  */
-abstract class EDD_eCourse_DB_Base {
+abstract class EDD_eCourse_DB {
 
 	/**
 	 * The name of our database table

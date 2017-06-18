@@ -36,15 +36,6 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		private static $instance;
 
 		/**
-		 * E-Course DB Object
-		 *
-		 * @var EDD_eCourse_DB
-		 * @access public
-		 * @since  1.0.0
-		 */
-		public $courses;
-
-		/**
 		 * Modules DB Object
 		 *
 		 * @var EDD_eCourse_Modules_DB
@@ -69,7 +60,6 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 				self::$instance->load_textdomain();
 				self::$instance->hooks();
 
-				self::$instance->courses = new EDD_eCourse_DB;
 				self::$instance->modules = new EDD_eCourse_Modules_DB;
 			}
 
@@ -104,20 +94,21 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 * @return void
 		 */
 		private function includes() {
+			// Include scripts
 			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db-base.php';
-			require_once EDD_ECOURSE_DIR . 'includes/class-ecourse-db.php';
 			require_once EDD_ECOURSE_DIR . 'includes/class-modules-db.php';
 			require_once EDD_ECOURSE_DIR . 'includes/edd-actions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/scripts.php';
-			require_once EDD_ECOURSE_DIR . 'includes/functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/course-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/lesson-functions.php';
+			require_once EDD_ECOURSE_DIR . 'includes/misc-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/module-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/post-types.php';
-			require_once EDD_ECOURSE_DIR . 'includes/rewrite-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/shortcodes.php';
 			require_once EDD_ECOURSE_DIR . 'includes/template-functions.php';
 			require_once EDD_ECOURSE_DIR . 'includes/user-functions.php';
+			require_once EDD_ECOURSE_DIR . 'includes/widgets/class-completed-courses.php';
+			require_once EDD_ECOURSE_DIR . 'includes/widgets/class-ecourse-progress.php';
 
 			if ( is_admin() ) {
 				require_once EDD_ECOURSE_DIR . 'includes/admin/admin-pages.php';
@@ -264,28 +255,19 @@ function edd_ecourse_activation() {
 
 	if ( ! function_exists( 'edd_ecourse_insert_demo_course' ) ) {
 		include_once 'includes/course-functions.php';
-	}
-
-	if ( ! function_exists( 'edd_ecourse_add_endpoint' ) ) {
-		include_once 'includes/rewrite-functions.php';
+		include_once 'includes/module-functions.php';
 	}
 
 	// Register post type.
 	edd_ecourse_post_type();
 
 	// Insert demo content.
-	//edd_ecourse_insert_demo_course();
+	edd_ecourse_insert_demo_course();
 
-	// Add course endpoint.
-	edd_ecourse_add_endpoint();
-
-	// Install tables.
+	// Create database table.
 	if ( ! class_exists( 'EDD_eCourse_DB' ) ) {
-		require_once 'includes/class-ecourse-db.php';
+		require_once 'includes/class-ecourse-db-base.php';
 	}
-
-	$db = new EDD_eCourse_DB();
-	@$db->create_table();
 
 	if ( ! class_exists( 'EDD_eCourse_Modules_DB' ) ) {
 		require_once 'includes/class-modules-db.php';
@@ -304,7 +286,7 @@ function edd_ecourse_activation() {
 	if ( ! array_key_exists( 'ecourse_dashboard_page', $existing_settings ) ) {
 		$dashboard = wp_insert_post( array(
 			'post_title'     => __( 'Dashboard', 'edd-ecourse' ),
-			'post_content'   => '[course-dashboard]',
+			'post_content'   => '',
 			'post_status'    => 'publish',
 			'post_author'    => 1,
 			'post_type'      => 'page',

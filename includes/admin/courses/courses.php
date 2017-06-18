@@ -45,81 +45,68 @@ function edd_ecourse_render_course_overview() {
 	?>
 	<h1>
 		<?php _e( 'E-Courses', 'edd-ecourse' ); ?>
-		<a href="<?php echo esc_url( edd_ecourse_get_add_course_url() ); ?>" class="page-title-action"><?php _e( 'Add New', 'edd-ecourse' ); ?></a>
+		<a href="<?php echo esc_url( edd_ecourse_get_add_course_url() ); ?>" class="page-title-action" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd_ecourse_add_course' ) ); ?>"><?php _e( 'Add New', 'edd-ecourse' ); ?></a>
 	</h1>
 
-	<div id="edd-ecourse-add" class="metabox-holder">
-		<div class="postbox">
-			<h3 class="hndle"><?php _e( 'New E-Course', 'edd-ecourse' ); ?></h3>
-
-			<form class="inside">
-				<label for="edd-ecourse-name-new" class="screen-reader-text"><?php _e( 'E-Course Name', 'edd-ecourse' ); ?></label>
-				<input type="text" id="edd-ecourse-name-new" placeholder="<?php esc_attr_e( 'Course name', 'edd-ecourse' ); ?>" required>
-				<button type="submit" class="button"><?php _e( 'Create', 'edd-ecourse' ); ?></button>
-				<?php wp_nonce_field( 'edd_ecourse_add_course', 'edd_ecourse_add_course_nonce' ); ?>
-			</form>
-		</div>
-	</div>
-
 	<div id="edd-ecourse-grid">
-		<?php
-		if ( is_array( $courses ) ) {
+	<?php
+	if ( is_array( $courses ) ) {
 
-			foreach ( $courses as $course ) {
-				$download       = edd_ecourse_get_course_download( $course->id );
-				$number_lessons = edd_ecourse_get_number_course_lessons( $course->id );
-				$sales          = $download ? edd_get_download_earnings_stats( $download->ID ) : 0;
-				$students       = $download ? edd_get_download_sales_stats( $download->ID ) : 0;
-				?>
-				<div class="edd-ecourse" data-course-id="<?php echo esc_attr( $course->id ); ?>">
-					<div class="edd-ecourse-inner">
-						<h2><?php echo esc_html( $course->title ); ?></h2>
+		foreach ( $courses as $course ) {
+			$download       = edd_ecourse_get_course_download( $course->ID );
+			$number_lessons = edd_ecourse_get_number_course_lessons( $course->ID );
+			$sales          = $download ? edd_get_download_earnings_stats( $download->ID ) : 0;
+			$students       = $download ? edd_get_download_sales_stats( $download->ID ) : 0;
+			?>
+			<div class="edd-ecourse" data-course-id="<?php echo esc_attr( $course->ID ); ?>">
+				<div class="edd-ecourse-inner">
+					<h2><?php echo esc_html( $course->post_title ); ?></h2>
 
-						<div class="edd-ecourse-stats">
-							<div class="edd-ecourse-lessons">
-								<?php printf( _n( '%s Lesson', '%s Lessons', $number_lessons, 'edd-ecourse' ), '<strong>' . $number_lessons . '</strong>' ); ?>
-							</div>
-							<div class="edd-ecourse-sales">
-								<?php printf( __( '%s Sales', 'edd-ecourse' ), '<strong>' . edd_currency_filter( $sales ) . '</strong>' ); ?>
-							</div>
-							<div class="edd-ecourse-students">
-								<?php printf( __( '%s Students', 'edd-ecourse' ), '<strong>' . $students . '</strong>' ); ?>
-							</div>
+					<div class="edd-ecourse-stats">
+						<div class="edd-ecourse-lessons">
+							<?php printf( _n( '%s Lesson', '%s Lessons', $number_lessons, 'edd-ecourse' ), '<strong>' . $number_lessons . '</strong>' ); ?>
 						</div>
-
-						<div class="edd-ecourse-product">
-							<?php if ( $download ) : ?>
-								<p><?php printf( __( 'Product: %s', 'edd-ecourse' ), '<a href="' . esc_url( get_edit_post_link( $download->ID ) ) . '">' . esc_html( $download->post_title ) . '</a>' ); ?></p>
-							<?php else : ?>
-								<p><?php printf( __( 'This course doesn\'t have an associated product yet. Would you like to <a href="%s">create one?</a>', 'edd-ecourse' ), esc_url( admin_url( 'post-new.php?post_type=download&course=' . $course->id ) ) ); ?></p>
-							<?php endif; ?>
+						<div class="edd-ecourse-sales">
+							<?php printf( __( '%s Sales', 'edd-ecourse' ), '<strong>' . edd_currency_filter( $sales ) . '</strong>' ); ?>
 						</div>
-
-						<div class="edd-ecourse-actions">
-							<a href="<?php echo esc_url( edd_ecourse_get_manage_course_url( $course->id ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Manage Course', 'edd-ecourse' ); ?>">
-								<span class="dashicons dashicons-edit"></span>
-							</a>
-
-							<a href="<?php echo esc_url( edd_ecourse_get_course_permalink( $course->slug ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-view" title="<?php esc_attr_e( 'View Course', 'edd-ecourse' ); ?>" target="_blank">
-								<span class="dashicons dashicons-visibility"></span>
-							</a>
-
-							<button href="#" class="button edd-ecourse-tip edd-ecourse-action-delete" title="<?php esc_attr_e( 'Delete Course', 'edd-ecourse' ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'delete_course_' . $course->id ) ); ?>">
-								<span class="dashicons dashicons-trash"></span>
-							</button>
+						<div class="edd-ecourse-students">
+							<?php printf( __( '%s Students', 'edd-ecourse' ), '<strong>' . $students . '</strong>' ); ?>
 						</div>
 					</div>
-				</div>
-				<?php
 
-			}
+					<div class="edd-ecourse-product">
+						<?php if ( $download ) : ?>
+							<p><?php printf( __( 'Product: %s', 'edd-ecourse' ), '<a href="' . esc_url( get_edit_post_link( $download->ID ) ) . '">' . esc_html( $download->post_title ) . '</a>' ); ?></p>
+						<?php else : ?>
+							<p><?php printf( __( 'This course doesn\'t have an associated product yet. Would you like to <a href="%s">create one?</a>', 'edd-ecourse' ), esc_url( admin_url( 'post-new.php?post_type=download&course=' . $course->ID ) ) ); ?></p>
+						<?php endif; ?>
+					</div>
+
+					<div class="edd-ecourse-actions">
+						<a href="<?php echo esc_url( edd_ecourse_get_manage_course_url( $course->ID ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-edit" title="<?php esc_attr_e( 'Manage Course', 'edd-ecourse' ); ?>">
+							<span class="dashicons dashicons-edit"></span>
+						</a>
+
+						<a href="<?php echo esc_url( get_permalink( $course ) ); ?>" class="button edd-ecourse-tip edd-ecourse-action-view" title="<?php esc_attr_e( 'View Course', 'edd-ecourse' ); ?>" target="_blank">
+							<span class="dashicons dashicons-visibility"></span>
+						</a>
+
+						<button href="#" class="button edd-ecourse-tip edd-ecourse-action-delete" title="<?php esc_attr_e( 'Delete Course', 'edd-ecourse' ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'delete_course_' . $course->ID ) ); ?>">
+							<span class="dashicons dashicons-trash"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<?php
+
+		}
 
 		} else {
 
-		}
+}
 		?>
 	</div>
-	<?php
+<?php
 
 }
 
@@ -133,20 +120,23 @@ add_action( 'edd_ecourse_render_course_overview', 'edd_ecourse_render_course_ove
  */
 function edd_ecourse_render_course_edit() {
 
+	global $post;
+
 	if ( ! isset( $_GET['course'] ) ) {
 		wp_die( __( 'Missing course ID.', 'edd-ecourse' ) );
 	}
 
-	$course = edd_ecourse_get_course( absint( $_GET['course'] ) );
+	$course = get_post( absint( $_GET['course'] ) );
+	$post   = $course;
 
 	if ( ! $course ) {
 		wp_die( __( 'Invalid course ID.', 'edd-ecourse' ) );
 	}
 
-	$modules = edd_ecourse_get_course_modules( $course->id );
+	$modules = edd_ecourse_get_course_modules( $course->ID );
 	?>
-	<h1 id="edd-ecourse-title" data-course="<?php echo esc_attr( $course->id ); ?>">
-		<span><?php echo esc_html( $course->title ); ?></span>
+	<h1 id="edd-ecourse-title" data-course="<?php echo esc_attr( $course->ID ); ?>">
+		<span><?php echo esc_html( $course->post_title ); ?></span>
 		<button id="edd-ecourse-edit-course-title" class="page-title-action"><?php _e( 'Edit Title', 'edd-ecourse' ); ?></button>
 	</h1>
 
@@ -159,8 +149,8 @@ function edd_ecourse_render_course_edit() {
 						<strong><?php _e( 'Permalink:', 'edd-ecourse' ); ?></strong>
 						<span id="sample-permalink">
 							<?php // @todo Make this editable ?>
-							<a href="<?php echo esc_url( edd_ecourse_get_course_url( $course->slug ) ); ?>" target="_blank">
-								<?php echo home_url( '/' . edd_ecourse_get_endpoint() . '/' ) . '<span id="editable-post-name">' . esc_html( $course->slug ) . '</span>/'; ?>
+							<a href="<?php echo esc_url( get_permalink( $course ) ); ?>" target="_blank">
+								<?php echo home_url( '/course/' ) . '<span id="editable-post-name">' . esc_html( $course->post_name ) . '</span>/'; ?><?php // @todo fix this ?>
 							</a>
 						</span>
 						&lrm;
@@ -183,12 +173,31 @@ function edd_ecourse_render_course_edit() {
 							<div class="inside">
 								<div class="edd-admin-box">
 									<div class="edd-admin-box-inside">
+
 										<p>
-											<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
-											<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
-											<input type="text" id="course-start-date" name="course_start_date" class="large-text" value="<?php echo esc_attr( $course->start_date ); ?>">
+											<label for="course_status" class="label"><?php _e( 'Status:', 'edd-ecourse' ); ?></label>
+											<select id="course_status" name="course_status">
+												<option value="draft" <?php selected( $course->post_status, 'draft' ); ?>><?php _e( 'Draft', 'edd-ecourse' ); ?></option>
+												<option value="publish" <?php selected( $course->post_status, 'publish' ); ?>><?php _e( 'Published', 'edd-ecourse' ); ?></option>
+												<option value="future" <?php selected( $course->post_status, 'future' ); ?>><?php _e( 'Scheduled', 'edd-ecourse' ); ?></option>
+											</select>
+											<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( '"Draft" to make all lessons private, "Published" to make the course available for purchase, "Scheduled" to schedule the release in the future for pre-selling.', 'edd-ecourse' ); ?>"></span>
 										</p>
-										<p class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></p>
+
+										<div id="ecourse-start-date-wrap"<?php echo 'future' != $course->post_status ? ' style="display: none;"' : ''; ?>>
+											<p>
+												<label for="course-start-date" class="label"><?php _e( 'Start Date', 'edd-ecourse' ); ?></label>
+												<span class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter a start date if you wish to pre-sell the course. People will be able to buy the course but won\'t get access to the lessons until the start date.', 'edd-ecourse' ); ?>"></span>
+												<input type="text" id="course-start-date" name="course_start_date" class="large-text" value="<?php echo esc_attr( edd_ecourse_get_readable_course_date( $course ) ); ?>">
+												<span class="description"><?php printf( __( 'Sample format: %s', 'edd-ecourse' ), date( 'F jS Y', strtotime( 'first day of next month' ) ) ); ?></span>
+											</p>
+										</div>
+
+										<div id="major-publishing-actions">
+											<p id="ecourse-save">
+												<button type="button" id="ecourse-save-status" class="button button-primary"><?php _e( 'Save', 'edd-ecourse' ); ?></button>
+											</p>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -203,14 +212,15 @@ function edd_ecourse_render_course_edit() {
 					<div id="edd-ecourse-module-sortables" class="meta-box-sortables ui-sortable">
 
 						<!-- Modules -->
-						<?php if ( is_array( $modules ) ) : ?>
+						<?php if ( is_array( $modules ) ) { ?>
 
-							<?php foreach ( $modules as $module ) : ?>
+							<?php foreach ( $modules as $module ) { ?>
 								<div class="postbox edd-ecourse-module-group" data-module="<?php echo esc_attr( $module->id ); ?>">
 									<h3 class="hndle">
 										<span class="edd-ecourse-module-title"><?php echo esc_html( $module->title ); ?></span>
 										<button class="button edd-ecourse-edit-module-title"><?php _e( 'Edit', 'edd-ecourse' ); ?></button>
 										<a href="<?php echo esc_url( edd_ecourse_get_add_lesson_url( $course->id, $module->id ) ); ?>" class="button edd-ecourse-add-module-lesson"><?php _e( 'Add Lesson', 'edd-ecourse' ); ?></a>
+										<a href="#" class="edd-ecourse-delete-module"><span class="dashicons dashicons-trash"></span></a>
 									</h3>
 									<div class="inside">
 
@@ -220,7 +230,7 @@ function edd_ecourse_render_course_edit() {
 										if ( is_array( $lessons ) ) {
 											?>
 											<ul class="edd-ecourse-lesson-list">
-												<?php foreach ( $lessons as $lesson ) : ?>
+												<?php foreach ( $lessons as $lesson ) { ?>
 													<li data-id="<?php echo esc_attr( $lesson->ID ); ?>" data-position="<?php echo esc_attr( 1 ); ?>">
 														<span class="edd-ecourse-lesson-title">
 															<a href="<?php echo esc_url( get_edit_post_link( $lesson->ID ) ); ?>"><?php echo esc_html( $lesson->post_title ); ?></a>
@@ -229,9 +239,10 @@ function edd_ecourse_render_course_edit() {
 														<span class="edd-ecourse-lesson-actions">
 															<a href="<?php echo esc_url( get_edit_post_link( $lesson->ID ) ); ?>" class="edd-ecourse-lesson-edit-link edd-ecourse-tip" title="<?php esc_attr_e( 'Edit', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-edit"></span></a>
 															<a href="<?php echo esc_url( get_permalink( $lesson->ID ) ); ?>" target="_blank" class="edd-ecourse-lesson-preview-link edd-ecourse-tip" title="<?php esc_attr_e( 'View', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-visibility"></span></a>
+															<a href="#" class="edd-ecourse-lesson-delete edd-ecourse-tip" title="<?php esc_attr_e( 'Delete', 'edd-ecourse' ); ?>"><span class="dashicons dashicons-trash"></span></a>
 														</span>
 													</li>
-												<?php endforeach; ?>
+												<?php } ?>
 											</ul>
 											<?php
 										}
@@ -239,21 +250,14 @@ function edd_ecourse_render_course_edit() {
 
 									</div>
 								</div>
-							<?php endforeach; ?>
+							<?php } ?>
 
-						<?php endif; ?>
+						<?php } ?>
 
-						<div class="postbox edd-ecourse-add-module">
-							<h3 class="hndle"><?php _e( 'Add Module', 'edd-ecourse' ) ?></h3>
-							<div class="inside">
-								<form id="edd-ecourse-add-module-form" method="POST">
-									<label for="edd-ecourse-module-name" class="screen-reader-text"><?php _e( 'Enter module name', 'edd-ecourse' ); ?></label>
-									<input type="text" id="edd-ecourse-module-name" placeholder="<?php esc_attr_e( 'Module name', 'edd-ecourse' ); ?>" required>
-									<button type="submit" class="button"><?php _e( 'Add Module', 'edd-ecourse' ); ?></button>
-									<input type="hidden" id="edd-ecourse-id" value="<?php echo esc_attr( $course->id ); ?>">
-									<?php wp_nonce_field( 'edd_ecourse_add_module', 'edd_ecourse_add_module_nonce' ); ?>
-								</form>
-							</div>
+						<div class="edd-ecourse-add-module">
+							<input type="hidden" id="edd-ecourse-id" value="<?php echo esc_attr( $course->ID ); ?>">
+							<input type="hidden" id="edd-ecourse-module-nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_ecourse_add_module' ) ); ?>">
+							<button type="button" class="button button-primary"><?php _e( 'Add Module', 'edd-ecourse' ); ?></button>
 						</div>
 
 					</div>
