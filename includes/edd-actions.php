@@ -124,7 +124,7 @@ function edd_ecourse_view_course_material_link( $text, $download_id ) {
 		return $text;
 	}
 
-	$course_url  = edd_ecourse_get_course_permalink( $course );
+	$course_url  = get_permalink( $course );
 	$course_link = '<a href="' . esc_url( $course_url ) . '">' . __( 'View course material', 'edd-ecourse' ) . '</a>';
 
 	return apply_filters( 'edd_ecourse_view_course_material_link', $course_link, $text, $download_id, $course );
