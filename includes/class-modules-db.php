@@ -97,7 +97,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 			return false;
 		}
 
-		$module = $this->get_module_by( 'id', $args['id'] );
+		$module = ! empty( $args['id'] ) ? $this->get_module_by( 'id', $args['id'] ) : false;
 
 		if ( $module ) {
 			$this->update( $module->id, $args );

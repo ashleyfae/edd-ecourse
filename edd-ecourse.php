@@ -255,6 +255,7 @@ function edd_ecourse_activation() {
 
 	if ( ! function_exists( 'edd_ecourse_insert_demo_course' ) ) {
 		include_once 'includes/course-functions.php';
+		include_once 'includes/module-functions.php';
 	}
 
 	// Register post type.
