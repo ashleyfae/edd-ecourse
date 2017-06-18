@@ -350,8 +350,6 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 */
 	public function create_table() {
 
-		global $wpdb;
-
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "CREATE TABLE " . $this->table_name . " (

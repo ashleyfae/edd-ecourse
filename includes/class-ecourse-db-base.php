@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class EDD_eCourse_DB_Base
+ * Class EDD_eCourse_DB
  *
  * @since 1.0
  */
