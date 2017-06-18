@@ -40,6 +40,7 @@ jQuery(document).ready(function ($) {
 
 			$('.toplevel_page_ecourses').on('click', '.page-title-action', function (e) {
 				e.preventDefault();
+				var nonce = $(this).data('nonce');
 				swal({
 					title: edd_ecourse_vars.l10n.add_ecourse,
 					type: 'input',
@@ -58,7 +59,7 @@ jQuery(document).ready(function ($) {
 					var data = {
 						action: 'edd_ecourse_add_course',
 						course_name: inputValue,
-						nonce: $('#edd_ecourse_add_course_nonce').val()
+						nonce: nonce
 					};
 
 					$.ajax({
