@@ -5,7 +5,7 @@
  * The primary sidebar shown on the dashboard and course archive pages.
  *
  * @package   edd-ecourse
- * @copyright Copyright (c) 2016, Ashley Gibson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 

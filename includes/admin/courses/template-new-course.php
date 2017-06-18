@@ -6,7 +6,7 @@
  * to add it into the course grid.
  *
  * @package   EDD\E-Course\Admin\Courses\Template\NewCourse
- * @copyright Copyright (c) 2016, Ashley Gibson
+ * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
  */
 
