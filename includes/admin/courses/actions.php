@@ -5,7 +5,7 @@
  * @package   EDD\E-Course\Admin\Courses\Actions
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Add E-Course
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_add_course_cb() {
@@ -58,7 +58,7 @@ add_action( 'wp_ajax_edd_ecourse_add_course', 'edd_ecourse_add_course_cb' );
 /**
  * Delete E-Course
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_delete_course() {
@@ -94,7 +94,7 @@ add_action( 'wp_ajax_edd_ecourse_delete_course', 'edd_ecourse_delete_course' );
 /**
  * Add Module
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_add_module_cb() {
@@ -172,7 +172,7 @@ add_action( 'wp_ajax_edd_ecourse_delete_module', 'edd_ecourse_delete_module_cb' 
 /**
  * Update E-Course Title
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_update_course_title() {
@@ -208,7 +208,7 @@ add_action( 'wp_ajax_edd_ecourse_update_course_title', 'edd_ecourse_update_cours
 /**
  * Update E-Course Slug
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_update_course_slug() {
@@ -244,7 +244,7 @@ add_action( 'wp_ajax_edd_ecourse_update_course_slug', 'edd_ecourse_update_course
 /**
  * Update E-Course
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_update_course() {
@@ -307,7 +307,7 @@ add_action( 'wp_ajax_edd_ecourse_update_course', 'edd_ecourse_update_course' );
 /**
  * Update Module Title
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_update_module_title() {
@@ -340,7 +340,7 @@ add_action( 'wp_ajax_edd_ecourse_update_module_title', 'edd_ecourse_update_modul
 /**
  * Save Module Positions
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_save_module_positions() {
@@ -374,7 +374,7 @@ add_action( 'wp_ajax_edd_ecourse_save_module_positions', 'edd_ecourse_save_modul
 /**
  * Save Lesson Positions
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_save_lesson_positions() {
@@ -504,7 +504,7 @@ add_action( 'wp_ajax_edd_ecourse_delete_lesson', 'edd_ecourse_delete_lesson_cb' 
 /**
  * Load Underscore.js Course Template
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_load_course_js_templates() {

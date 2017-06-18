@@ -9,6 +9,7 @@
  * @package   edd-ecourse
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -19,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get Templates Directory
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function edd_ecourse_get_templates_dir() {
@@ -29,7 +30,7 @@ function edd_ecourse_get_templates_dir() {
 /**
  * Get Templates URL
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function edd_ecourse_get_templates_url() {
@@ -41,7 +42,7 @@ function edd_ecourse_get_templates_url() {
  *
  * @param array $paths
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function edd_ecourse_template_paths( $paths ) {
@@ -59,7 +60,7 @@ add_filter( 'edd_template_paths', 'edd_ecourse_template_paths' );
  *
  * @uses  edd_ecourse_is_dashboard_page()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_is_course_page() {
@@ -90,7 +91,7 @@ function edd_ecourse_is_course_page() {
  *
  * Checks to see if we're on a public course archive page.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_is_course_archive() {
@@ -104,7 +105,7 @@ function edd_ecourse_is_course_archive() {
  *
  * Returns true if the current page is the chosen dashboard page.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_is_dashboard_page() {
@@ -122,7 +123,7 @@ function edd_ecourse_is_dashboard_page() {
  * Removes all theme CSS from the stylesheet queue. This is so we
  * can add our own styles without interference.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_modify_styles_queue() {
@@ -164,7 +165,7 @@ add_action( 'wp_print_styles', 'edd_ecourse_modify_styles_queue' );
  *
  * @param string $template
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function edd_ecourse_template_include( $template ) {
@@ -221,7 +222,7 @@ add_action( 'template_include', 'edd_ecourse_template_include' );
  *
  * Includes a sidebar file, depending on which page we're on.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_get_sidebar() {
@@ -240,7 +241,7 @@ function edd_ecourse_get_sidebar() {
  * Loads the correct e-course page template for the current page.
  * This gets run after permissions are confirmed.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_load_page_template() {
@@ -273,7 +274,7 @@ function edd_ecourse_load_page_template() {
  *                     `tagline` - Site description when on home page.
  *                     `site` - Site title when not on homepage.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function edd_ecourse_title_tag( $title ) {

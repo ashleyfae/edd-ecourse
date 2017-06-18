@@ -5,6 +5,7 @@
  * @package   edd-ecourse
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -19,8 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param int              $lesson_id ID of the lesson to start.
  * @param bool|WP_User|int $user_id   User object/ID or leave blank to use current user.
+ *
+ * @since 1.0
+ * @return WP_Error|bool
  */
 function edd_ecourse_user_start_lesson( $lesson_id, $user_id = false ) {
+
 	$lesson_id = absint( $lesson_id );
 	$course_id = edd_ecourse_get_lesson_course( $lesson_id );
 
@@ -49,7 +54,8 @@ function edd_ecourse_user_start_lesson( $lesson_id, $user_id = false ) {
 		$real_user_id = $current_user->ID;
 	}
 
-	update_user_meta( $real_user_id, 'started_course_lessons_' . $course_id, $started_lessons );
+	return update_user_meta( $real_user_id, 'started_course_lessons_' . $course_id, $started_lessons );
+
 }
 
 function edd_ecourse_user_complete_lesson( $lesson_id, $user_id = false ) {
@@ -64,7 +70,7 @@ function edd_ecourse_user_complete_lesson( $lesson_id, $user_id = false ) {
  * @param int|object       $course Course ID or object.
  * @param bool|WP_User|int $user   User object/ID or leave blank to use current user.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array Array of lesson IDs.
  */
 function edd_ecourse_get_started_lessons( $course, $user = false ) {
@@ -95,7 +101,7 @@ function edd_ecourse_get_started_lessons( $course, $user = false ) {
  * @param int|object       $course Course ID or object.
  * @param bool|WP_User|int $user   User object/ID, or leave blank to use current user.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array Array of lesson IDs.
  */
 function edd_ecourse_get_completed_lessons( $course, $user = false ) {
@@ -126,7 +132,7 @@ function edd_ecourse_get_completed_lessons( $course, $user = false ) {
  * @param int              $lesson_id Lesson ID to check.
  * @param bool|WP_User|int $user      User object or ID, or leave blank to use current user.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_user_has_completed_lesson( $lesson_id, $user = false ) {
@@ -155,7 +161,7 @@ function edd_ecourse_user_has_completed_lesson( $lesson_id, $user = false ) {
 
 	}
 
-	return apply_filters( 'edd_ecourse_user_has_completed_course', $has_completed, $lesson_id, $user_id, $course );
+	return apply_filters( 'edd_ecourse_user_has_completed_lesson', $has_completed, $lesson_id, $user_id, $course );
 
 }
 
@@ -167,7 +173,7 @@ function edd_ecourse_user_has_completed_lesson( $lesson_id, $user = false ) {
  * @param int              $course_id ID of the course to grant access to.
  * @param bool|WP_User|int $user      User object/ID or leave false to use current user.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_has_course_access( $course_id, $user = false ) {
@@ -196,7 +202,7 @@ function edd_ecourse_has_course_access( $course_id, $user = false ) {
  * @param int              $course_id ID of the course to grant access to.
  * @param bool|WP_User|int $user      User object/ID or leave false to use current user.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_grant_course_access( $course_id, $user = false ) {
@@ -232,7 +238,7 @@ function edd_ecourse_grant_course_access( $course_id, $user = false ) {
  * @param int               $course_id ID of the course to grant access to.
  * @param WP_User|int|false $user      User object/ID or leave false to use current user.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_revoke_course_access( $course_id, $user = false ) {
@@ -272,7 +278,7 @@ function edd_ecourse_revoke_course_access( $course_id, $user = false ) {
  *
  * @param WP_User|int|false $user User object/ID or leave false to use current user.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool Whether or not the user can view this e-course page.
  */
 function edd_ecourse_user_can_view_page( $user = false ) {
@@ -324,7 +330,7 @@ function edd_ecourse_user_can_view_page( $user = false ) {
  * @param int|false $current_course_id ID of the current course.
  * @param int       $user_id           ID of the user to check.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_grant_admin_access_to_pages( $can_view_page, $current_course_id, $user_id ) {

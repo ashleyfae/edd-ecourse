@@ -24,14 +24,14 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 	/**
 	 * Main EDD_eCourse class
 	 *
-	 * @since 1.0.0
+	 * @since 1.0
 	 */
 	class EDD_eCourse {
 
 		/**
 		 * @var EDD_eCourse $instance The one true EDD_eCourse
 		 * @access private
-		 * @since  1.0.0
+		 * @since  1.0
 		 */
 		private static $instance;
 
@@ -40,7 +40,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 *
 		 * @var EDD_eCourse_Modules_DB
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 */
 		public $modules;
 
@@ -49,7 +49,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 * Get active instance
 		 *
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 * @return EDD_eCourse self::$instance The one true EDD_eCourse
 		 */
 		public static function instance() {
@@ -71,12 +71,12 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 * Setup plugin constants
 		 *
 		 * @access private
-		 * @since  1.0.0
+		 * @since  1.0
 		 * @return void
 		 */
 		private function setup_constants() {
 			// Plugin version
-			define( 'EDD_ECOURSE_VER', '1.0.0' );
+			define( 'EDD_ECOURSE_VER', '1.0' );
 
 			// Plugin path
 			define( 'EDD_ECOURSE_DIR', plugin_dir_path( __FILE__ ) );
@@ -90,7 +90,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 * Include necessary files
 		 *
 		 * @access private
-		 * @since  1.0.0
+		 * @since  1.0
 		 * @return void
 		 */
 		private function includes() {
@@ -127,7 +127,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 * Run action and filter hooks
 		 *
 		 * @access      private
-		 * @since       1.0.0
+		 * @since       1.0
 		 * @return void
 		 *
 		 * @todo        Probably remove.
@@ -148,7 +148,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 * Internationalization
 		 *
 		 * @access      public
-		 * @since       1.0.0
+		 * @since       1.0
 		 * @return      void
 		 */
 		public function load_textdomain() {
@@ -183,7 +183,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
 		 * @param array $settings The existing EDD settings array
 		 *
 		 * @access public
-		 * @since  1.0.0
+		 * @since  1.0
 		 * @return array The modified EDD settings array
 		 */
 		public function settings( $settings ) {
@@ -222,7 +222,7 @@ if ( ! class_exists( 'EDD_eCourse' ) ) {
  * The main function responsible for returning the one true EDD_eCourse
  * instance to functions everywhere
  *
- * @since 1.0.0
+ * @since 1.0
  * @return EDD_eCourse|void The one true EDD_eCourse
  */
 function edd_ecourse_load() {
@@ -244,7 +244,7 @@ add_action( 'plugins_loaded', 'edd_ecourse_load' );
 /**
  * Activation Functions
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_activation() {

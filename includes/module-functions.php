@@ -5,6 +5,7 @@
  * @package   edd-ecourse
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -18,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array $args Module arguments, including `title` (required), `description`, `position`, and `course`
  *                    (required).
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int|false Module ID on success or false on failure.
  */
 function edd_ecourse_insert_module( $args = array() ) {
@@ -35,7 +36,7 @@ function edd_ecourse_insert_module( $args = array() ) {
  * @param int   $module_id ID of the module to get lessons for.
  * @param array $args      WP_Query arguments to override the defaults.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array|false
  */
 function edd_ecourse_get_module_lessons( $module_id, $args = array() ) {
@@ -71,7 +72,7 @@ function edd_ecourse_get_module_lessons( $module_id, $args = array() ) {
  *
  * @param int $module_id ID of the module.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int
  */
 function edd_ecourse_get_number_module_lessons( $module_id ) {

@@ -8,7 +8,7 @@
  * @package   edd-ecourse
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class EDD_eCourse_Modules_DB
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 
@@ -27,7 +27,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 * EDD_eCourse_Modules_DB constructor.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function __construct() {
@@ -46,7 +46,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 * @todo   check this
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_columns() {
@@ -63,7 +63,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 * Get Default Column Values
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_column_defaults() {
@@ -81,7 +81,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 * @param array $data
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int|bool Row ID or false on failure.
 	 */
 	public function add( $data = array() ) {
@@ -118,7 +118,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 * @param bool $id ID of the course to delete.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool|false|int
 	 */
 	public function delete( $id = false ) {
@@ -168,7 +168,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 * @param string $field Name of the field to check.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return bool
 	 */
 	public function exists( $value = '', $field = 'id' ) {
@@ -191,7 +191,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 * @param int    $value The module ID or title to search.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return object|false Module object or false on failure.
 	 */
 	public function get_module_by( $field = 'id', $value = 0 ) {
@@ -254,7 +254,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 * @param array $args Query arguments to override the defaults.
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return array|false Array of module objects or false on failure.
 	 */
 	public function get_modules( $args = array() ) {
@@ -334,7 +334,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 * @param array $args
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return int
 	 */
 	public function count( $args = array() ) {
@@ -345,7 +345,7 @@ class EDD_eCourse_Modules_DB extends EDD_eCourse_DB {
 	 * Create Table
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function create_table() {

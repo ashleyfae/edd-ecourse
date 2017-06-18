@@ -5,7 +5,7 @@
  * @package   EDD\E-Course\Admin\Courses\Functions
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Returns the URL to the "Add Course" page.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function edd_ecourse_get_add_course_url() {
@@ -33,7 +33,7 @@ function edd_ecourse_get_add_course_url() {
 /**
  * Checks to see if we're currently on the Edit Course page.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_is_edit_course_page() {

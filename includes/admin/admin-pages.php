@@ -5,7 +5,7 @@
  * @package   EDD\E-Course\Admin\Pages
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Checks whether we're on an EDD E-Course page.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_is_admin_page() {
@@ -47,7 +47,7 @@ function edd_ecourse_is_admin_page() {
  * @param $passed_page
  * @param $passed_view
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_filter_edd_is_admin_page( $is_admin_page, $page, $view, $passed_page, $passed_view ) {
@@ -59,7 +59,7 @@ add_filter( 'edd_is_admin_page', 'edd_ecourse_filter_edd_is_admin_page', 10, 5 )
 /**
  * Register Admin Menu Pages
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_admin_pages() {
@@ -89,7 +89,7 @@ add_action( 'admin_menu', 'edd_ecourse_admin_pages' );
  * @global array  $edd_settings_page The slug for the EDD settings page
  * @global string $post_type         The type of post that we are editing
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_admin_scripts( $hook ) {
@@ -149,7 +149,7 @@ add_action( 'admin_enqueue_scripts', 'edd_ecourse_admin_scripts', 100 );
  *
  * Keep students out of the admin area.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function ecu_ecourse_keep_out_of_admin() {

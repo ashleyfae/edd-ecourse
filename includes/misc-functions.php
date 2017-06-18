@@ -5,6 +5,7 @@
  * @package   EDD\E-Course\Misc Functions
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -17,10 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * URL to the e-course dashboard page.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function edd_ecourse_get_dashboard_url() {
+
 	$dashboard = edd_get_option( 'ecourse_dashboard_page' );
 
 	if ( $dashboard ) {
@@ -30,12 +32,13 @@ function edd_ecourse_get_dashboard_url() {
 	}
 
 	return apply_filters( 'edd_ecourse_dashboard_url', $url, $dashboard );
+
 }
 
 /**
  * Register Widget Areas
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_register_widget_areas() {

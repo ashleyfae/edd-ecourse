@@ -5,7 +5,7 @@
  * @package   EDD\E-Course\Admin\Courses
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Displays a list of all available e-courses as well as an option to add a new one.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_render_page() {
@@ -36,7 +36,7 @@ function edd_ecourse_render_page() {
 /**
  * Render All E-Courses Grid
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_render_course_overview() {
@@ -115,7 +115,7 @@ add_action( 'edd_ecourse_render_course_overview', 'edd_ecourse_render_course_ove
 /**
  * Render View E-Course Lesson List
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_render_course_edit() {

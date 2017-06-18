@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class EDD_eCourse_Progress
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class EDD_eCourse_Progress extends WP_Widget {
 

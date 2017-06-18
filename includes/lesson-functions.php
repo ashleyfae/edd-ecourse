@@ -5,6 +5,7 @@
  * @package   edd-ecourse
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -20,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param WP_Post|int $lesson   Post object or ID.
  * @param bool        $fallback Whether or not to fall back to the `$_GET` variable.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int|false Course ID or false if none is selected.
  */
 function edd_ecourse_get_lesson_course( $lesson, $fallback = true ) {
@@ -32,6 +33,14 @@ function edd_ecourse_get_lesson_course( $lesson, $fallback = true ) {
 		$course_id = $_GET['course'];
 	}
 
+	/**
+	 * Filters the ID of the course associated with a lesson.
+	 *
+	 * @param int|false   $course_id Course ID or false if none is selected.
+	 * @param WP_Post|int $lesson    Lesson post object or ID.
+	 *
+	 * @since 1.0
+	 */
 	return apply_filters( 'edd_ecourse_get_lesson_course', $course_id, $lesson );
 
 }
@@ -44,7 +53,7 @@ function edd_ecourse_get_lesson_course( $lesson, $fallback = true ) {
  * @param WP_Post|int $lesson   Post object or ID.
  * @param bool        $fallback Whether or not to fall back to the `$_GET` variable.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int|false Module ID or false if none is selected.
  */
 function edd_ecourse_get_lesson_module( $lesson, $fallback = true ) {
@@ -56,6 +65,14 @@ function edd_ecourse_get_lesson_module( $lesson, $fallback = true ) {
 		$module_id = $_GET['module'];
 	}
 
+	/**
+	 * Filters the ID of the module that this lesson is assigned to.
+	 *
+	 * @param int|false   $module_id Module ID or false if none is selected.
+	 * @param WP_Post|int $lesson    Lesson post object or ID.
+	 *
+	 * @since 1.0
+	 */
 	return apply_filters( 'edd_ecourse_get_lesson_module', $module_id, $lesson );
 
 }
@@ -67,7 +84,7 @@ function edd_ecourse_get_lesson_module( $lesson, $fallback = true ) {
  *
  * @param WP_Post|int $lesson Post object or ID.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array|false Array of lesson types or false if none.
  */
 function edd_ecourse_get_lesson_type( $lesson ) {
@@ -75,6 +92,14 @@ function edd_ecourse_get_lesson_type( $lesson ) {
 	$lesson_id = is_a( $lesson, 'WP_Post' ) ? $lesson->ID : $lesson;
 	$type      = get_post_meta( $lesson_id, 'lesson_type', true );
 
+	/**
+	 * Filters the type of lesson.
+	 *
+	 * @param string      $type   Lesson type.
+	 * @param WP_Post|int $lesson Lesson post object or ID.
+	 *
+	 * @since 1.0
+	 */
 	return apply_filters( 'edd_ecourse_get_lesson_type', $type, $lesson );
 
 }
@@ -86,10 +111,11 @@ function edd_ecourse_get_lesson_type( $lesson ) {
  * The icon should be the name of a Font Awesome icon (without the
  * `fa fa-` prefixes).
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function edd_ecourse_get_available_lesson_types() {
+
 	$types = array(
 		'audio'    => array(
 			'name' => __( 'Audio', 'edd-ecourse' ),
@@ -109,7 +135,15 @@ function edd_ecourse_get_available_lesson_types() {
 		)
 	);
 
+	/**
+	 * Filters the array of available lesson types.
+	 *
+	 * @param array $types
+	 *
+	 * @since 1.0
+	 */
 	return apply_filters( 'edd_ecourse_get_available_lesson_types', $types );
+
 }
 
 /**
@@ -120,10 +154,11 @@ function edd_ecourse_get_available_lesson_types() {
  *
  * @param WP_Post|int $lesson Post object or ID.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string|false
  */
 function edd_ecourse_get_lesson_status( $lesson ) {
+
 	$post = is_a( $lesson, 'WP_Post' ) ? $lesson : get_post( $lesson );
 
 	if ( ! is_a( $post, 'WP_Post' ) ) {
@@ -154,7 +189,16 @@ function edd_ecourse_get_lesson_status( $lesson ) {
 
 	}
 
+	/**
+	 * Filters the status of a lesson.
+	 *
+	 * @param string|false $status Formatted name of the status.
+	 * @param WP_Post      $post   Lesson post object.
+	 *
+	 * @since 1.0
+	 */
 	return apply_filters( 'edd_ecourse_get_lesson_status', $status, $post );
+
 }
 
 /**
@@ -162,7 +206,7 @@ function edd_ecourse_get_lesson_status( $lesson ) {
  *
  * @param WP_Post|int $lesson Lesson ID or object.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return int
  */
 function edd_ecourse_get_lesson_position( $lesson ) {
@@ -170,6 +214,14 @@ function edd_ecourse_get_lesson_position( $lesson ) {
 	$lesson_id = is_a( $lesson, 'WP_Post' ) ? $lesson->ID : $lesson;
 	$position  = get_post_meta( $lesson_id, 'lesson_position', true );
 
+	/**
+	 * Filters the position of a lesson within a course.
+	 *
+	 * @param int         $position Numerical position within the course.
+	 * @param WP_Post|int $lesson   Lesson ID or post object.
+	 *
+	 * @since 1.0
+	 */
 	return apply_filters( 'edd_ecourse_get_lesson_position', $position, $lesson );
 
 }
@@ -183,7 +235,7 @@ function edd_ecourse_get_lesson_position( $lesson ) {
  * @param WP_Post|int  $lesson Post object or ID.
  * @param bool|WP_User $user   User object or leave blank to use current user.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string|false Will return `complete`, `in-progress`, or `not-started`. False if not logged in.
  */
 function edd_ecourse_get_lesson_completion( $lesson, $user = false ) {
@@ -214,7 +266,17 @@ function edd_ecourse_get_lesson_completion( $lesson, $user = false ) {
 		}
 	}
 
-	return apply_filters( 'edd_ecourse_lesson_completion', $status, $lesson_id, $course );
+	/**
+	 * Filters the user's lesson completion status.
+	 *
+	 * @param string        $status    Either `complete`, `in-progress`, or `not-started`.
+	 * @param int           $lesson_id ID of the lesson being checked.
+	 * @param WP_Post|false $course    Course the lesson is part of.
+	 * @param WP_User       $user      User being checked.
+	 *
+	 * @since 1.0
+	 */
+	return apply_filters( 'edd_ecourse_lesson_completion', $status, $lesson_id, $course, $user );
 
 }
 
@@ -229,7 +291,7 @@ function edd_ecourse_get_lesson_completion( $lesson, $user = false ) {
  * @param WP_Post|int  $lesson Post object or ID.
  * @param bool|WP_User $user   User object or leave blank to use current user.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function edd_ecourse_get_lesson_completion_icon( $lesson, $user = false ) {
@@ -254,6 +316,17 @@ function edd_ecourse_get_lesson_completion_icon( $lesson, $user = false ) {
 
 	}
 
+	/**
+	 * Filters the icon associated with a completion status.
+	 *
+	 * @param string       $html   Formatted icon HTML.
+	 * @param string       $icon   Font Awesome icon name (without `fa fa-` prefix).
+	 * @param string       $status User's completion status.
+	 * @param WP_Post|int  $lesson Lesson post object or ID.
+	 * @param WP_User|bool $user   User being checked.
+	 *
+	 * @since 1.0
+	 */
 	return apply_filters( 'edd_ecourse_lesson_completion_icon_html', $html, $icon, $status, $lesson, $user );
 
 }
@@ -271,7 +344,7 @@ function edd_ecourse_get_lesson_completion_icon( $lesson, $user = false ) {
  *
  * @uses  edd_ecourse_get_lesson_completion_icon()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_lesson_completion_icon( $lesson, $user = false ) {
@@ -283,7 +356,7 @@ function edd_ecourse_lesson_completion_icon( $lesson, $user = false ) {
  *
  * @param WP_Post|int $lesson Post object or ID.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function edd_ecourse_get_lesson_type_icon( $lesson ) {
@@ -315,7 +388,7 @@ function edd_ecourse_get_lesson_type_icon( $lesson ) {
  *
  * @uses  edd_ecourse_get_lesson_type_icon()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_lesson_type_icon( $lesson ) {
@@ -330,7 +403,7 @@ function edd_ecourse_lesson_type_icon( $lesson ) {
  *
  * @param int|WP_Post $lesson Post object or ID.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return array
  */
 function edd_ecourse_get_lesson_classes( $lesson ) {
@@ -373,10 +446,11 @@ function edd_ecourse_get_lesson_classes( $lesson ) {
  *
  * @uses  edd_ecourse_get_lesson_classes()
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_lesson_class( $lesson, $extra_classes = '' ) {
+
 	$classes = edd_ecourse_get_lesson_classes( $lesson );
 
 	if ( $extra_classes ) {
@@ -386,6 +460,7 @@ function edd_ecourse_lesson_class( $lesson, $extra_classes = '' ) {
 	if ( count( $classes ) ) {
 		echo ' class="' . esc_attr( implode( ' ', $classes ) ) . '"';
 	}
+
 }
 
 /**
@@ -395,13 +470,15 @@ function edd_ecourse_lesson_class( $lesson, $extra_classes = '' ) {
  *
  * @param WP_Post|int $lesson Post object or ID.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return bool
  */
 function edd_ecourse_is_free_preview( $lesson ) {
+
 	$lesson_id  = is_object( $lesson ) ? $lesson->ID : $lesson;
 	$preview    = get_post_meta( $lesson_id, 'free_lesson_preview', true );
 	$is_preview = $preview ? true : false;
 
 	return apply_filters( 'edd_ecourse_is_free_lesson_preview', $is_preview, $lesson_id );
+
 }

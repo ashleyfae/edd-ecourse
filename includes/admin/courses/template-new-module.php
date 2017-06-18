@@ -8,7 +8,7 @@
  * @package   EDD\E-Course\Admin\Courses\Template\NewModule
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly

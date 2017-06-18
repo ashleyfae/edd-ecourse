@@ -3,7 +3,7 @@
  * Activation handler
  *
  * @package EDD\ActivationHandler
- * @since   1.0.0
+ * @since   1.0
  */
 
 
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * EDD Extension Activation Handler Class
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class EDD_Extension_Activation {
 
@@ -26,7 +26,7 @@ class EDD_Extension_Activation {
 	 * Setup the activation class
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function __construct( $plugin_path, $plugin_file ) {
@@ -64,7 +64,7 @@ class EDD_Extension_Activation {
 	 * Process plugin deactivation
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return void
 	 */
 	public function run() {
@@ -77,7 +77,7 @@ class EDD_Extension_Activation {
 	 * Display notice if EDD isn't installed
 	 *
 	 * @access public
-	 * @since  1.0.0
+	 * @since  1.0
 	 * @return string The notice to display
 	 */
 	public function missing_edd_notice() {

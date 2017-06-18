@@ -5,7 +5,7 @@
  * @package   EDD\E-Course\PostTypes
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @todo  Custom capabilities at some point.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_post_type() {

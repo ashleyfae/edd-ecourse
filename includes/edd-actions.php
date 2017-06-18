@@ -7,6 +7,7 @@
  * @package   edd-ecourse
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -22,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param int $payment_id Payment ID.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_grant_access_after_purchase( $payment_id ) {
@@ -65,7 +66,7 @@ add_action( 'edd_complete_purchase', 'edd_ecourse_grant_access_after_purchase' )
  * @param string $new_status New payment status.
  * @param string $old_status Old payment status.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_remove_access_after_refund( $payment_id, $new_status, $old_status ) {
@@ -112,22 +113,32 @@ add_action( 'edd_update_payment_status', 'edd_ecourse_remove_access_after_refund
  * @param string $text        Existing text that reads "No downloadable files found".
  * @param int    $download_id Download ID.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return string
  */
 function edd_ecourse_view_course_material_link( $text, $download_id ) {
 
-	$course = get_post_meta( $download_id, 'ecourse', true );
+	$course_id = get_post_meta( $download_id, 'ecourse', true );
 
 	// Not a course - bail.
-	if ( ! $course ) {
+	if ( empty( $course_id ) ) {
 		return $text;
 	}
 
-	$course_url  = get_permalink( $course );
+	$course_url  = get_permalink( $course_id );
 	$course_link = '<a href="' . esc_url( $course_url ) . '">' . __( 'View course material', 'edd-ecourse' ) . '</a>';
 
-	return apply_filters( 'edd_ecourse_view_course_material_link', $course_link, $text, $download_id, $course );
+	/**
+	 * Filters the view course material link and HTML.
+	 *
+	 * @param string $course_link Course link HTML.
+	 * @param string $text        Original text that reads "No downloadable files found".
+	 * @param int    $download_id ID of the download.
+	 * @param int    $course_id   ID of the corresponding e-course.
+	 *
+	 * @since 1.0
+	 */
+	return apply_filters( 'edd_ecourse_view_course_material_link', $course_link, $text, $download_id, $course_id );
 
 }
 

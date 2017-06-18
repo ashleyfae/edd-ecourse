@@ -5,7 +5,7 @@
  * @package   EDD\E-Course\Scripts
  * @copyright Copyright (c) 2017, Ashley Gibson
  * @license   GPL2+
- * @since     1.0.0
+ * @since     1.0
  */
 
 // Exit if accessed directly
@@ -13,11 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Load frontend scripts
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_scripts( $hook ) {

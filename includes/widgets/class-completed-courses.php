@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class EDD_Completed_Courses
  *
- * @since 1.0.0
+ * @since 1.0
  */
 class EDD_Completed_Courses extends WP_Widget {
 

@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param WP_User $user
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_show_user_profile( $user ) {
@@ -69,7 +69,7 @@ add_action( 'edit_user_profile', 'edd_ecourse_show_user_profile' );
  *
  * @param int $user_id ID of the user being saved.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_edit_user_profile( $user_id ) {

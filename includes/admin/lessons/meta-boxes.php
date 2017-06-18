@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Register Meta Boxes
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_register_lesson_meta_boxes() {
@@ -35,7 +35,7 @@ add_action( 'add_meta_boxes', 'edd_ecourse_register_lesson_meta_boxes' );
  *
  * @param WP_Post $post
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_render_lesson_details_box( $post ) {
@@ -95,7 +95,7 @@ function edd_ecourse_render_lesson_details_box( $post ) {
  *
  * @param WP_Post $post
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_render_lesson_permissions_box( $post ) {
@@ -147,7 +147,7 @@ function edd_ecourse_render_lesson_permissions_box( $post ) {
  * @param int     $post_id
  * @param WP_Post $post
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_save_lesson_meta( $post_id, $post ) {

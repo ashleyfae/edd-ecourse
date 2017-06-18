@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Register Meta Boxes
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_register_download_meta_boxes() {
@@ -32,7 +32,7 @@ add_action( 'add_meta_boxes', 'edd_ecourse_register_download_meta_boxes' );
  *
  * @param WP_Post $post
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_render_download_course_box( $post ) {
@@ -75,7 +75,7 @@ function edd_ecourse_render_download_course_box( $post ) {
  * @param int     $post_id ID of the post.
  * @param WP_Post $post    Post object.
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_save_download( $post_id, $post ) {

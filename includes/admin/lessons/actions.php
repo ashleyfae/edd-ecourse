@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Update Course Module List
  *
- * @since 1.0.0
+ * @since 1.0
  * @return void
  */
 function edd_ecourse_update_course_module_list() {
