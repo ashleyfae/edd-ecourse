@@ -45,7 +45,7 @@ function edd_ecourse_render_download_course_box( $post ) {
 	$selected_course = get_post_meta( $post->ID, 'ecourse', true );
 
 	// Fallback for direct link with query arg.
-	if ( ! $selected_course && array_key_exists( 'course', $_GET ) ) {
+	if ( ! $selected_course && ! empty( $_GET['course'] ) ) {
 		$selected_course = absint( $_GET['course'] );
 	}
 
@@ -59,7 +59,7 @@ function edd_ecourse_render_download_course_box( $post ) {
 			<select id="ecourse" name="ecourse">
 				<option value="" <?php selected( $selected_course, false ); ?>><?php _e( 'None', 'edd-ecourse' ); ?></option>
 				<?php foreach ( $courses as $course ) : ?>
-					<option value="<?php echo esc_attr( $course->id ); ?>" <?php selected( $selected_course, $course->id ); ?>><?php echo esc_html( $course->title ); ?></option>
+					<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $selected_course, $course->ID ); ?>><?php echo esc_html( $course->post_title ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>
